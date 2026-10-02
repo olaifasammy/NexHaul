@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T01:12:25.854Z",
+    "scannedAt": "2026-10-02T01:37:14.965Z",
     "git": {
       "branch": "main",
-      "commit": "da215be225ff0561d58adf8c8cdb7475cdc8a5c5",
-      "dirty": false
+      "commit": "77b9cf86de678bd7590d92022d8edca1ad0d2902",
+      "dirty": true
     },
     "languages": {
       "JSON": 6,
@@ -75,9 +75,9 @@
       },
       {
         "path": "src/App.tsx",
-        "size": 83928,
-        "mtimeMs": 1790898273079.9421,
-        "hash": "3ab60902ad8318c8c2f9218d9ef74ff1f991704755927a93de5c3021034753f8",
+        "size": 84332,
+        "mtimeMs": 1790904219927.938,
+        "hash": "9075d54adf786b02b2d692ed98d49c0dc2accd6b308871438964abd621d6b324",
         "language": "TypeScript React",
         "imports": [
           "./components/Dashboard",
@@ -210,9 +210,9 @@
       },
       {
         "path": "src/components/FleetManager.tsx",
-        "size": 47484,
-        "mtimeMs": 1790893984515.9453,
-        "hash": "30aa2fa4c46c04f4be58c659f2b010950bad234cf36b1591ae3c60816170214b",
+        "size": 47821,
+        "mtimeMs": 1790904201475.938,
+        "hash": "20b694c4b774084e8f93049d5ec707d0de7ffd0bc027f92a4e71fbe182e904a6",
         "language": "TypeScript React",
         "imports": [
           "../engine/maintenancePricing",
@@ -506,9 +506,9 @@
       },
       {
         "path": "src/components/TruckInspectionModal.tsx",
-        "size": 14352,
-        "mtimeMs": 1790866241255.965,
-        "hash": "d86a9837232f612176473ad4673ad7d0ea7e3d111ca516da17f574e0c5d7e88b",
+        "size": 15059,
+        "mtimeMs": 1790903854603.9382,
+        "hash": "8444d66229d1248c0479f87fee1aecf7905bd76838ea2b70bbea0c8ca6e75667",
         "language": "TypeScript React",
         "imports": [
           "../config/simulation",
@@ -817,9 +817,9 @@
       },
       {
         "path": "src/engine/simulation.ts",
-        "size": 77505,
-        "mtimeMs": 1790903259667.9387,
-        "hash": "9ad740e2a51ccdc35accf1cf44d2e91a09ef70f2d50c6a70df781fc08818ff1c",
+        "size": 78093,
+        "mtimeMs": 1790903780063.9382,
+        "hash": "cd90e7ac80e4a926385e2dad2e0a2a3525f3f57542a00b16bdd18acd286749cb",
         "language": "TypeScript",
         "imports": [
           "../config/simulation",
@@ -843,9 +843,9 @@
       },
       {
         "path": "src/engine/storage.ts",
-        "size": 16419,
-        "mtimeMs": 1790903181383.9387,
-        "hash": "4fa66fd436a8d7e5db04282eb024f682e84f698b1a7c4b25c868ca5a12e2138a",
+        "size": 16615,
+        "mtimeMs": 1790903759211.9382,
+        "hash": "aab0d83218fc9bfde712dea17da5e1c412cba0261e91bb8fd5b038af4d1ef70d",
         "language": "TypeScript",
         "imports": [
           "../data/contracts",
@@ -879,9 +879,9 @@
       },
       {
         "path": "src/types/game.ts",
-        "size": 11362,
-        "mtimeMs": 1790903160055.9387,
-        "hash": "66f58b421a7b456ab547a39d13c7e73c2fb2736d6fe201308cab2367e1ac0ae3",
+        "size": 11431,
+        "mtimeMs": 1790903578619.9385,
+        "hash": "45fe40c6cf80bfbcb084020d4fe371958fa13ad1092ae87625e98d7f5060907d",
         "language": "TypeScript",
         "imports": [],
         "exports": [
@@ -900,6 +900,7 @@
           "FuelDelivery",
           "GameSaveState",
           "IPOMarketState",
+          "InsuranceCoverageTier",
           "InvestorRound",
           "OfficeStaff",
           "OfflineProgressSummary",
@@ -908,7 +909,6 @@
           "ShipperRetainer",
           "StaffRole",
           "Trailer",
-          "TrailerType",
           "Truck",
           "TruckClass",
           "TruckRegion",
@@ -1874,6 +1874,7 @@
           "FuelDelivery",
           "GameSaveState",
           "IPOMarketState",
+          "InsuranceCoverageTier",
           "InvestorRound",
           "OfficeStaff",
           "OfflineProgressSummary",
@@ -1882,7 +1883,6 @@
           "ShipperRetainer",
           "StaffRole",
           "Trailer",
-          "TrailerType",
           "Truck",
           "TruckClass",
           "TruckRegion",
@@ -2667,13 +2667,8 @@
   },
   "changes": {
     "added": [],
-    "changed": [
-      "src/data/contracts.ts",
-      "src/engine/simulation.ts",
-      "src/engine/storage.ts",
-      "src/types/game.ts"
-    ],
+    "changed": [],
     "deleted": [],
-    "unchanged": 56
+    "unchanged": 60
   }
 }

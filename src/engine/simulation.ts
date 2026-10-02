@@ -435,7 +435,7 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
   nextState.drivers.forEach(driver => {
     if (driver.assignedTruckId) {
       const truck = nextState.trucks.find(t => t.id === driver.assignedTruckId);
-      if (!truck || (!truck.assignedContractId && truck.status !== 'resting' && truck.status !== 'maintenance')) {
+      if (!truck) {
         driver.assignedTruckId = null;
         driver.isResting = false;
       }
