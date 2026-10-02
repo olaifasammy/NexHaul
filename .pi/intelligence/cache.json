@@ -5,10 +5,10 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T02:24:25.889Z",
+    "scannedAt": "2026-10-02T02:27:01.200Z",
     "git": {
       "branch": "main",
-      "commit": "eb8ebf0ed72b877a0e0546dde22a28305d44910e",
+      "commit": "664d34534969cf2535d3d362b77276f9ae37e1e8",
       "dirty": false
     },
     "languages": {
@@ -414,9 +414,9 @@
       },
       {
         "path": "src/components/RealMapCanvas.tsx",
-        "size": 15768,
-        "mtimeMs": 1790907571207.9355,
-        "hash": "807b3dfba0af5d0cbeab3874e9939e4f7944a930104a75ac926430f6c30ff1cc",
+        "size": 13518,
+        "mtimeMs": 1790907905847.9353,
+        "hash": "d255e19d642f7dea4a6639b0257d55e62bedfcfa0c470208a502a6424b648881",
         "language": "TypeScript React",
         "imports": [
           "../types/game",
@@ -2676,7 +2676,7 @@
   "changes": {
     "added": [],
     "changed": [
-      "src/components/Dashboard.tsx"
+      "src/components/RealMapCanvas.tsx"
     ],
     "deleted": [],
     "unchanged": 59

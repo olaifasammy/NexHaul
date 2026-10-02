@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useState, useRef, useEffect } from 'react';
 import type { Contract, Truck } from '../types/game';
 
 export type MapRegion = 'Global' | 'America' | 'Europe' | 'Asia' | 'Africa';
@@ -118,6 +118,11 @@ export const RealMapCanvas: React.FC<{
   showLabels?: boolean;
   showRoutes?: boolean;
 }> = ({ region, contracts, trucks, selectedTruckId, onSelectTruck, zoom = 1, showLabels = true, showRoutes = true }) => {
+  const [offset, setOffset] = useState({ x: 0, y: 0 });
+  const isDragging = useRef(false);
+  const lastMousePos = useRef({ x: 0, y: 0 });
+  const svgRef = useRef<SVGSVGElement>(null);
+
   const cities = useMemo(
     () => Object.entries(CITY_LOCATIONS).filter(([, c]) => region === 'Global' || c.region === region),
     [region],
@@ -141,11 +146,6 @@ export const RealMapCanvas: React.FC<{
     y: 40 + ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat || 1)) * 520,
   });
 
-  const cityPoints = useMemo(
-    () => cities.map(([name, city]) => ({ name, ...project(city.lat, city.lng) })),
-    [cities, bounds]
-  );
-
   const activeTruckPositions = useMemo(() => {
     return trucks.map(truck => {
       const contract = contracts.find(c => c.assignedTruckId === truck.id && c.status === 'in_progress');
@@ -157,96 +157,143 @@ export const RealMapCanvas: React.FC<{
       const origin = CITY_LOCATIONS[contract.origin] || CITY_LOCATIONS['Dallas Logistics'];
       const dest = CITY_LOCATIONS[contract.destination] || CITY_LOCATIONS['Chicago Hub'];
       const ratio = Math.min(0.99, (contract.progressMiles || 0) / (contract.distanceMiles || 1));
-      
-      const currentLat = origin.lat + (dest.lat - origin.lat) * ratio;
-      const currentLng = origin.lng + (dest.lng - origin.lng) * ratio;
+
+      // Re-implementing Quadratic Bezier Curve Math for the truck position
+      const a = project(origin.lat, origin.lng);
+      const b = project(dest.lat, dest.lng);
+      const dx = b.x - a.x;
+      const dy = b.y - a.y;
+      const curve = Math.max(-60, Math.min(60, dx * 0.15));
+      const cx = (a.x + b.x) / 2 - curve;
+      const cy = (a.y + b.y) / 2 + curve;
+
+      const t = ratio;
+      const currentX = (1-t)*(1-t)*a.x + 2*(1-t)*t*cx + t*t*b.x;
+      const currentY = (1-t)*(1-t)*a.y + 2*(1-t)*t*cy + t*t*b.y;
       
       return {
         truckId: truck.id,
-        ...project(currentLat, currentLng),
-        origin: project(origin.lat, origin.lng),
-        dest: project(dest.lat, dest.lng),
+        x: currentX,
+        y: currentY,
+        origin: a,
+        dest: b,
+        cx,
+        cy,
         truck,
         isIdle: false
       };
     });
   }, [trucks, contracts, bounds]);
 
+  // Handle Dragging
+  const handleMouseDown = (e: React.MouseEvent | React.TouchEvent) => {
+    isDragging.current = true;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    lastMousePos.current = { x: clientX, y: clientY };
+  };
+
+  const handleMouseMove = (e: React.MouseEvent | React.TouchEvent) => {
+    if (!isDragging.current) return;
+    const clientX = 'touches' in e ? e.touches[0].clientX : e.clientX;
+    const clientY = 'touches' in e ? e.touches[0].clientY : e.clientY;
+    
+    const dx = (clientX - lastMousePos.current.x) / zoom;
+    const dy = (clientY - lastMousePos.current.y) / zoom;
+    
+    setOffset(prev => ({ x: prev.x + dx, y: prev.y + dy }));
+    lastMousePos.current = { x: clientX, y: clientY };
+  };
+
+  const handleMouseUp = () => {
+    isDragging.current = false;
+  };
+
   return (
-    <div className="relative w-full h-full bg-[#05070a] overflow-hidden rounded-xl border border-slate-900/50">
+    <div className="relative w-full h-full bg-[#05070a] overflow-hidden rounded-xl border border-slate-900/50 cursor-grab active:cursor-grabbing">
       <svg 
+        ref={svgRef}
         viewBox="0 0 1000 600" 
-        className="w-full h-full transform transition-transform duration-500 ease-out origin-center"
-        style={{ transform: `scale(${zoom})` }}
+        className="w-full h-full transform transition-transform duration-300 ease-out origin-center"
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseUp}
+        onTouchStart={handleMouseDown}
+        onTouchMove={handleMouseMove}
+        onTouchEnd={handleMouseUp}
       >
-        {/* Active Transport Corridors (High Contrast / Thin Lines) */}
-        {showRoutes && activeTruckPositions.filter(p => !p.isIdle).map(p => (
-          <g key={`route-${p.truckId}`} opacity="0.4">
-            <line 
-              x1={p.origin?.x} y1={p.origin?.y} x2={p.dest?.x} y2={p.dest?.y}
-              stroke="#1e293b" strokeWidth="1" strokeDasharray="2 2"
-            />
-            <line 
-              x1={p.origin?.x} y1={p.origin?.y} x2={p.x} y2={p.y}
-              stroke="#3b82f6" strokeWidth="1.5"
-            />
-          </g>
-        ))}
-
-        {/* Cities & Logistics Hubs (Simple Circles) */}
-        {cityPoints.map((city) => (
-          <g key={`city-${city.name}`} transform={`translate(${city.x}, ${city.y})`}>
-            <circle r="1.5" fill="#334155" />
-            <circle r="0.8" fill="#94a3b8" />
-            {showLabels && (
-              <text 
-                x="4" y="2" 
-                fill="#475569" 
-                fontSize="6" 
-                fontWeight="600" 
-                fontFamily="monospace"
-                className="pointer-events-none select-none uppercase tracking-tighter"
-              >
-                {labelFor(city.name)}
-              </text>
-            )}
-          </g>
-        ))}
-
-        {/* Live Truck Telemetry Beacons (Ultra-lightweight) */}
-        {activeTruckPositions.map(p => (
-          <g 
-            key={`truck-${p.truckId}`} 
-            transform={`translate(${p.x}, ${p.y})`}
-            onClick={() => onSelectTruck(p.truckId)}
-            className="cursor-pointer group"
-          >
-            {/* Minimal Pulse for Active Only */}
-            {!p.isIdle && (
-              <circle r="6" fill="#10b981" fillOpacity="0.15" className="animate-pulse" />
-            )}
-            
-            <rect 
-              x="-2.5" y="-2.5" width="5" height="5" 
-              fill={p.isIdle ? '#334155' : '#10b981'} 
-              stroke="#fff" strokeWidth="0.5"
-            />
-            
-            {/* HUD Tooltip Overlay (Simple Text) */}
-            <g className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-               <rect x="6" y="-12" width="60" height="20" fill="#000" fillOpacity="0.8" rx="2" />
-               <text x="10" y="-4" fill="#fff" fontSize="5" fontWeight="bold">{p.truck.name}</text>
-               <text x="10" y="4" fill="#94a3b8" fontSize="4">{p.truck.status}</text>
+        <g transform={`scale(${zoom}) translate(${offset.x}, ${offset.y})`}>
+          {/* Active Transport Corridors (Curved Bezier Lanes) */}
+          {showRoutes && activeTruckPositions.filter(p => !p.isIdle).map(p => (
+            <g key={`route-${p.truckId}`} opacity="0.3">
+              <path 
+                d={`M ${p.origin?.x} ${p.origin?.y} Q ${p.cx} ${p.cy} ${p.dest?.x} ${p.dest?.y}`}
+                stroke="#1e293b" strokeWidth="1" fill="none" strokeDasharray="2 2"
+              />
+              <path 
+                d={`M ${p.origin?.x} ${p.origin?.y} Q ${p.cx} ${p.cy} ${p.x} ${p.y}`}
+                stroke="#3b82f6" strokeWidth="1.5" fill="none"
+              />
             </g>
-          </g>
-        ))}
+          ))}
+
+          {/* Cities & Logistics Hubs */}
+          {cities.map(([name, city]) => {
+            const pos = project(city.lat, city.lng);
+            return (
+              <g key={`city-${name}`} transform={`translate(${pos.x}, ${pos.y})`}>
+                <circle r="1.5" fill="#334155" />
+                <circle r="0.8" fill="#94a3b8" />
+                {showLabels && (
+                  <text 
+                    x="4" y="2" 
+                    fill="#475569" 
+                    fontSize="6" 
+                    fontWeight="600" 
+                    fontFamily="monospace"
+                    className="pointer-events-none select-none uppercase tracking-tighter"
+                  >
+                    {labelFor(name)}
+                  </text>
+                )}
+              </g>
+            );
+          })}
+
+          {/* Live Truck Telemetry Beacons */}
+          {activeTruckPositions.map(p => (
+            <g 
+              key={`truck-${p.truckId}`} 
+              transform={`translate(${p.x}, ${p.y})`}
+              onClick={() => onSelectTruck(p.truckId)}
+              className="cursor-pointer group"
+            >
+              {!p.isIdle && (
+                <circle r="6" fill="#10b981" fillOpacity="0.15" className="animate-pulse" />
+              )}
+              
+              <rect 
+                x="-2.5" y="-2.5" width="5" height="5" 
+                fill={p.isIdle ? '#334155' : '#10b981'} 
+                stroke="#fff" strokeWidth="0.5"
+              />
+              
+              <g className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+                 <rect x="6" y="-12" width="60" height="20" fill="#000" fillOpacity="0.8" rx="2" />
+                 <text x="10" y="-4" fill="#fff" fontSize="5" fontWeight="bold">{p.truck.name}</text>
+                 <text x="10" y="4" fill="#94a3b8" fontSize="4">{p.truck.status}</text>
+              </g>
+            </g>
+          ))}
+        </g>
       </svg>
 
-      {/* Map Legend (Minimalist) */}
-      <div className="absolute bottom-2 left-2 flex items-center gap-3 text-[7px] text-slate-500 font-bold uppercase tracking-widest pointer-events-none select-none">
-        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-emerald-500" /> Active</span>
-        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-slate-700" /> Idle</span>
-        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-slate-800 rounded-full" /> Hub</span>
+      {/* Interactive HUD Legend */}
+      <div className="absolute bottom-2 left-2 flex items-center gap-3 text-[7px] text-slate-500 font-bold uppercase tracking-widest pointer-events-none select-none bg-slate-950/40 px-2 py-1 rounded-full backdrop-blur-sm">
+        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-emerald-500" /> Live</span>
+        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-blue-500" /> Corridor</span>
+        <span className="text-slate-600 ml-2">Drag to Pan • Pinch to Zoom</span>
       </div>
     </div>
   );
