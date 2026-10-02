@@ -1250,19 +1250,33 @@ export function App() {
   const handleAssignDriverTruck = (driverId: string, truckId: string | null) => {
     setGameState(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
-      const driver = next.drivers.find(d => d.id === driverId);
-      if (!driver) return prev;
 
-      // Clear prior truck assignment
-      if (driver.assignedTruckId) {
-        const priorTruck = next.trucks.find(t => t.id === driver.assignedTruckId);
-        if (priorTruck) priorTruck.assignedDriverId = null;
+      // Clear any other truck currently referencing this driver
+      next.trucks.forEach(t => {
+        if (t.assignedDriverId === driverId) {
+          t.assignedDriverId = null;
+        }
+      });
+
+      // Clear any other driver currently referencing this target truck
+      if (truckId) {
+        next.drivers.forEach(d => {
+          if (d.assignedTruckId === truckId) {
+            d.assignedTruckId = null;
+          }
+        });
       }
 
-      driver.assignedTruckId = truckId;
+      const driver = next.drivers.find(d => d.id === driverId);
+      if (driver) {
+        driver.assignedTruckId = truckId;
+      }
+
       if (truckId) {
-        const newTruck = next.trucks.find(t => t.id === truckId);
-        if (newTruck) newTruck.assignedDriverId = driverId;
+        const truck = next.trucks.find(t => t.id === truckId);
+        if (truck) {
+          truck.assignedDriverId = driverId;
+        }
       }
 
       return next;

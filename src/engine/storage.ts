@@ -319,6 +319,46 @@ export function loadGameStateFromStorage(): GameSaveState | null {
         });
       }
 
+      // Sanitize 1-to-1 Truck & Driver Assignments
+      if (Array.isArray(parsed.trucks) && Array.isArray(parsed.drivers)) {
+        const assignedDrivers = new Set<string>();
+        parsed.trucks.forEach(t => {
+          if (t && t.assignedDriverId) {
+            if (assignedDrivers.has(t.assignedDriverId)) {
+              t.assignedDriverId = null;
+            } else {
+              assignedDrivers.add(t.assignedDriverId);
+            }
+          }
+        });
+
+        const assignedTrucks = new Set<string>();
+        parsed.drivers.forEach(d => {
+          if (d && d.assignedTruckId) {
+            if (assignedTrucks.has(d.assignedTruckId)) {
+              d.assignedTruckId = null;
+            } else {
+              assignedTrucks.add(d.assignedTruckId);
+            }
+          }
+        });
+
+        parsed.trucks.forEach(t => {
+          if (t && t.assignedDriverId) {
+            const d = parsed.drivers.find(x => x && x.id === t.assignedDriverId);
+            if (d) d.assignedTruckId = t.id;
+            else t.assignedDriverId = null;
+          }
+        });
+        parsed.drivers.forEach(d => {
+          if (d && d.assignedTruckId) {
+            const t = parsed.trucks.find(x => x && x.id === d.assignedTruckId);
+            if (t) t.assignedDriverId = d.id;
+            else d.assignedTruckId = null;
+          }
+        });
+      }
+
       if (Array.isArray(parsed.drivers)) {
         parsed.drivers.forEach(d => {
           if (!d) return;
