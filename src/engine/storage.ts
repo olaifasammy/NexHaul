@@ -163,7 +163,40 @@ export function getInitialGameState(): GameSaveState {
     totalSalariesPaid: 0,
     totalTaxesPaid: 0,
     totalLoanInterestPaid: 0,
-    totalPenaltiesPaid: 0
+    totalPenaltiesPaid: 0,
+    regionalHubs: {
+      'America': { region: 'America', hubName: 'Dallas Central Logistics HQ', cityName: 'Dallas, TX', cost: 0, levelRequirement: 1, isUnlocked: true, description: 'Primary North American headquarters and dispatch center.' },
+      'Europe': { region: 'Europe', hubName: 'Rotterdam EuroPort Terminal', cityName: 'Rotterdam, NL', cost: 250000, levelRequirement: 3, isUnlocked: false, description: 'European continental freight hub and COE fleet terminal.' },
+      'Africa': { region: 'Africa', hubName: 'Cairo Trans-African Gateway', cityName: 'Cairo, EG', cost: 300000, levelRequirement: 4, isUnlocked: false, description: 'North & Sub-Saharan trade corridor operations hub.' },
+      'Asia': { region: 'Asia', hubName: 'Singapore Maritime & Express Hub', cityName: 'Singapore', cost: 400000, levelRequirement: 5, isUnlocked: false, description: 'East Asian expressway and high-density corridor terminal.' },
+      'Electric EV': { region: 'Electric EV', hubName: 'Silicon Valley Megawatt Depot', cityName: 'San Jose, CA', cost: 150000, levelRequirement: 2, isUnlocked: false, description: 'Dedicated zero-emission megacharging and electric EV fleet depot.' }
+    },
+    cryptoMarket: {
+      assets: {
+        BTC: { symbol: 'BTC', name: 'Bitcoin', price: 65430.00, basePrice: 64000.00, change24h: 3.4, high24h: 66800.00, low24h: 63100.00, volume24h: 28450120, priceHistory: [63500, 63800, 64200, 64800, 65100, 65430], trend: 'rising', description: 'The decentralized digital gold standard of global finance.' },
+        ETH: { symbol: 'ETH', name: 'Ethereum', price: 3480.00, basePrice: 3400.00, change24h: 5.1, high24h: 3550.00, low24h: 3310.00, volume24h: 14120400, priceHistory: [3320, 3360, 3410, 3450, 3480], trend: 'rising', description: 'Smart contract platform powering decentralized logistics networks.' },
+        TRCK: { symbol: 'TRCK', name: 'TruckCoin', price: 1.45, basePrice: 1.20, change24h: 18.4, high24h: 1.52, low24h: 1.18, volume24h: 5240000, priceHistory: [1.20, 1.25, 1.32, 1.40, 1.45], trend: 'rising', description: 'Native utility token for automated fleet smart contracts and autonomous corridor tolling.' },
+        HAUL: { symbol: 'HAUL', name: 'HaulerDAO', price: 14.20, basePrice: 13.50, change24h: -1.2, high24h: 15.10, low24h: 13.80, volume24h: 3150000, priceHistory: [14.80, 14.60, 14.30, 14.10, 14.20], trend: 'falling', description: 'Governance and liquidity staking token for interstate freight syndicates.' },
+        SOL: { symbol: 'SOL', name: 'Solana', price: 192.50, basePrice: 180.00, change24h: 8.7, high24h: 198.00, low24h: 179.00, volume24h: 12890000, priceHistory: [178, 181, 185, 189, 192.5], trend: 'rising', description: 'High-throughput ultra-low-latency blockchain for instant GPS freight escrow.' },
+        BDSL: { symbol: 'BDSL', name: 'BitDiesel', price: 2.85, basePrice: 2.60, change24h: 4.2, high24h: 2.95, low24h: 2.72, volume24h: 1940000, priceHistory: [2.65, 2.70, 2.78, 2.82, 2.85], trend: 'rising', description: 'Synthetic commodity token pegged to global bulk diesel refinery futures.' },
+        USDT: { symbol: 'USDT', name: 'Tether USD', price: 1.00, basePrice: 1.00, change24h: 0.0, high24h: 1.01, low24h: 0.99, volume24h: 45000000, priceHistory: [1.00, 1.00, 1.00, 1.00, 1.00], trend: 'stable', description: 'USD-pegged stablecoin for rapid liquidity positioning.' },
+        DOGE: { symbol: 'DOGE', name: 'Dogecoin', price: 0.18, basePrice: 0.15, change24h: 14.2, high24h: 0.19, low24h: 0.14, volume24h: 8900000, priceHistory: [0.15, 0.16, 0.17, 0.175, 0.18], trend: 'rising', description: 'The ultimate meme currency accepted by select truck stops.' },
+        AVAX: { symbol: 'AVAX', name: 'Avalanche', price: 32.40, basePrice: 30.00, change24h: 6.8, high24h: 33.50, low24h: 29.80, volume24h: 4120000, priceHistory: [29.5, 30.2, 31.0, 31.8, 32.4], trend: 'rising', description: 'Subnet blockchain architecture for regional supply chain tracking.' },
+        LINK: { symbol: 'LINK', name: 'Chainlink', price: 18.20, basePrice: 17.50, change24h: 2.4, high24h: 18.90, low24h: 17.20, volume24h: 2850000, priceHistory: [17.4, 17.7, 17.9, 18.0, 18.2], trend: 'rising', description: 'Decentralized oracle network feeding real-time highway IoT sensor data.' },
+        RENDER: { symbol: 'RENDER', name: 'Render Network', price: 8.45, basePrice: 7.80, change24h: 9.1, high24h: 8.80, low24h: 7.60, volume24h: 3400000, priceHistory: [7.7, 7.9, 8.1, 8.3, 8.45], trend: 'rising', description: 'GPU compute power network powering autonomous self-driving truck AI.' },
+        XRP: { symbol: 'XRP', name: 'Ripple', price: 0.58, basePrice: 0.55, change24h: 1.5, high24h: 0.60, low24h: 0.54, volume24h: 6100000, priceHistory: [0.55, 0.56, 0.57, 0.575, 0.58], trend: 'stable', description: 'Institutional cross-border settlement rails for international freight.' },
+        POL: { symbol: 'POL', name: 'Polygon', price: 0.72, basePrice: 0.65, change24h: 4.5, high24h: 0.75, low24h: 0.64, volume24h: 4800000, priceHistory: [0.66, 0.68, 0.70, 0.71, 0.72], trend: 'rising', description: 'Layer-2 scaling network for instant zero-fee corridor toll micro-payments.' },
+        SUI: { symbol: 'SUI', name: 'Sui Network', price: 2.10, basePrice: 1.90, change24h: 12.8, high24h: 2.20, low24h: 1.85, volume24h: 7200000, priceHistory: [1.92, 1.98, 2.04, 2.08, 2.10], trend: 'rising', description: 'High-performance parallel execution chain for autonomous freight routing.' },
+        SHIB: { symbol: 'SHIB', name: 'ShibaHauler', price: 0.000028, basePrice: 0.000025, change24h: 7.4, high24h: 0.000030, low24h: 0.000024, volume24h: 9500000, priceHistory: [0.000025, 0.000026, 0.000027, 0.0000275, 0.000028], trend: 'rising', description: 'Community meme token adopted by independent cross-country owner-operators.' },
+        BNB: { symbol: 'BNB', name: 'Binance Coin', price: 610.00, basePrice: 590.00, change24h: 2.1, high24h: 625.00, low24h: 585.00, volume24h: 15400000, priceHistory: [592, 598, 604, 608, 610], trend: 'rising', description: 'Global utility token for decentralized fuel station and depot settlement.' }
+      },
+      holdings: {},
+      tradeHistory: [],
+      newsFeed: [
+        { id: 'news-1', timestamp: Date.now() - 3600000, headline: 'Whale wallet accumulates 50,000 TruckCoin ($TRCK) on decentralized exchange.', impactSymbol: 'TRCK', impactPercent: 8.5, source: 'CryptoLogistics Wire' },
+        { id: 'news-2', timestamp: Date.now() - 7200000, headline: 'Global refinery bottleneck spikes synthetic BitDiesel ($BDSL) token futures.', impactSymbol: 'BDSL', impactPercent: 4.2, source: 'Terminal Alpha' }
+      ]
+    }
   };
 }
 
@@ -278,6 +311,32 @@ export function loadGameStateFromStorage(): GameSaveState | null {
         ];
       }
 
+      const defaultCryptoAssets = getInitialGameState().cryptoMarket.assets;
+      if (!parsed.cryptoMarket) {
+        parsed.cryptoMarket = getInitialGameState().cryptoMarket;
+      } else {
+        if (!parsed.cryptoMarket.assets) parsed.cryptoMarket.assets = {};
+        for (const [sym, ast] of Object.entries(defaultCryptoAssets)) {
+          if (!parsed.cryptoMarket.assets[sym]) {
+            parsed.cryptoMarket.assets[sym] = ast;
+          }
+        }
+        if (!parsed.cryptoMarket.holdings) parsed.cryptoMarket.holdings = {};
+        if (!parsed.cryptoMarket.tradeHistory) parsed.cryptoMarket.tradeHistory = [];
+        if (!parsed.cryptoMarket.newsFeed) parsed.cryptoMarket.newsFeed = [];
+      }
+
+      const defaultHubs = getInitialGameState().regionalHubs;
+      if (!parsed.regionalHubs) {
+        parsed.regionalHubs = defaultHubs;
+      } else {
+        for (const [reg, hubInfo] of Object.entries(defaultHubs)) {
+          if (!parsed.regionalHubs[reg as TruckRegion]) {
+            parsed.regionalHubs[reg as TruckRegion] = hubInfo;
+          }
+        }
+      }
+
       if (parsed.stats.totalTollsPaid === undefined) parsed.stats.totalTollsPaid = 0;
       if (parsed.stats.totalFinesPaid === undefined) parsed.stats.totalFinesPaid = 0;
       if (!parsed.stats.revenueHistory) parsed.stats.revenueHistory = [];
@@ -299,6 +358,7 @@ export function loadGameStateFromStorage(): GameSaveState | null {
           if (!t) return;
           if (!t.currentCity) t.currentCity = 'HQ Depot';
           if (!t.status) t.status = 'idle';
+          if (!t.stationedHub) t.stationedHub = t.region || 'America';
           if (t.odometerMiles === undefined) t.odometerMiles = 0;
           if (t.hasInsurance === undefined) t.hasInsurance = true;
           if (!t.insuranceTier) t.insuranceTier = t.hasInsurance ? 'Standard Collision' : 'None';

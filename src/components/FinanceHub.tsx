@@ -30,10 +30,16 @@ export const FinanceHub: React.FC<FinanceHubProps> = ({ state, onTakeLoan, onRep
   const workingRate = getInterestRate(0.085);
   const expansionRate = getInterestRate(0.055);
 
+  const cryptoAssetsValue = Object.entries(state.cryptoMarket?.holdings || {}).reduce((sum, [sym, h]) => {
+    const ast = state.cryptoMarket?.assets[sym];
+    return sum + (ast ? h.amount * ast.price : 0);
+  }, 0);
+
   const totalAssets = state.cash + 
     state.trucks.reduce((sum, t) => sum + (t.price || 50000), 0) +
     state.trailers.reduce((sum, t) => sum + (t.price || 15000), 0) +
-    (state.bulkFuelReserveLitres * 1.2);
+    (state.bulkFuelReserveLitres * 1.2) +
+    cryptoAssetsValue;
 
   const totalLiabilities = state.loans.reduce((sum, l) => sum + l.remainingBalance, 0);
   const netEquity = totalAssets - totalLiabilities;

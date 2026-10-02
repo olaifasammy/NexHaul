@@ -22,6 +22,7 @@ interface HQDepotProps {
   onFireStaff: (staffId: string) => void;
   onUpgradeStructure: (newStructure: 'Sole Proprietorship' | 'LLC' | 'Corporation' | 'Publicly Traded (IPO)') => void;
   onUnlockRegion: (region: TruckRegion) => void;
+  onBuyRegionalHub: (region: TruckRegion) => void;
   onBuyHeavyHaulPermit: (region: TruckRegion) => void;
   onResetSave: () => void;
   onImportSave: (newState: GameSaveState) => void;
@@ -50,7 +51,9 @@ export const HQDepot: React.FC<HQDepotProps> = ({
   onAcceptInvestor, onLaunchIPO, onPayDividend, onClaimMilestone,
   onHireDriver, onRestDriver, onBonusDriver, onFireDriver, onAssignDriverTruck, onRaiseDriverPay,
   onToggleAutoDispatch,
-  onNewGame, onSwitchGame, onDeleteGame
+  onNewGame, onSwitchGame, onDeleteGame,
+  onUnlockRegion,
+  onBuyRegionalHub
 }) => {
   const [subTab, setSubTab] = useState<HQSubTab>('profile');
   const [staffSubTab, setStaffSubTab] = useState<'office' | 'drivers'>('office');
@@ -167,48 +170,50 @@ export const HQDepot: React.FC<HQDepotProps> = ({
             })}
           </div>
 
-          {/* Region Permits Section */}
+          {/* Regional Hubs & Terminals Section */}
           <div className="bg-slate-900 border border-slate-800 rounded-2xl p-5 shadow-lg space-y-4 mt-6">
             <div className="border-b border-slate-800 pb-3">
               <h3 className="font-bold text-white text-base flex items-center space-x-2">
                 <Globe className="w-4 h-4 text-blue-400" />
-                <span>International Logistics Permits</span>
+                <span>Regional Logistics Hubs & Terminals</span>
               </h3>
-              <p className="text-[10px] text-slate-400 mt-0.5">Secure regional operating licenses to expand your freight network globally.</p>
+              <p className="text-[10px] text-slate-400 mt-0.5">Establish physical continental terminals to station trucks and operate freight routes in different regions.</p>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-              {regionPermits.map((permit) => {
-                const isUnlocked = state.unlockedRegions.includes(permit.id);
-                const canAfford = state.cash >= permit.cost;
-                const levelMet = state.companyLevel >= permit.level;
-                
+              {Object.values(state.regionalHubs || {}).map((hub) => {
+                const isUnlocked = hub.isUnlocked;
+                const canAfford = state.cash >= hub.cost;
+                const levelMet = state.companyLevel >= hub.levelRequirement;
+
                 return (
-                  <div key={permit.id} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
+                  <div key={hub.region} className="bg-slate-950 p-4 rounded-xl border border-slate-800 space-y-3">
                     <div className="flex items-center justify-between">
-                      <div className="font-bold text-white text-xs">{permit.label}</div>
+                      <div>
+                        <div className="font-bold text-white text-xs">{hub.hubName}</div>
+                        <div className="text-[9px] text-blue-400 font-mono">{hub.cityName} ({hub.region})</div>
+                      </div>
                       {isUnlocked ? (
                         <span className="text-[10px] font-bold text-emerald-400 bg-emerald-500/10 px-2 py-0.5 rounded border border-emerald-500/30 flex items-center gap-1">
-                          <CheckCircle className="w-3 h-3" /> Active
+                          <CheckCircle className="w-3 h-3" /> Active HQ
                         </span>
                       ) : (
-                        <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Locked</span>
+                        <span className="text-[10px] font-bold text-slate-400 bg-slate-800 px-2 py-0.5 rounded">Terminal Locked</span>
                       )}
                     </div>
-                    <p className="text-[10px] text-slate-400 leading-relaxed">{permit.description}</p>
-                    
+                    <p className="text-[10px] text-slate-400 leading-relaxed">{hub.description}</p>
+
                     {!isUnlocked && (
                       <div className="pt-2 border-t border-slate-800 flex items-center justify-between">
                         <div className="space-y-0.5">
-                          <div className={`text-xs font-bold font-mono ${canAfford ? 'text-emerald-400' : 'text-rose-400'}`}>${permit.cost.toLocaleString()}</div>
-                          <div className={`text-[9px] font-bold ${levelMet ? 'text-blue-400' : 'text-slate-500'}`}>Req. Level {permit.level}</div>
+                          <div className={`text-xs font-bold font-mono ${canAfford ? 'text-emerald-400' : 'text-rose-400'}`}>${hub.cost.toLocaleString()}</div>
+                          <div className={`text-[9px] font-bold ${levelMet ? 'text-blue-400' : 'text-slate-500'}`}>Req. Level {hub.levelRequirement}</div>
                         </div>
                         <button
-                          onClick={() => onUnlockRegion(permit.id)}
-                          disabled={!canAfford || !levelMet}
-                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] rounded-lg transition disabled:opacity-30"
+                          onClick={() => onBuyRegionalHub(hub.region)}
+                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-[10px] rounded-lg transition"
                         >
-                          Buy Permit
+                          Establish Terminal
                         </button>
                       </div>
                     )}

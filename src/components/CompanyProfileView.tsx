@@ -57,7 +57,11 @@ export const CompanyProfileView: React.FC<CompanyProfileViewProps> = ({ state, o
   const trailerValue = state.trailers.reduce((sum, t) => sum + (t.price || 30000) * Math.max(0.6, (t.conditionPercent ?? 100) / 100), 0);
   const fuelReserveValue = Math.floor((state.bulkFuelReserveLitres || 0) * (state.currentDieselMarketPrice || 1.45));
   const depotInfrastructureValue = ((state.depot?.repairBayLevel || 1) * 35000) + ((state.depot?.fuelTerminalLevel || 1) * 25000);
-  const totalEnterpriseAssets = state.cash + fleetValue + trailerValue + fuelReserveValue + depotInfrastructureValue;
+  const cryptoAssetsValue = Object.entries(state.cryptoMarket?.holdings || {}).reduce((sum, [sym, h]) => {
+    const ast = state.cryptoMarket?.assets[sym];
+    return sum + (ast ? h.amount * ast.price : 0);
+  }, 0);
+  const totalEnterpriseAssets = state.cash + fleetValue + trailerValue + fuelReserveValue + depotInfrastructureValue + cryptoAssetsValue;
 
   const totalPayloadCapacityTons = state.trailers.reduce((sum, tr) => sum + (tr.capacityTons || 24), 0);
   const fleetAvgCondition = state.trucks.length > 0

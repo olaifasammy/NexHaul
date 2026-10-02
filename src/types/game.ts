@@ -47,7 +47,10 @@ export interface Truck {
 
   // Realism States
   currentCity: string;
-  status: 'idle' | 'in_transit' | 'deadheading' | 'resting' | 'fueling' | 'breakdown' | 'maintenance';
+  status: 'idle' | 'in_transit' | 'deadheading' | 'resting' | 'fueling' | 'breakdown' | 'maintenance' | 'shipping';
+  stationedHub: TruckRegion;
+  shippingSecondsRemaining?: number;
+  destinationHub?: TruckRegion;
   odometerMiles: number;
   hasInsurance: boolean;
   insuranceTier: InsuranceCoverageTier;
@@ -323,6 +326,64 @@ export interface FuelDelivery {
   totalCost: number;
 }
 
+export interface CryptoAsset {
+  symbol: string;
+  name: string;
+  price: number;
+  basePrice: number;
+  change24h: number;
+  high24h: number;
+  low24h: number;
+  volume24h: number;
+  priceHistory: number[];
+  trend: 'rising' | 'falling' | 'stable';
+  description: string;
+}
+
+export interface CryptoHolding {
+  symbol: string;
+  amount: number;
+  totalInvested: number;
+  averageBuyPrice: number;
+}
+
+export interface CryptoTradeRecord {
+  id: string;
+  timestamp: number;
+  symbol: string;
+  type: 'buy' | 'sell';
+  amount: number;
+  price: number;
+  totalUsd: number;
+  feeUsd: number;
+}
+
+export interface CryptoNewsItem {
+  id: string;
+  timestamp: number;
+  headline: string;
+  impactSymbol?: string;
+  impactPercent?: number;
+  source: string;
+}
+
+export interface CryptoMarketState {
+  assets: Record<string, CryptoAsset>;
+  holdings: Record<string, CryptoHolding>;
+  tradeHistory: CryptoTradeRecord[];
+  newsFeed: CryptoNewsItem[];
+}
+
+export interface RegionalHubInfo {
+  region: TruckRegion;
+  hubName: string;
+  cityName: string;
+  cost: number;
+  levelRequirement: number;
+  isUnlocked: boolean;
+  description: string;
+}
+
 export interface ShipperRetainer {
   id: string;
   shipperName: string;
@@ -408,4 +469,10 @@ export interface GameSaveState {
     revenueHistory: number[];
     expenseHistory: number[];
   };
+
+  // Real Crypto Market Exchange & Portfolio
+  // Regional Hubs & Continental Terminals (Realism: Buy physical hub to operate in region)
+  regionalHubs: Record<TruckRegion, RegionalHubInfo>;
+
+  cryptoMarket: CryptoMarketState;
 }

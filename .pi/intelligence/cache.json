@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T02:27:01.200Z",
+    "scannedAt": "2026-10-02T08:21:39.047Z",
     "git": {
       "branch": "main",
-      "commit": "664d34534969cf2535d3d362b77276f9ae37e1e8",
-      "dirty": false
+      "commit": "8eebe49c8866634fb6620650014b4437ad7683e1",
+      "dirty": true
     },
     "languages": {
       "JSON": 6,
@@ -75,9 +75,9 @@
       },
       {
         "path": "src/App.tsx",
-        "size": 84568,
-        "mtimeMs": 1790905829711.9368,
-        "hash": "0fd957ea3326f95adc790cc6f268a91011fd834b9dc64918f0b3e4cfc198e5f5",
+        "size": 92288,
+        "mtimeMs": 1790927536495.9211,
+        "hash": "d201f1ee7639832fde9efaa2b0d2caa18129569287f31d2d0e8228ab0c913d8c",
         "language": "TypeScript React",
         "imports": [
           "./components/Dashboard",
@@ -114,9 +114,9 @@
       },
       {
         "path": "src/components/CompanyProfileView.tsx",
-        "size": 27242,
-        "mtimeMs": 1790889533295.9485,
-        "hash": "a54eacabc440f59839acd45b9950f8b0cbee2d49876f37742deed2bb6ec5b69c",
+        "size": 27478,
+        "mtimeMs": 1790924402895.9236,
+        "hash": "bd4bdb7dcf7480ae16de40290597d027c771a26e21c58ef47d8c050bcfd33a4f",
         "language": "TypeScript React",
         "imports": [
           "../types/game",
@@ -195,9 +195,9 @@
       },
       {
         "path": "src/components/FinanceHub.tsx",
-        "size": 21754,
-        "mtimeMs": 1790592607667.4084,
-        "hash": "6712cd2add472c3a72380a3d0e848c1b7e0c89da209942908091c58eeb97e6c8",
+        "size": 21995,
+        "mtimeMs": 1790924394171.9236,
+        "hash": "cf6eaaa718e8b8ac14edbcbbff3ea2927ca4bb17b4fc1d60f222555245fec4f2",
         "language": "TypeScript React",
         "imports": [
           "../types/game",
@@ -211,9 +211,9 @@
       },
       {
         "path": "src/components/FleetManager.tsx",
-        "size": 47821,
-        "mtimeMs": 1790904201475.938,
-        "hash": "20b694c4b774084e8f93049d5ec707d0de7ffd0bc027f92a4e71fbe182e904a6",
+        "size": 50658,
+        "mtimeMs": 1790927613295.9211,
+        "hash": "cee50032b1e9f88c60b5df5af652de8a951fd919b1eaa036180109c113411e90",
         "language": "TypeScript React",
         "imports": [
           "../engine/maintenancePricing",
@@ -267,9 +267,9 @@
       },
       {
         "path": "src/components/HQDepot.tsx",
-        "size": 18162,
-        "mtimeMs": 1790891508743.947,
-        "hash": "27e97a57761b9fb3e798e9d9acb27a3a77d257878c2c4ff6d3884631cce45eff",
+        "size": 18378,
+        "mtimeMs": 1790926761539.9219,
+        "hash": "bb72d741a6eef911083c69bb3f155ac0a878c7e5bd8360cfb3e8110b45d0090b",
         "language": "TypeScript React",
         "imports": [
           "../config/simulation",
@@ -354,9 +354,9 @@
       },
       {
         "path": "src/components/MarketHub.tsx",
-        "size": 41430,
-        "mtimeMs": 1790778220994.8857,
-        "hash": "e27d0aecfd65c147094f68ca76d3b717be1c49cba003791a59472bbd43a95cad",
+        "size": 65506,
+        "mtimeMs": 1790924373175.9236,
+        "hash": "7e11f59755eecd1654c23c0f785c84dbba243880612c6f70eb158901f0da0db3",
         "language": "TypeScript React",
         "imports": [
           "../data/trailers",
@@ -414,9 +414,9 @@
       },
       {
         "path": "src/components/RealMapCanvas.tsx",
-        "size": 13518,
-        "mtimeMs": 1790907905847.9353,
-        "hash": "d255e19d642f7dea4a6639b0257d55e62bedfcfa0c470208a502a6424b648881",
+        "size": 15349,
+        "mtimeMs": 1790908065839.935,
+        "hash": "ff1411e0ef124d25d425793bb49480692cb672710be979e219be5f644b1edda7",
         "language": "TypeScript React",
         "imports": [
           "../types/game",
@@ -782,9 +782,9 @@
       },
       {
         "path": "src/engine/jurisdiction.ts",
-        "size": 10584,
-        "mtimeMs": 1790881740063.954,
-        "hash": "9a91664f2da76727ef07ab3afd5ae34dd9c62d2d73c232e0f528483f8cf78f31",
+        "size": 11454,
+        "mtimeMs": 1790927322651.9214,
+        "hash": "4c3b804914d7c91d9788a568f7b6ff5022e2936ff7c3368af09f98ff1fe10d05",
         "language": "TypeScript",
         "imports": [
           "../config/simulation",
@@ -818,9 +818,9 @@
       },
       {
         "path": "src/engine/simulation.ts",
-        "size": 80626,
-        "mtimeMs": 1790906292035.9365,
-        "hash": "d7becd06b8bc665ac1dedf4f7f95ad92bf283a6f7bd17185b4f328ea6b790bae",
+        "size": 88986,
+        "mtimeMs": 1790927396251.9214,
+        "hash": "6e6f5e8302a08b0891681bf07fb5d91f73db8437c6bb2541bbf171e98a7f9db4",
         "language": "TypeScript",
         "imports": [
           "../config/simulation",
@@ -844,9 +844,9 @@
       },
       {
         "path": "src/engine/storage.ts",
-        "size": 17977,
-        "mtimeMs": 1790905804935.9368,
-        "hash": "278436422e5733223ae1bd5954b797c90c24ac6ed8611818fdccb1dc5d0d3a0d",
+        "size": 25745,
+        "mtimeMs": 1790927422111.9214,
+        "hash": "c7924eb288eda691ca55b349c13c3de4c23b495b67162d2c5b3ed1d01a8931ae",
         "language": "TypeScript",
         "imports": [
           "../data/contracts",
@@ -880,9 +880,9 @@
       },
       {
         "path": "src/types/game.ts",
-        "size": 11416,
-        "mtimeMs": 1790906734435.936,
-        "hash": "c2290afc23480a2148cdb6e07bf8b137ceb3954ccc709676370b430848c10a09",
+        "size": 12885,
+        "mtimeMs": 1790927289015.9214,
+        "hash": "86069b6719edf7cb7435cb12623a6edf80dabc469029d1ea28f3eea4744e06f7",
         "language": "TypeScript",
         "imports": [],
         "exports": [
@@ -893,6 +893,11 @@
           "CompanyProfile",
           "Contract",
           "CorporateStructureType",
+          "CryptoAsset",
+          "CryptoHolding",
+          "CryptoMarketState",
+          "CryptoNewsItem",
+          "CryptoTradeRecord",
           "DepotUpgrade",
           "Driver",
           "DriverTrait",
@@ -906,6 +911,7 @@
           "OfficeStaff",
           "OfflineProgressSummary",
           "PlayerSkill",
+          "RegionalHubInfo",
           "RoadEventLog",
           "ShipperRetainer",
           "StaffRole",
@@ -1869,6 +1875,11 @@
           "CompanyProfile",
           "Contract",
           "CorporateStructureType",
+          "CryptoAsset",
+          "CryptoHolding",
+          "CryptoMarketState",
+          "CryptoNewsItem",
+          "CryptoTradeRecord",
           "DepotUpgrade",
           "Driver",
           "DriverTrait",
@@ -1882,6 +1893,7 @@
           "OfficeStaff",
           "OfflineProgressSummary",
           "PlayerSkill",
+          "RegionalHubInfo",
           "RoadEventLog",
           "ShipperRetainer",
           "StaffRole",
@@ -2675,10 +2687,8 @@
   },
   "changes": {
     "added": [],
-    "changed": [
-      "src/components/RealMapCanvas.tsx"
-    ],
+    "changed": [],
     "deleted": [],
-    "unchanged": 59
+    "unchanged": 60
   }
 }

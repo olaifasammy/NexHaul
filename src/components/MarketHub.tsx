@@ -37,6 +37,8 @@ interface MarketHubProps {
   onBuyTrailer: (
     trailerModel: typeof CATALOG_TRAILERS[0]
   ) => void;
+  onBuyCrypto: (symbol: string, usdAmount: number) => void;
+  onSellCrypto: (symbol: string, coinAmount: number) => void;
 }
 
 type MarketTab =
@@ -100,6 +102,8 @@ export const MarketHub: React.FC<MarketHubProps> = ({
   state,
   onBuyTruck,
   onBuyTrailer,
+  onBuyCrypto,
+  onSellCrypto,
 }) => {
   const [activeTab, setActiveTab] =
     useState<MarketTab>('overview');
@@ -118,6 +122,12 @@ export const MarketHub: React.FC<MarketHubProps> = ({
 
   const [showFilters, setShowFilters] =
     useState(false);
+
+  // Crypto tab local state
+  const [selectedCryptoSymbol, setSelectedCryptoSymbol] = useState<string>('BTC');
+  const [cryptoTradeType, setCryptoTradeType] = useState<'buy' | 'sell'>('buy');
+  const [cryptoTradeInput, setCryptoTradeInput] = useState<string>('');
+  const [hoveredPoint, setHoveredPoint] = useState<{ val: number; index: number } | null>(null);
 
   const toggleFavorite = (id: string) => {
     setFavorites((current) =>
@@ -630,56 +640,454 @@ export const MarketHub: React.FC<MarketHubProps> = ({
         {/* =========================================================
             CRYPTO
         ========================================================= */}
-        {activeTab === 'crypto' && (
-          <div className="mt-4 space-y-4">
+        {activeTab === 'crypto' && (() => {
+          const cryptoMarket = state.cryptoMarket || { assets: {}, holdings: {}, tradeHistory: [], newsFeed: [] };
+          const assets = cryptoMarket.assets || {};
+          const holdings = cryptoMarket.holdings || {};
+          const activeAsset = assets[selectedCryptoSymbol] || Object.values(assets)[0] || {
+            symbol: 'BTC',
+            name: 'Bitcoin',
+            price: 65000,
+            basePrice: 64000,
+            change24h: 3.4,
+            high24h: 66000,
+            low24h: 63000,
+            volume24h: 10000000,
+            priceHistory: [64000, 64500, 65000],
+            trend: 'rising',
+            description: 'Digital asset'
+          };
 
-            <section className="relative overflow-hidden rounded-3xl border border-amber-400/10 bg-gradient-to-br from-[#171208] via-[#0d0e12] to-[#090c12] p-6 sm:p-8">
+          const activeHolding = holdings[activeAsset.symbol];
+          const ownedAmount = activeHolding ? activeHolding.amount : 0;
 
-              <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl" />
+          // Calculate Total Portfolio Value & P&L
+          let totalPortfolioValue = 0;
+          let totalPortfolioInvested = 0;
+          Object.entries(holdings).forEach(([sym, h]) => {
+            const ast = assets[sym];
+            if (ast && h) {
+              totalPortfolioValue += h.amount * ast.price;
+              totalPortfolioInvested += h.totalInvested;
+            }
+          });
+          const totalPortfolioPnL = totalPortfolioValue - totalPortfolioInvested;
+          const totalPortfolioPnLPct = totalPortfolioInvested > 0 ? (totalPortfolioPnL / totalPortfolioInvested) * 100 : 0;
 
-              <div className="relative">
-                <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-400/20 bg-amber-400/10">
-                  <Coins className="h-6 w-6 text-amber-400" />
+          const handleExecuteTrade = () => {
+            const val = parseFloat(cryptoTradeInput);
+            if (isNaN(val) || val <= 0) return;
+
+            if (cryptoTradeType === 'buy') {
+              if (state.cash < val) return;
+              onBuyCrypto(activeAsset.symbol, val);
+            } else {
+              let coinAmountToSell = val;
+              // If user entered a USD value instead of coin units, auto-convert USD to coins
+              if (val > ownedAmount && val <= (ownedAmount * activeAsset.price)) {
+                coinAmountToSell = val / activeAsset.price;
+              }
+              if (ownedAmount < coinAmountToSell) return;
+              onSellCrypto(activeAsset.symbol, coinAmountToSell);
+            }
+            setCryptoTradeInput('');
+          };
+
+          const setQuickPercentage = (pct: number) => {
+            if (cryptoTradeType === 'buy') {
+              const targetUsd = (state.cash * pct);
+              setCryptoTradeInput(targetUsd.toFixed(2));
+            } else {
+              const targetCoin = (ownedAmount * pct);
+              setCryptoTradeInput(targetCoin.toFixed(6));
+            }
+          };
+
+          return (
+            <div className="mt-4 space-y-4">
+
+              {/* Crypto Header Metrics */}
+              <section className="grid grid-cols-2 gap-3 lg:grid-cols-4">
+                <MetricCard
+                  label="Crypto Portfolio"
+                  value={formatMoney(totalPortfolioValue)}
+                  icon={<Coins />}
+                  accent="amber"
+                />
+                <MetricCard
+                  label="Unrealized P&L"
+                  value={`${totalPortfolioPnL >= 0 ? '+' : ''}${formatMoney(totalPortfolioPnL)} (${totalPortfolioPnLPct.toFixed(1)}%)`}
+                  icon={<TrendingUp />}
+                  accent={totalPortfolioPnL >= 0 ? 'emerald' : 'amber'}
+                />
+                <MetricCard
+                  label="Available Cash"
+                  value={formatMoney(state.cash)}
+                  icon={<Wallet />}
+                  accent="emerald"
+                />
+                <MetricCard
+                  label="24h Exchange Vol"
+                  value={formatCompactMoney(Object.values(assets).reduce((acc: number, a: any) => acc + (a.volume24h || 0), 0))}
+                  icon={<BarChart3 />}
+                  accent="blue"
+                />
+              </section>
+
+              {/* Top 24h Rise / Fall Ticker Bar */}
+              {(() => {
+                const list = Object.values(assets) as any[];
+                if (list.length === 0) return null;
+                const sorted = [...list].sort((a, b) => b.change24h - a.change24h);
+                const topGainer = sorted[0];
+                const topLoser = sorted[sorted.length - 1];
+
+                return (
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                    <div className="flex items-center justify-between p-3 rounded-2xl border border-emerald-500/20 bg-emerald-500/5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-8 w-8 rounded-xl bg-emerald-500/10 flex items-center justify-center text-emerald-400 font-black text-xs">🚀</div>
+                        <div>
+                          <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Top 24h Gainer</p>
+                          <p className="text-xs font-black text-white">{topGainer.name} ({topGainer.symbol})</p>
+                        </div>
+                      </div>
+                      <span className="font-mono text-xs font-black text-emerald-400">+{topGainer.change24h}%</span>
+                    </div>
+
+                    <div className="flex items-center justify-between p-3 rounded-2xl border border-rose-500/20 bg-rose-500/5">
+                      <div className="flex items-center gap-2.5">
+                        <div className="h-8 w-8 rounded-xl bg-rose-500/10 flex items-center justify-center text-rose-400 font-black text-xs">🔻</div>
+                        <div>
+                          <p className="text-[9px] font-bold uppercase tracking-wider text-slate-400">Top 24h Loser</p>
+                          <p className="text-xs font-black text-white">{topLoser.name} ({topLoser.symbol})</p>
+                        </div>
+                      </div>
+                      <span className="font-mono text-xs font-black text-rose-400">{topLoser.change24h}%</span>
+                    </div>
+                  </div>
+                );
+              })()}
+
+              {/* Main Exchange Terminal Grid */}
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
+
+                {/* Left 1 Col: Coin List */}
+                <div className="rounded-3xl border border-white/[0.07] bg-[#0b111b] p-4">
+                  <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+                    <h3 className="text-xs font-black uppercase tracking-wider text-slate-200">
+                      Digital Assets
+                    </h3>
+                    <span className="text-[9px] font-bold text-amber-400">SPOT / LOGISTICS</span>
+                  </div>
+
+                  <div className="mt-3 space-y-2">
+                    {Object.values(assets).map((asset: any) => {
+                      const isSelected = asset.symbol === activeAsset.symbol;
+                      const holding = holdings[asset.symbol];
+                      const val = holding ? holding.amount * asset.price : 0;
+
+                      return (
+                        <button
+                          key={asset.symbol}
+                          onClick={() => {
+                            setSelectedCryptoSymbol(asset.symbol);
+                            setCryptoTradeInput('');
+                          }}
+                          className={`w-full flex items-center justify-between p-3 rounded-2xl border text-left transition ${
+                            isSelected
+                              ? 'border-amber-400/40 bg-amber-400/10 shadow-lg shadow-amber-950/20'
+                              : 'border-white/[0.05] bg-black/20 hover:border-white/10 hover:bg-white/[0.03]'
+                          }`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-500/10 border border-amber-400/20 font-black text-amber-400 text-xs">
+                              {asset.symbol.slice(0, 3)}
+                            </div>
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black text-white">{asset.symbol}</span>
+                                <span className="text-[9px] text-slate-500">{asset.name}</span>
+                              </div>
+                              <p className="font-mono text-xs font-bold text-slate-300 mt-0.5">
+                                ${asset.price >= 10 ? asset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : asset.price.toFixed(4)}
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="text-right">
+                            <span className={`inline-flex items-center gap-0.5 text-[10px] font-black ${
+                              asset.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'
+                            }`}>
+                              {asset.change24h >= 0 ? <TrendingUp className="h-3 w-3" /> : <TrendingDown className="h-3 w-3" />}
+                              {asset.change24h >= 0 ? '+' : ''}{asset.change24h}%
+                            </span>
+                            {val > 0 && (
+                              <p className="font-mono text-[9px] text-amber-300 mt-0.5">
+                                {formatMoney(val)}
+                              </p>
+                            )}
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
                 </div>
 
-                <h2 className="mt-5 text-2xl font-black tracking-tight">
-                  Crypto Exchange
-                </h2>
+                {/* Right 2 Cols: Detailed Chart & Trading Terminal */}
+                <div className="lg:col-span-2 space-y-4">
 
-                <p className="mt-2 max-w-xl text-xs leading-relaxed text-slate-400">
-                  Digital assets and hedge instruments for your
-                  logistics operation.
-                </p>
+                  {/* Chart & Specs Header */}
+                  <div className="rounded-3xl border border-white/[0.07] bg-[#0b111b] p-5">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 pb-4 border-b border-white/[0.06]">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-12 w-12 items-center justify-center rounded-2xl border border-amber-400/30 bg-amber-400/10 text-amber-400 font-black text-base">
+                          {activeAsset.symbol}
+                        </div>
+                        <div>
+                          <div className="flex items-center gap-2">
+                            <h2 className="text-lg font-black text-white">{activeAsset.name}</h2>
+                            <span className="rounded-md border border-amber-400/20 bg-amber-400/10 px-2 py-0.5 text-[9px] font-black uppercase text-amber-300">
+                              Verified
+                            </span>
+                          </div>
+                          <p className="text-[10px] text-slate-400 mt-0.5">{activeAsset.description}</p>
+                        </div>
+                      </div>
 
-                <div className="mt-6 grid gap-3 sm:grid-cols-3">
+                      <div className="text-right">
+                        <p className="font-mono text-2xl font-black text-white">
+                          ${activeAsset.price >= 10 ? activeAsset.price.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : activeAsset.price.toFixed(4)}
+                        </p>
+                        <p className={`text-xs font-black ${activeAsset.change24h >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                          {activeAsset.change24h >= 0 ? '+' : ''}{activeAsset.change24h}% (24h)
+                        </p>
+                      </div>
+                    </div>
 
-                  <CryptoCard
-                    name="BTC/USD"
-                    price="$62,430"
-                    change="-2.4%"
-                    positive={false}
-                  />
+                    {/* SVG Price Chart */}
+                    <div className="mt-4 pt-2">
+                      <div className="flex items-center justify-between text-[10px] text-slate-500 mb-2">
+                        <span>Live Price Action (Ticks)</span>
+                        <div className="flex gap-3 font-mono">
+                          <span>High: ${activeAsset.high24h >= 10 ? activeAsset.high24h.toLocaleString() : activeAsset.high24h.toFixed(4)}</span>
+                          <span>Low: ${activeAsset.low24h >= 10 ? activeAsset.low24h.toLocaleString() : activeAsset.low24h.toFixed(4)}</span>
+                          <span>Vol: {formatCompactMoney(activeAsset.volume24h)}</span>
+                        </div>
+                      </div>
 
-                  <CryptoCard
-                    name="ETH/USD"
-                    price="$3,245"
-                    change="+3.7%"
-                    positive
-                  />
+                      <div className="h-28 w-full rounded-2xl bg-black/40 border border-white/[0.04] px-3 py-2 relative flex items-center justify-center overflow-hidden">
+                        {activeAsset.priceHistory && activeAsset.priceHistory.length > 1 ? (() => {
+                          const history = activeAsset.priceHistory;
+                          const min = Math.min(...history);
+                          const max = Math.max(...history);
+                          const range = max - min || 1;
+                          const width = 500;
+                          const height = 90;
 
-                  <CryptoCard
-                    name="LOGI/USD"
-                    price="$1.27"
-                    change="+12.8%"
-                    positive
-                  />
+                          const pts = history.map((val: number, idx: number) => {
+                            const x = (idx / (history.length - 1)) * (width - 40) + 20;
+                            const y = height - ((val - min) / range) * (height - 25) - 12;
+                            return { x, y, val };
+                          });
+
+                          let pathD = `M ${pts[0].x} ${pts[0].y}`;
+                          for (let i = 0; i < pts.length - 1; i++) {
+                            const xc = (pts[i].x + pts[i + 1].x) / 2;
+                            const yc = (pts[i].y + pts[i + 1].y) / 2;
+                            pathD += ` Q ${pts[i].x} ${pts[i].y}, ${xc} ${yc}`;
+                          }
+
+                          return (
+                            <div className="w-full h-full relative flex items-center">
+                              {hoveredPoint && (
+                                <div className="absolute top-1 left-2 bg-black/80 border border-amber-400/30 rounded px-2 py-0.5 text-[9px] font-mono text-amber-300 z-10">
+                                  Past Price [t-{history.length - 1 - hoveredPoint.index}]: ${hoveredPoint.val >= 10 ? hoveredPoint.val.toLocaleString() : hoveredPoint.val.toFixed(4)}
+                                </div>
+                              )}
+                              <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
+                                <defs>
+                                  <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+                                    <stop offset="0%" stopColor="#f59e0b" stopOpacity="0.35" />
+                                    <stop offset="100%" stopColor="#f59e0b" stopOpacity="0.0" />
+                                  </linearGradient>
+                                </defs>
+                                <path
+                                  d={`${pathD} L ${pts[pts.length - 1].x} ${height} L ${pts[0].x} ${height} Z`}
+                                  fill="url(#chartGrad)"
+                                />
+                                <path
+                                  fill="none"
+                                  stroke="#f59e0b"
+                                  strokeWidth="2.5"
+                                  strokeLinecap="round"
+                                  d={pathD}
+                                />
+                                {pts.map((pt, idx) => (
+                                  <circle
+                                    key={idx}
+                                    cx={pt.x}
+                                    cy={pt.y}
+                                    r={hoveredPoint?.index === idx ? 5 : 3}
+                                    className="cursor-pointer transition-all duration-150"
+                                    fill={hoveredPoint?.index === idx ? '#fbbf24' : '#f59e0b'}
+                                    stroke="#070b12"
+                                    strokeWidth="1.5"
+                                    onMouseEnter={() => setHoveredPoint({ val: pt.val, index: idx })}
+                                    onMouseLeave={() => setHoveredPoint(null)}
+                                  />
+                                ))}
+                              </svg>
+                            </div>
+                          );
+                        })() : (
+                          <span className="text-xs text-slate-600">Gathering price history...</span>
+                        )}
+                      </div>
+                    </div>
+
+                    {/* Trading Terminal Form */}
+                    <div className="mt-5 rounded-2xl border border-white/[0.06] bg-black/30 p-4">
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex rounded-xl border border-white/[0.06] bg-black/40 p-1">
+                          <button
+                            onClick={() => setCryptoTradeType('buy')}
+                            className={`px-4 py-1.5 rounded-lg text-xs font-black transition ${
+                              cryptoTradeType === 'buy' ? 'bg-emerald-500 text-black shadow-md' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            BUY {activeAsset.symbol}
+                          </button>
+                          <button
+                            onClick={() => setCryptoTradeType('sell')}
+                            className={`px-4 py-1.5 rounded-lg text-xs font-black transition ${
+                              cryptoTradeType === 'sell' ? 'bg-rose-500 text-black shadow-md' : 'text-slate-400 hover:text-white'
+                            }`}
+                          >
+                            SELL {activeAsset.symbol}
+                          </button>
+                        </div>
+
+                        <div className="text-right text-xs">
+                          {cryptoTradeType === 'buy' ? (
+                            <span className="text-slate-400">Available Cash: <strong className="text-emerald-400">{formatMoney(state.cash)}</strong></span>
+                          ) : (
+                            <span className="text-slate-400">Owned: <strong className="text-amber-400">{ownedAmount.toFixed(4)} {activeAsset.symbol}</strong></span>
+                          )}
+                        </div>
+                      </div>
+
+                      <div className="space-y-3">
+                        <div className="relative">
+                          <span className="absolute left-3 top-1/2 -translate-y-1/2 text-xs font-bold text-slate-500">
+                            {cryptoTradeType === 'buy' ? 'USD Amount ($)' : `Amount (${activeAsset.symbol})`}
+                          </span>
+                          <input
+                            type="number"
+                            value={cryptoTradeInput}
+                            onChange={(e) => setCryptoTradeInput(e.target.value)}
+                            placeholder="0.00"
+                            className="w-full h-12 rounded-xl border border-white/[0.08] bg-[#070b12] pl-36 pr-4 font-mono text-sm text-white outline-none focus:border-amber-400/50"
+                          />
+                        </div>
+
+                        {/* Quick Percent Buttons */}
+                        <div className="grid grid-cols-4 gap-2">
+                          <button onClick={() => setQuickPercentage(0.25)} className="py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] text-[10px] font-bold text-slate-300 hover:bg-white/[0.07]">25%</button>
+                          <button onClick={() => setQuickPercentage(0.50)} className="py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] text-[10px] font-bold text-slate-300 hover:bg-white/[0.07]">50%</button>
+                          <button onClick={() => setQuickPercentage(0.75)} className="py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] text-[10px] font-bold text-slate-300 hover:bg-white/[0.07]">75%</button>
+                          <button onClick={() => setQuickPercentage(1.00)} className="py-1.5 rounded-lg border border-white/[0.06] bg-white/[0.03] text-[10px] font-bold text-slate-300 hover:bg-white/[0.07]">MAX</button>
+                        </div>
+
+                        <button
+                          onClick={handleExecuteTrade}
+                          className={`w-full h-12 rounded-xl font-black text-xs transition active:scale-[.99] ${
+                            cryptoTradeType === 'buy'
+                              ? 'bg-emerald-500 text-black hover:bg-emerald-400 shadow-lg shadow-emerald-950/20'
+                              : 'bg-rose-500 text-black hover:bg-rose-400 shadow-lg shadow-rose-950/20'
+                          }`}
+                        >
+                          {cryptoTradeType === 'buy' ? `EXECUTE BUY ORDER (${activeAsset.symbol})` : `EXECUTE SELL ORDER (${activeAsset.symbol})`}
+                        </button>
+                      </div>
+                    </div>
+
+                  </div>
 
                 </div>
+
               </div>
-            </section>
 
-          </div>
-        )}
+              {/* Holdings & Recent Trades Section */}
+              <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+
+                {/* Holdings table */}
+                <div className="rounded-3xl border border-white/[0.07] bg-[#0b111b] p-5">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-200 mb-3">
+                    Your Crypto Portfolio Holdings
+                  </h3>
+
+                  {Object.keys(holdings).length > 0 ? (
+                    <div className="space-y-2">
+                      {Object.values(holdings).map((holding: any) => {
+                        const ast = assets[holding.symbol];
+                        if (!ast) return null;
+                        const currentVal = holding.amount * ast.price;
+                        const pnl = currentVal - holding.totalInvested;
+                        const pnlPct = holding.totalInvested > 0 ? (pnl / holding.totalInvested) * 100 : 0;
+
+                        return (
+                          <div key={holding.symbol} className="flex items-center justify-between p-3 rounded-2xl border border-white/[0.05] bg-black/20">
+                            <div>
+                              <div className="flex items-center gap-2">
+                                <span className="text-xs font-black text-white">{holding.symbol}</span>
+                                <span className="text-[10px] text-slate-400 font-mono">{holding.amount.toFixed(4)} units</span>
+                              </div>
+                              <p className="text-[10px] text-slate-500 mt-0.5">Avg Buy: ${holding.averageBuyPrice.toLocaleString()}</p>
+                            </div>
+
+                            <div className="text-right">
+                              <p className="font-mono text-xs font-black text-white">{formatMoney(currentVal)}</p>
+                              <p className={`text-[10px] font-black ${pnl >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
+                                {pnl >= 0 ? '+' : ''}{formatMoney(pnl)} ({pnlPct.toFixed(1)}%)
+                              </p>
+                            </div>
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
+                    <div className="py-10 text-center text-xs text-slate-600 border border-dashed border-white/[0.06] rounded-2xl">
+                      No active crypto holdings. Buy tokens from the exchange above!
+                    </div>
+                  )}
+                </div>
+
+                {/* Crypto News & Alpha Feed */}
+                <div className="rounded-3xl border border-white/[0.07] bg-[#0b111b] p-5">
+                  <h3 className="text-xs font-black uppercase tracking-wider text-slate-200 mb-3 flex items-center gap-2">
+                    <Sparkles className="h-3.5 w-3.5 text-amber-400" />
+                    Crypto & Logistics Alpha Feed
+                  </h3>
+
+                  <div className="space-y-2.5 max-h-72 overflow-y-auto pr-1">
+                    {(cryptoMarket.newsFeed || []).map((news: any) => (
+                      <div key={news.id} className="p-3 rounded-2xl border border-white/[0.05] bg-black/20 text-xs">
+                        <div className="flex items-center justify-between text-[9px] text-slate-500 mb-1">
+                          <span className="font-bold text-amber-400">{news.source}</span>
+                          <span>{new Date(news.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}</span>
+                        </div>
+                        <p className="text-slate-300 font-medium leading-relaxed">{news.headline}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+              </div>
+
+            </div>
+          );
+        })()}
 
         {/* =========================================================
             FUTURES

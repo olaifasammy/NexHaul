@@ -28,6 +28,7 @@ interface FleetManagerProps {
   onSetTrailerInsuranceTier: (trailerId: string, tier: InsuranceCoverageTier) => void;
   onSellTruck: (truckId: string) => void;
   onSellTrailer: (trailerId: string) => void;
+  onRelocateTruck?: (truckId: string, targetHub: TruckRegion) => void;
   onSubmitUpgrades?: (truckId: string, selectedParts: Array<keyof Truck['upgrades']>, totalCost: number, totalSeconds: number, scheduleAfterJob: boolean) => void;
   onNavigateTab?: (tab: TabType, truckId?: string) => void;
 }
@@ -50,6 +51,7 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
   onSetTrailerInsuranceTier,
   onSellTruck,
   onSellTrailer,
+  onRelocateTruck,
   onSubmitUpgrades,
   onNavigateTab,
 }) => {
@@ -266,10 +268,52 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
                      </div>
                      <div className="flex items-center space-x-1">
                         <span className="text-slate-500 uppercase font-bold text-[8px]">Status:</span>
-                        <span className={truck.status === 'in_transit' ? 'text-amber-400 font-bold' : truck.status === 'resting' ? 'text-amber-400 font-bold' : truck.status === 'maintenance' ? 'text-rose-400 font-bold' : 'text-emerald-400 font-bold'}>
-                           {truck.status === 'in_transit' ? 'En-route' : truck.status === 'resting' ? 'Resting' : truck.status === 'maintenance' ? 'In Repair' : truck.status === 'idle' ? 'In Garage' : 'Idle'}
+                        <span className={truck.status === 'in_transit' ? 'text-amber-400 font-bold' : truck.status === 'resting' ? 'text-amber-400 font-bold' : truck.status === 'maintenance' ? 'text-rose-400 font-bold' : truck.status === 'shipping' ? 'text-blue-400 font-bold' : 'text-emerald-400 font-bold'}>
+                           {truck.status === 'in_transit' ? 'En-route' : truck.status === 'resting' ? 'Resting' : truck.status === 'maintenance' ? 'In Repair' : truck.status === 'shipping' ? 'In Transit' : truck.status === 'idle' ? 'In Garage' : 'Idle'}
                         </span>
                      </div>
+                  </div>
+
+                  {/* Stationed Hub & Relocation Section */}
+                  <div className="bg-slate-950 p-3 rounded-xl border border-slate-800 space-y-2">
+                    <div className="flex items-center justify-between text-xs">
+                      <span className="text-slate-400">Stationed Terminal:</span>
+                      <strong className="text-white font-mono">{truck.stationedHub || truck.region || 'America'} Hub</strong>
+                    </div>
+
+                    {truck.status === 'shipping' ? (
+                      <div className="text-[11px] font-bold text-amber-400 bg-amber-500/10 p-2 rounded-lg border border-amber-500/20 text-center font-mono">
+                        📦 In Intercontinental Transit to {truck.destinationHub} ({Math.floor((truck.shippingSecondsRemaining || 0) / 60)}m {(truck.shippingSecondsRemaining || 0) % 60}s remaining)
+                      </div>
+                    ) : (
+                      <div className="flex items-center gap-2 pt-1">
+                        <select
+                          id={`relocate-select-${truck.id}`}
+                          className="flex-1 bg-slate-900 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white outline-none"
+                          defaultValue=""
+                        >
+                          <option value="" disabled>Select Target Hub ($18k)...</option>
+                          {Object.values(state.regionalHubs || {}).map((hub) => (
+                            hub.isUnlocked && hub.region !== truck.stationedHub ? (
+                              <option key={hub.region} value={hub.region}>{hub.region} ({hub.cityName})</option>
+                            ) : null
+                          ))}
+                        </select>
+                        <button
+                          type="button"
+                          onClick={() => {
+                            const sel = document.getElementById(`relocate-select-${truck.id}`) as HTMLSelectElement;
+                            if (sel && sel.value && onRelocateTruck) {
+                              onRelocateTruck(truck.id, sel.value as TruckRegion);
+                            }
+                          }}
+                          disabled={Boolean(truck.assignedContractId || truck.status === 'in_transit')}
+                          className="px-3 py-1 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-lg transition disabled:opacity-40"
+                        >
+                          Ship Rig
+                        </button>
+                      </div>
+                    )}
                   </div>
 
                   {/* Engine Spec Summary */}

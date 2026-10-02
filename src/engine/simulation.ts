@@ -442,6 +442,79 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
     }
   });
 
+  // Initialize Crypto Market if missing
+  if (!nextState.cryptoMarket) {
+    nextState.cryptoMarket = {
+      assets: {
+        BTC: { symbol: 'BTC', name: 'Bitcoin', price: 65430.00, basePrice: 64000.00, change24h: 3.4, high24h: 66800.00, low24h: 63100.00, volume24h: 28450120, priceHistory: [63500, 63800, 64200, 64800, 65100, 65430], trend: 'rising', description: 'The decentralized digital gold standard of global finance.' },
+        ETH: { symbol: 'ETH', name: 'Ethereum', price: 3480.00, basePrice: 3400.00, change24h: 5.1, high24h: 3550.00, low24h: 3310.00, volume24h: 14120400, priceHistory: [3320, 3360, 3410, 3450, 3480], trend: 'rising', description: 'Smart contract platform powering decentralized logistics networks.' },
+        TRCK: { symbol: 'TRCK', name: 'TruckCoin', price: 1.45, basePrice: 1.20, change24h: 18.4, high24h: 1.52, low24h: 1.18, volume24h: 5240000, priceHistory: [1.20, 1.25, 1.32, 1.40, 1.45], trend: 'rising', description: 'Native utility token for automated fleet smart contracts and autonomous corridor tolling.' },
+        HAUL: { symbol: 'HAUL', name: 'HaulerDAO', price: 14.20, basePrice: 13.50, change24h: -1.2, high24h: 15.10, low24h: 13.80, volume24h: 3150000, priceHistory: [14.80, 14.60, 14.30, 14.10, 14.20], trend: 'falling', description: 'Governance and liquidity staking token for interstate freight syndicates.' },
+        SOL: { symbol: 'SOL', name: 'Solana', price: 192.50, basePrice: 180.00, change24h: 8.7, high24h: 198.00, low24h: 179.00, volume24h: 12890000, priceHistory: [178, 181, 185, 189, 192.5], trend: 'rising', description: 'High-throughput ultra-low-latency blockchain for instant GPS freight escrow.' },
+        BDSL: { symbol: 'BDSL', name: 'BitDiesel', price: 2.85, basePrice: 2.60, change24h: 4.2, high24h: 2.95, low24h: 2.72, volume24h: 1940000, priceHistory: [2.65, 2.70, 2.78, 2.82, 2.85], trend: 'rising', description: 'Synthetic commodity token pegged to global bulk diesel refinery futures.' },
+        USDT: { symbol: 'USDT', name: 'Tether USD', price: 1.00, basePrice: 1.00, change24h: 0.0, high24h: 1.01, low24h: 0.99, volume24h: 45000000, priceHistory: [1.00, 1.00, 1.00, 1.00, 1.00], trend: 'stable', description: 'USD-pegged stablecoin for rapid liquidity positioning.' },
+        DOGE: { symbol: 'DOGE', name: 'Dogecoin', price: 0.18, basePrice: 0.15, change24h: 14.2, high24h: 0.19, low24h: 0.14, volume24h: 8900000, priceHistory: [0.15, 0.16, 0.17, 0.175, 0.18], trend: 'rising', description: 'The ultimate meme currency accepted by select truck stops.' },
+        AVAX: { symbol: 'AVAX', name: 'Avalanche', price: 32.40, basePrice: 30.00, change24h: 6.8, high24h: 33.50, low24h: 29.80, volume24h: 4120000, priceHistory: [29.5, 30.2, 31.0, 31.8, 32.4], trend: 'rising', description: 'Subnet blockchain architecture for regional supply chain tracking.' },
+        LINK: { symbol: 'LINK', name: 'Chainlink', price: 18.20, basePrice: 17.50, change24h: 2.4, high24h: 18.90, low24h: 17.20, volume24h: 2850000, priceHistory: [17.4, 17.7, 17.9, 18.0, 18.2], trend: 'rising', description: 'Decentralized oracle network feeding real-time highway IoT sensor data.' },
+        RENDER: { symbol: 'RENDER', name: 'Render Network', price: 8.45, basePrice: 7.80, change24h: 9.1, high24h: 8.80, low24h: 7.60, volume24h: 3400000, priceHistory: [7.7, 7.9, 8.1, 8.3, 8.45], trend: 'rising', description: 'GPU compute power network powering autonomous self-driving truck AI.' },
+        XRP: { symbol: 'XRP', name: 'Ripple', price: 0.58, basePrice: 0.55, change24h: 1.5, high24h: 0.60, low24h: 0.54, volume24h: 6100000, priceHistory: [0.55, 0.56, 0.57, 0.575, 0.58], trend: 'stable', description: 'Institutional cross-border settlement rails for international freight.' },
+        POL: { symbol: 'POL', name: 'Polygon', price: 0.72, basePrice: 0.65, change24h: 4.5, high24h: 0.75, low24h: 0.64, volume24h: 4800000, priceHistory: [0.66, 0.68, 0.70, 0.71, 0.72], trend: 'rising', description: 'Layer-2 scaling network for instant zero-fee corridor toll micro-payments.' },
+        SUI: { symbol: 'SUI', name: 'Sui Network', price: 2.10, basePrice: 1.90, change24h: 12.8, high24h: 2.20, low24h: 1.85, volume24h: 7200000, priceHistory: [1.92, 1.98, 2.04, 2.08, 2.10], trend: 'rising', description: 'High-performance parallel execution chain for autonomous freight routing.' },
+        SHIB: { symbol: 'SHIB', name: 'ShibaHauler', price: 0.000028, basePrice: 0.000025, change24h: 7.4, high24h: 0.000030, low24h: 0.000024, volume24h: 9500000, priceHistory: [0.000025, 0.000026, 0.000027, 0.0000275, 0.000028], trend: 'rising', description: 'Community meme token adopted by independent cross-country owner-operators.' },
+        BNB: { symbol: 'BNB', name: 'Binance Coin', price: 610.00, basePrice: 590.00, change24h: 2.1, high24h: 625.00, low24h: 585.00, volume24h: 15400000, priceHistory: [592, 598, 604, 608, 610], trend: 'rising', description: 'Global utility token for decentralized fuel station and depot settlement.' }
+      },
+      holdings: {},
+      tradeHistory: [],
+      newsFeed: [
+        { id: 'news-1', timestamp: Date.now() - 3600000, headline: 'Whale wallet accumulates 50,000 TruckCoin ($TRCK) on decentralized exchange.', impactSymbol: 'TRCK', impactPercent: 8.5, source: 'CryptoLogistics Wire' }
+      ]
+    };
+  }
+
+  // Real Crypto Market Price Simulation & News Shock
+  if (Math.random() < (0.015 * deltaSeconds)) {
+    const symbols = Object.keys(nextState.cryptoMarket.assets);
+    const targetSymbol = symbols[Math.floor(Math.random() * symbols.length)];
+    const asset = nextState.cryptoMarket.assets[targetSymbol];
+    if (asset) {
+      const oldPrice = asset.price;
+      const volatility = targetSymbol === 'TRCK' ? 0.035 : targetSymbol === 'SOL' ? 0.028 : 0.015;
+      const pctChange = (Math.random() - 0.49) * volatility;
+      const newPrice = Math.max(0.01, +(oldPrice * (1 + pctChange)).toFixed(2));
+
+      asset.price = newPrice;
+      asset.trend = newPrice > oldPrice ? 'rising' : newPrice < oldPrice ? 'falling' : 'stable';
+      asset.high24h = Math.max(asset.high24h, newPrice);
+      asset.low24h = Math.min(asset.low24h, newPrice);
+      
+      const changeFromBase = +(((newPrice - asset.basePrice) / asset.basePrice) * 100).toFixed(1);
+      asset.change24h = changeFromBase;
+
+      if (!asset.priceHistory) asset.priceHistory = [];
+      asset.priceHistory.push(newPrice);
+      if (asset.priceHistory.length > 20) asset.priceHistory.shift();
+
+      if (Math.abs(pctChange) > 0.02 && Math.random() < 0.3) {
+        const headlines = [
+          `Whale accumulation wave detected for $${targetSymbol}. Volume surging across decentralized pools.`,
+          `Regulatory clearance announced for interstate freight settlement using $${targetSymbol}.`,
+          `Short liquidations cascade across order books for $${targetSymbol} as momentum spikes.`
+        ];
+        const headline = headlines[Math.floor(Math.random() * headlines.length)];
+        if (!nextState.cryptoMarket.newsFeed) nextState.cryptoMarket.newsFeed = [];
+        nextState.cryptoMarket.newsFeed.unshift({
+          id: `crypto-news-${Date.now()}`,
+          timestamp: Date.now(),
+          headline,
+          impactSymbol: targetSymbol,
+          impactPercent: +(pctChange * 100).toFixed(1),
+          source: 'CryptoLogistics Terminal'
+        });
+        if (nextState.cryptoMarket.newsFeed.length > 15) nextState.cryptoMarket.newsFeed.pop();
+      }
+    }
+  }
+
   const ecoSkillLevel = nextState.skills['eco-mastery'] || 0;
   const maintenanceSkillLevel = nextState.skills['mechanic-precision'] || 0;
   const dispatcherSkillLevel = nextState.skills['dispatcher-broker'] || 0;
@@ -452,6 +525,30 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
   const mechanicStaffBonus = nextState.staff.filter(s => s.role === 'mechanic').reduce((sum, s) => sum + s.efficiencyBonus, 0);
   const hrStaffBonus = nextState.staff.filter(s => s.role === 'hr_manager').reduce((sum, s) => sum + s.efficiencyBonus, 0);
   const safetyStaffBonus = nextState.staff.filter(s => s.role === 'safety_officer').reduce((sum, s) => sum + s.efficiencyBonus, 0);
+
+  // Process Trucks in Ocean/Intercontinental Shipping Transit
+  nextState.trucks.forEach(truck => {
+    if (truck.status !== 'shipping') return;
+    const remSecs = truck.shippingSecondsRemaining ?? 300;
+    const newRemSecs = Math.max(0, remSecs - deltaSeconds);
+    truck.shippingSecondsRemaining = newRemSecs;
+
+    if (newRemSecs > 0) return;
+
+    const targetHub = truck.destinationHub || truck.stationedHub || 'America';
+    truck.stationedHub = targetHub;
+    truck.status = 'idle';
+    truck.shippingSecondsRemaining = 0;
+    truck.destinationHub = undefined;
+
+    newEvents.push({
+      id: `shipping-complete-${truck.id}-${Date.now()}`,
+      timestamp: Date.now(),
+      title: `📦 Intercontinental Freight Delivery Complete`,
+      message: `${truck.name} successfully arrived via cargo carrier at ${targetHub} Regional Terminal and is ready for local dispatch.`,
+      type: 'success'
+    });
+  });
 
   // Process Trucks in HQ Repair Bay Maintenance
   nextState.trucks.forEach(truck => {

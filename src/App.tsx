@@ -255,7 +255,8 @@ export function App() {
         trailer,
         next.unlockedRegions || ['America'],
         next.heavyHaulPermits || [],
-        next.companyLevel
+        next.companyLevel,
+        next.regionalHubs || {}
       );
 
       if (!validation.isValid) {
@@ -887,7 +888,156 @@ export function App() {
     });
   };
 
+  const handleBuyCrypto = (symbol: string, usdAmount: number) => {
+    setGameState(prev => {
+      const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
+      if (!next.cryptoMarket) return prev;
+      if (next.cash < usdAmount || usdAmount <= 0) return prev;
+
+      const asset = next.cryptoMarket.assets[symbol];
+      if (!asset) return prev;
+
+      const fee = usdAmount * 0.001; // 0.1% exchange fee
+      const effectiveUsd = usdAmount - fee;
+      const coinAmount = effectiveUsd / asset.price;
+
+      next.cash -= usdAmount;
+
+      if (!next.cryptoMarket.holdings[symbol]) {
+        next.cryptoMarket.holdings[symbol] = {
+          symbol,
+          amount: 0,
+          totalInvested: 0,
+          averageBuyPrice: 0
+        };
+      }
+
+      const holding = next.cryptoMarket.holdings[symbol];
+      const newTotalInvested = holding.totalInvested + effectiveUsd;
+      const newAmount = holding.amount + coinAmount;
+      const newAvgPrice = newAmount > 0 ? newTotalInvested / newAmount : asset.price;
+
+      holding.amount = newAmount;
+      holding.totalInvested = newTotalInvested;
+      holding.averageBuyPrice = newAvgPrice;
+
+      if (!next.cryptoMarket.tradeHistory) next.cryptoMarket.tradeHistory = [];
+      next.cryptoMarket.tradeHistory.unshift({
+        id: `trade-${Date.now()}`,
+        timestamp: Date.now(),
+        symbol,
+        type: 'buy',
+        amount: coinAmount,
+        price: asset.price,
+        totalUsd: usdAmount,
+        feeUsd: fee
+      });
+      if (next.cryptoMarket.tradeHistory.length > 50) next.cryptoMarket.tradeHistory.pop();
+
+      next.eventLogs.unshift({
+        id: `crypto-buy-${Date.now()}`,
+        timestamp: Date.now(),
+        title: `Crypto Buy Executed: ${symbol}`,
+        message: `Purchased ${coinAmount.toFixed(4)} ${symbol} for $${usdAmount.toLocaleString()} at $${asset.price.toLocaleString()} (${fee.toFixed(2)} fee).`,
+        type: 'success',
+        cashChange: -usdAmount
+      });
+
+      return next;
+    });
+  };
+
+  const handleSellCrypto = (symbol: string, coinAmount: number) => {
+    setGameState(prev => {
+      const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
+      if (!next.cryptoMarket) return prev;
+      const holding = next.cryptoMarket.holdings[symbol];
+      const asset = next.cryptoMarket.assets[symbol];
+      if (!holding || !asset || holding.amount < coinAmount || coinAmount <= 0) return prev;
+
+      const grossUsd = coinAmount * asset.price;
+      const fee = grossUsd * 0.001; // 0.1% exchange fee
+      const netUsd = grossUsd - fee;
+
+      next.cash += netUsd;
+
+      const remainingAmount = holding.amount - coinAmount;
+      if (remainingAmount <= 0.000001) {
+        delete next.cryptoMarket.holdings[symbol];
+      } else {
+        holding.amount = remainingAmount;
+        holding.totalInvested = holding.totalInvested * (remainingAmount / (holding.amount + coinAmount));
+      }
+
+      if (!next.cryptoMarket.tradeHistory) next.cryptoMarket.tradeHistory = [];
+      next.cryptoMarket.tradeHistory.unshift({
+        id: `trade-${Date.now()}`,
+        timestamp: Date.now(),
+        symbol,
+        type: 'sell',
+        amount: coinAmount,
+        price: asset.price,
+        totalUsd: netUsd,
+        feeUsd: fee
+      });
+      if (next.cryptoMarket.tradeHistory.length > 50) next.cryptoMarket.tradeHistory.pop();
+
+      next.eventLogs.unshift({
+        id: `crypto-sell-${Date.now()}`,
+        timestamp: Date.now(),
+        title: `Crypto Sell Executed: ${symbol}`,
+        message: `Sold ${coinAmount.toFixed(4)} ${symbol} for $${netUsd.toLocaleString()} net at $${asset.price.toLocaleString()} (${fee.toFixed(2)} fee).`,
+        type: 'success',
+        cashChange: netUsd
+      });
+
+      return next;
+    });
+  };
+
+  const handleRelocateTruck = (truckId: string, targetHub: TruckRegion) => {
+    setGameState(prev => {
+      const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
+      const truck = next.trucks.find(t => t.id === truckId);
+      if (!truck || truck.status === 'in_transit' || truck.status === 'shipping' || truck.assignedContractId) return prev;
+
+      const hubs = next.regionalHubs || {};
+      const target = hubs[targetHub];
+      if (!target || !target.isUnlocked) return prev;
+
+      const shippingCost = 18000;
+      if (next.cash < shippingCost) return prev;
+
+      next.cash -= shippingCost;
+      truck.status = 'shipping';
+      truck.destinationHub = targetHub;
+      truck.shippingSecondsRemaining = 300;
+
+      next.eventLogs.unshift({
+        id: `relocate-truck-${truckId}-${Date.now()}`,
+        timestamp: Date.now(),
+        title: `🚢 Intercontinental Fleet Shipping Initiated`,
+        message: `${truck.name} dispatched to port for cargo carrier transit from ${truck.stationedHub} to ${targetHub} Terminal (-$${shippingCost.toLocaleString()}).`,
+        type: 'info',
+        cashChange: -shippingCost
+      });
+
+      return next;
+    });
+  };
+
   const handleBuyTruck = (model: typeof CATALOG_TRUCKS[0], customName?: string) => {
+    const regionalHubs = gameState.regionalHubs || {};
+    const hub = regionalHubs[model.region];
+    if (model.region && model.region !== 'Electric EV' && (!hub || !hub.isUnlocked)) {
+      setPurchaseResultModal({
+        title: 'Purchase Denied: Regional Hub Required',
+        message: `You must acquire the ${model.region} Regional Hub (${hub?.hubName || 'Continental Terminal'}) in Headquarters before purchasing or stationing trucks in this region.`,
+        success: false
+      });
+      return;
+    }
+
     if (model.unlockRequirement && gameState.companyLevel < model.unlockRequirement.companyLevel) {
       setPurchaseResultModal({
         title: 'Purchase Failed',
@@ -945,7 +1095,10 @@ export function App() {
             imageUrl: model.imageUrl,
             description: model.description,
             currentCity: 'HQ Depot',
-            status: 'idle',
+            status: 'shipping',
+            stationedHub: model.region,
+            shippingSecondsRemaining: 180,
+            destinationHub: model.region,
             odometerMiles: 0,
             hasInsurance: true,
             vin: '1HD' + Math.random().toString(36).substring(2, 15).toUpperCase(),
@@ -1503,11 +1656,63 @@ export function App() {
     });
   };
 
+  const handleBuyRegionalHub = (region: TruckRegion) => {
+    setGameState(prev => {
+      const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
+      if (!next.regionalHubs || !next.regionalHubs[region]) return prev;
+      const hub = next.regionalHubs[region];
+      if (hub.isUnlocked) return prev;
+
+      if (next.companyLevel < hub.levelRequirement) {
+        setPurchaseResultModal({
+          title: 'Hub Acquisition Denied',
+          message: `Company Level ${hub.levelRequirement} required to establish a logistics hub in ${region} (${hub.hubName}).`,
+          success: false
+        });
+        return prev;
+      }
+
+      if (next.cash < hub.cost) {
+        setPurchaseResultModal({
+          title: 'Hub Acquisition Denied',
+          message: `Insufficient funds! ${hub.hubName} costs $${hub.cost.toLocaleString()}, but you have $${next.cash.toLocaleString()}.`,
+          success: false
+        });
+        return prev;
+      }
+
+      next.cash -= hub.cost;
+      hub.isUnlocked = true;
+
+      if (!next.unlockedRegions) next.unlockedRegions = ['America'];
+      if (!next.unlockedRegions.includes(region)) {
+        next.unlockedRegions.push(region);
+      }
+
+      next.eventLogs.unshift({
+        id: `regional-hub-${region}-${Date.now()}`,
+        timestamp: Date.now(),
+        title: `🏢 Regional Hub Established: ${region}`,
+        message: `Successfully established ${hub.hubName} in ${hub.cityName} for $${hub.cost.toLocaleString()}. Fleet operations and contract dispatching in ${region} are now fully authorized!`,
+        type: 'success',
+        cashChange: -hub.cost
+      });
+
+      return next;
+    });
+
+    setPurchaseResultModal({
+      title: 'Regional Hub Established!',
+      message: `Successfully acquired regional logistics terminal. You can now station trucks and dispatch freight across ${region}!`,
+      success: true
+    });
+  };
+
   const handleUnlockRegion = (region: TruckRegion) => {
     if (gameState.unlockedRegions.includes(region)) return;
 
-    const costMap: Record<string, number> = { 'Europe': 50000, 'Asia': 150000 };
-    const levelMap: Record<string, number> = { 'Europe': 3, 'Asia': 5 };
+    const costMap: Record<string, number> = { 'Europe': 50000, 'Africa': 100000, 'Asia': 150000 };
+    const levelMap: Record<string, number> = { 'Europe': 3, 'Africa': 4, 'Asia': 5 };
     
     const cost = costMap[region] || 0;
     const levelReq = levelMap[region] || 0;
@@ -1931,6 +2136,7 @@ export function App() {
             onAttachTrailer={handleAttachTrailer}
             onSetInsuranceTier={handleSetTruckInsuranceTier}
             onSetTrailerInsuranceTier={handleSetTrailerInsuranceTier}
+            onRelocateTruck={handleRelocateTruck}
             onSellTruck={handleSellTruck}
             onSellTrailer={handleSellTrailer}
             onSubmitUpgrades={handleScheduleTruckUpgrades}
@@ -1999,6 +2205,8 @@ export function App() {
             state={gameState}
             onBuyTruck={handleBuyTruck}
             onBuyTrailer={handleBuyTrailer}
+            onBuyCrypto={handleBuyCrypto}
+            onSellCrypto={handleSellCrypto}
           />
         )}
 
@@ -2022,6 +2230,7 @@ export function App() {
             onFireStaff={handleFireStaff}
             onUpgradeStructure={handleUpgradeStructure}
             onUnlockRegion={handleUnlockRegion}
+            onBuyRegionalHub={handleBuyRegionalHub}
             onBuyHeavyHaulPermit={handleBuyHeavyHaulPermit}
             onClaimMilestone={handleClaimMilestone}
             onResetSave={handleResetSave}
