@@ -585,6 +585,12 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
         );
 
         if (validation.isValid) {
+          // AI Tier 2+ Auto-Negotiation bonus (+8% to +15% payout increase)
+          if (dispatchAILevel >= 2) {
+            const negotiationMultiplier = 1.08 + Math.random() * 0.07;
+            contract.payoutCash = Math.floor(contract.payoutCash * negotiationMultiplier);
+          }
+
           contract.status = 'in_progress';
           contract.progressMiles = 0;
           contract.elapsedSeconds = 0;
@@ -613,11 +619,16 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
           };
           nextState.activeContracts.push(activeContract);
 
+          const actionTitle = dispatchAILevel >= 2 ? '🤖 AI Tier 2 Negotiation & Dispatch' : '🤖 Automated Dispatch AI';
+          const actionMsg = dispatchAILevel >= 2
+            ? `Automated Dispatch Center (Tier ${dispatchAILevel}) negotiated higher freight rates & assigned ${truck.name} & ${driver.name} to ${contract.title} ($${contract.payoutCash.toLocaleString()}).`
+            : `Automated Dispatch Center (Tier ${dispatchAILevel}) assigned ${truck.name} & ${driver.name} to ${contract.title} ($${contract.payoutCash.toLocaleString()}).`;
+
           newEvents.push({
             id: `auto-dispatch-${contract.id}-${Date.now()}`,
             timestamp: Date.now(),
-            title: '🤖 Automated Dispatch AI',
-            message: `Automated Dispatch Center (Tier ${dispatchAILevel}) assigned ${truck.name} & ${driver.name} to ${contract.title} ($${contract.payoutCash.toLocaleString()}).`,
+            title: actionTitle,
+            message: actionMsg,
             type: 'success'
           });
 
@@ -788,6 +799,42 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
   // Process each contract in progress
   // Filter out any invalid/null contracts before processing
   nextState.activeContracts = (nextState.activeContracts || []).filter(c => c && c.id);
+
+  // Tier 3 AI Autonomous Incident Response (Breakdown Mechanic Approval & Driver Espresso Boost)
+  const dispatchAILevelForIncidents = nextState.depot?.dispatchAILevel || 0;
+  if (dispatchAILevelForIncidents >= 3 && (nextState.depot?.isAutoDispatchEnabled ?? true)) {
+    nextState.trucks.forEach(truck => {
+      if (truck.status === 'breakdown' && nextState.cash >= 350) {
+        nextState.cash -= 350;
+        truck.conditionPercent = Math.max(85, truck.conditionPercent);
+        truck.status = truck.assignedContractId ? 'in_transit' : 'idle';
+        newEvents.push({
+          id: `ai-tier3-repair-${truck.id}-${Date.now()}`,
+          timestamp: Date.now(),
+          title: `🤖 Tier 3 AI Incident Response: Mechanic Dispatched`,
+          message: `Automated Dispatch AI Tier 3 detected breakdown on ${truck.name}. Automatically approved mobile mechanic dispatch (-$350). Unit restored to 85% operating condition.`,
+          type: 'success',
+          cashChange: -350
+        });
+      }
+    });
+
+    nextState.drivers.forEach(driver => {
+      if (driver.fatiguePercent >= 75 && !driver.isResting && nextState.cash >= SIMULATION_CONFIG.driver.morale.coffeeCost) {
+        nextState.cash -= SIMULATION_CONFIG.driver.morale.coffeeCost;
+        driver.fatiguePercent = Math.max(0, driver.fatiguePercent - 25);
+        driver.moralePercent = Math.min(100, (driver.moralePercent || 100) + 15);
+        newEvents.push({
+          id: `ai-tier3-coffee-${driver.id}-${Date.now()}`,
+          timestamp: Date.now(),
+          title: `🤖 Tier 3 AI Roadside Care: Espresso Boost`,
+          message: `Automated Dispatch AI Tier 3 detected driver fatigue for ${driver.name} (>=75%). Automatically purchased roadside espresso and rest stop (-$${SIMULATION_CONFIG.driver.morale.coffeeCost}). Fatigue reduced by 25%!`,
+          type: 'success',
+          cashChange: -SIMULATION_CONFIG.driver.morale.coffeeCost
+        });
+      }
+    });
+  }
 
   nextState.activeContracts.forEach((contract) => {
     if (contract.status !== 'in_progress' || !contract.assignedTruckId || !contract.assignedDriverId) return;
