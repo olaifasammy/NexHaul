@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T02:21:28.504Z",
+    "scannedAt": "2026-10-02T02:24:25.889Z",
     "git": {
       "branch": "main",
-      "commit": "ec120189e1faf6d6c8f218c381c9122b0df01e71",
-      "dirty": true
+      "commit": "eb8ebf0ed72b877a0e0546dde22a28305d44910e",
+      "dirty": false
     },
     "languages": {
       "JSON": 6,
@@ -129,9 +129,9 @@
       },
       {
         "path": "src/components/Dashboard.tsx",
-        "size": 53526,
-        "mtimeMs": 1790907656591.9355,
-        "hash": "5bfc3ef95616995a464006417ec630229d99ddc8ff01c32101f29aa9022cb2c8",
+        "size": 53592,
+        "mtimeMs": 1790907706687.9355,
+        "hash": "3a63e9c872f74b347459fed0b445bee851905803d9e2a8a12cb994b265ff1c0d",
         "language": "TypeScript React",
         "imports": [
           "../engine/simulation",
@@ -139,6 +139,7 @@
           "./DriverFatigueModal",
           "./LiveMapModal",
           "./Navigation",
+          "./RealMapCanvas",
           "lucide-react",
           "react"
         ],
@@ -1038,6 +1039,7 @@
           "./DriverFatigueModal",
           "./LiveMapModal",
           "./Navigation",
+          "./RealMapCanvas",
           "lucide-react",
           "react"
         ],
@@ -1325,6 +1327,7 @@
           "react"
         ],
         "importedBy": [
+          "src/components/Dashboard.tsx",
           "src/components/LiveMapModal.tsx"
         ],
         "exports": [
@@ -2203,6 +2206,11 @@
           "type": "import"
         },
         {
+          "from": "src/components/Dashboard.tsx",
+          "to": "src/components/RealMapCanvas.tsx",
+          "type": "import"
+        },
+        {
           "from": "src/components/DriverFatigueModal.tsx",
           "to": "src/types/game.ts",
           "type": "import"
@@ -2668,10 +2676,9 @@
   "changes": {
     "added": [],
     "changed": [
-      "src/components/Dashboard.tsx",
-      "src/components/RealMapCanvas.tsx"
+      "src/components/Dashboard.tsx"
     ],
     "deleted": [],
-    "unchanged": 58
+    "unchanged": 59
   }
 }

@@ -137,8 +137,8 @@ export const RealMapCanvas: React.FC<{
   }, [cities, region]);
 
   const project = (lat: number, lng: number) => ({
-    x: 45 + ((lng - bounds.minLng) / (bounds.maxLng - bounds.minLng || 1)) * 910,
-    y: 35 + ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat || 1)) * 530,
+    x: 50 + ((lng - bounds.minLng) / (bounds.maxLng - bounds.minLng || 1)) * 900,
+    y: 40 + ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat || 1)) * 520,
   });
 
   const cityPoints = useMemo(
@@ -173,67 +173,37 @@ export const RealMapCanvas: React.FC<{
   }, [trucks, contracts, bounds]);
 
   return (
-    <div className="relative w-full h-full bg-[#090d16] overflow-hidden rounded-xl border border-slate-800/50 shadow-2xl">
+    <div className="relative w-full h-full bg-[#05070a] overflow-hidden rounded-xl border border-slate-900/50">
       <svg 
         viewBox="0 0 1000 600" 
         className="w-full h-full transform transition-transform duration-500 ease-out origin-center"
         style={{ transform: `scale(${zoom})` }}
       >
-        <defs>
-          <radialGradient id="hub-glow">
-            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
-            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
-          </radialGradient>
-          <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
-            <feGaussianBlur stdDeviation="2" result="blur" />
-            <feComposite in="SourceGraphic" in2="blur" operator="over" />
-          </filter>
-        </defs>
-
-        {/* Global Grid Lines */}
-        <g opacity="0.05">
-          {[...Array(20)].map((_, i) => (
-            <line key={`v-${i}`} x1={i * 50} y1="0" x2={i * 50} y2="600" stroke="#94a3b8" strokeWidth="1" />
-          ))}
-          {[...Array(12)].map((_, i) => (
-            <line key={`h-${i}`} x1="0" y1={i * 50} x2="1000" y2={i * 50} stroke="#94a3b8" strokeWidth="1" />
-          ))}
-        </g>
-
-        {/* Active Transport Corridors */}
+        {/* Active Transport Corridors (High Contrast / Thin Lines) */}
         {showRoutes && activeTruckPositions.filter(p => !p.isIdle).map(p => (
-          <g key={`route-${p.truckId}`}>
-            <path 
-              d={`M ${p.origin?.x} ${p.origin?.y} L ${p.dest?.x} ${p.dest?.y}`}
-              stroke="#1e293b"
-              strokeWidth="2"
-              fill="none"
-              strokeDasharray="4 4"
+          <g key={`route-${p.truckId}`} opacity="0.4">
+            <line 
+              x1={p.origin?.x} y1={p.origin?.y} x2={p.dest?.x} y2={p.dest?.y}
+              stroke="#1e293b" strokeWidth="1" strokeDasharray="2 2"
             />
-            <path 
-              d={`M ${p.origin?.x} ${p.origin?.y} L ${p.x} ${p.y}`}
-              stroke="#3b82f6"
-              strokeWidth="2"
-              fill="none"
-              strokeOpacity="0.6"
-              filter="url(#neon-glow)"
+            <line 
+              x1={p.origin?.x} y1={p.origin?.y} x2={p.x} y2={p.y}
+              stroke="#3b82f6" strokeWidth="1.5"
             />
           </g>
         ))}
 
-        {/* Cities & Logistics Hubs */}
+        {/* Cities & Logistics Hubs (Simple Circles) */}
         {cityPoints.map((city) => (
           <g key={`city-${city.name}`} transform={`translate(${city.x}, ${city.y})`}>
-            <circle r="12" fill="url(#hub-glow)" />
-            <circle r="3" fill="#334155" />
-            <circle r="1.5" fill="#facc15" filter="url(#neon-glow)" />
+            <circle r="1.5" fill="#334155" />
+            <circle r="0.8" fill="#94a3b8" />
             {showLabels && (
               <text 
-                x="6" 
-                y="3" 
-                fill="#94a3b8" 
-                fontSize="8" 
-                fontWeight="700" 
+                x="4" y="2" 
+                fill="#475569" 
+                fontSize="6" 
+                fontWeight="600" 
                 fontFamily="monospace"
                 className="pointer-events-none select-none uppercase tracking-tighter"
               >
@@ -243,7 +213,7 @@ export const RealMapCanvas: React.FC<{
           </g>
         ))}
 
-        {/* Live Truck Telemetry Beacons */}
+        {/* Live Truck Telemetry Beacons (Ultra-lightweight) */}
         {activeTruckPositions.map(p => (
           <g 
             key={`truck-${p.truckId}`} 
@@ -251,52 +221,32 @@ export const RealMapCanvas: React.FC<{
             onClick={() => onSelectTruck(p.truckId)}
             className="cursor-pointer group"
           >
-            <circle 
-              r="10" 
-              fill={p.isIdle ? '#64748b' : '#10b981'} 
-              fillOpacity="0.2" 
-              className={!p.isIdle ? "animate-ping" : ""} 
-            />
+            {/* Minimal Pulse for Active Only */}
+            {!p.isIdle && (
+              <circle r="6" fill="#10b981" fillOpacity="0.15" className="animate-pulse" />
+            )}
+            
             <rect 
-              x="-5" 
-              y="-5" 
-              width="10" 
-              height="10" 
-              rx="2" 
-              fill={p.isIdle ? '#475569' : '#10b981'} 
-              stroke="#fff" 
-              strokeWidth="1.5"
-              className="transition-transform group-hover:scale-125 shadow-xl"
+              x="-2.5" y="-2.5" width="5" height="5" 
+              fill={p.isIdle ? '#334155' : '#10b981'} 
+              stroke="#fff" strokeWidth="0.5"
             />
             
-            {/* HUD Tooltip Overlay */}
+            {/* HUD Tooltip Overlay (Simple Text) */}
             <g className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
-               <rect x="12" y="-25" width="100" height="45" rx="6" fill="#0f172a" fillOpacity="0.95" stroke="#334155" />
-               <text x="18" y="-12" fill="#fff" fontSize="8" fontWeight="bold">{p.truck.name}</text>
-               <text x="18" y="-2" fill="#94a3b8" fontSize="7">Status: {p.truck.status}</text>
-               <text x="18" y="8" fill="#fbbf24" fontSize="7">Fuel: {Math.floor(p.truck.currentFuelLitres)}L</text>
-               <text x="18" y="16" fill="#10b981" fontSize="7">Mpg: {p.truck.fuelEfficiencyMpg}</text>
+               <rect x="6" y="-12" width="60" height="20" fill="#000" fillOpacity="0.8" rx="2" />
+               <text x="10" y="-4" fill="#fff" fontSize="5" fontWeight="bold">{p.truck.name}</text>
+               <text x="10" y="4" fill="#94a3b8" fontSize="4">{p.truck.status}</text>
             </g>
           </g>
         ))}
       </svg>
 
-      {/* Map Legend / HUD Overlay */}
-      <div className="absolute bottom-4 left-4 bg-slate-950/80 backdrop-blur-md border border-slate-800 p-3 rounded-xl space-y-2 pointer-events-none select-none">
-        <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-          <span className="text-[10px] font-black text-white uppercase tracking-widest">NexHaul Live Telemetry</span>
-        </div>
-        <div className="flex items-center gap-4 text-[9px] text-slate-400 font-bold uppercase">
-          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-emerald-500 rounded-sm" /> En-Route</span>
-          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-slate-500 rounded-sm" /> Idle / Garage</span>
-          <span className="flex items-center gap-1.5"><span className="w-2 h-2 bg-amber-400 rounded-full border border-slate-800" /> Logistics Hub</span>
-        </div>
-      </div>
-      
-      {/* Continental Indicator */}
-      <div className="absolute top-4 right-4 bg-blue-600/10 backdrop-blur-sm border border-blue-500/20 px-3 py-1.5 rounded-full">
-        <span className="text-[10px] font-bold text-blue-400 uppercase tracking-tighter">Sector: {region} Navigation</span>
+      {/* Map Legend (Minimalist) */}
+      <div className="absolute bottom-2 left-2 flex items-center gap-3 text-[7px] text-slate-500 font-bold uppercase tracking-widest pointer-events-none select-none">
+        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-emerald-500" /> Active</span>
+        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-slate-700" /> Idle</span>
+        <span className="flex items-center gap-1"><span className="w-1 h-1 bg-slate-800 rounded-full" /> Hub</span>
       </div>
     </div>
   );
