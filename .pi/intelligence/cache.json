@@ -1,0 +1,2665 @@
+{
+  "snapshot": {
+    "schemaVersion": 1,
+    "projectRoot": "/data/data/com.termux/files/home/play/sandbox/Truck-simulator",
+    "projectName": "Truck-simulator",
+    "workspace": "play",
+    "leakWarnings": [],
+    "scannedAt": "2026-10-02T00:12:32.515Z",
+    "git": {
+      "branch": "detached",
+      "commit": "",
+      "dirty": false
+    },
+    "languages": {
+      "JSON": 6,
+      "Markdown": 2,
+      "JavaScript": 2,
+      "TypeScript React": 30,
+      "TypeScript": 20
+    },
+    "files": [
+      {
+        "path": ".oxlintrc.json",
+        "size": 245,
+        "mtimeMs": 1790492513215.48,
+        "hash": "b4d344818a1e1bf43997e4744a9153c8eef770c98b58229cd86363dabb85ded4",
+        "language": "JSON",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "FUTURE_INCIDENTS.md",
+        "size": 3024,
+        "mtimeMs": 1790883147607.953,
+        "hash": "c609958b8aa5224b63de7e084ec8f22d5e494239a0c1e15d9cdbbdee22bf2330",
+        "language": "Markdown",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "README.md",
+        "size": 1278,
+        "mtimeMs": 1790492513207.48,
+        "hash": "fa8aac78b8be1993010b57f41000a243ecba006f6731513fe4ec91e788bf2517",
+        "language": "Markdown",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "package-lock.json",
+        "size": 67148,
+        "mtimeMs": 1790875231327.9587,
+        "hash": "ba6a2658554defe6fd20db1d32acf196acab2aae5611379c1448456c5f6cb5e9",
+        "language": "JSON",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "package.json",
+        "size": 580,
+        "mtimeMs": 1790875212311.9587,
+        "hash": "fc64910a55f5e9a5fa52f4208f5bfa3019f87e3ed1f5f4f6267aef9dab85bee6",
+        "language": "JSON",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "postcss.config.js",
+        "size": 80,
+        "mtimeMs": 1790493324819.4795,
+        "hash": "190c877db466995bf1482f4a16abd06e04a89ede3119341e2a86ff96e1737b27",
+        "language": "JavaScript",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "src/App.tsx",
+        "size": 83928,
+        "mtimeMs": 1790898273079.9421,
+        "hash": "3ab60902ad8318c8c2f9218d9ef74ff1f991704755927a93de5c3021034753f8",
+        "language": "TypeScript React",
+        "imports": [
+          "./components/Dashboard",
+          "./components/FleetManager",
+          "./components/FreightBoard",
+          "./components/FuelManager",
+          "./components/HQDepot",
+          "./components/Header",
+          "./components/LeaderboardModal",
+          "./components/LiveMapModal",
+          "./components/MarketHub",
+          "./components/Navigation",
+          "./components/NewGameModal",
+          "./components/OfflineModal",
+          "./components/RepairBayView",
+          "./components/TruckInspectionModal",
+          "./config/simulation",
+          "./data/contracts",
+          "./data/drivers",
+          "./data/skills",
+          "./data/trailers",
+          "./data/trucks",
+          "./engine/gameplayStorage",
+          "./engine/jurisdiction",
+          "./engine/maintenancePricing",
+          "./engine/simulation",
+          "./engine/storage",
+          "./types/game",
+          "react"
+        ],
+        "exports": [
+          "App"
+        ]
+      },
+      {
+        "path": "src/components/CompanyProfileView.tsx",
+        "size": 27242,
+        "mtimeMs": 1790889533295.9485,
+        "hash": "a54eacabc440f59839acd45b9950f8b0cbee2d49876f37742deed2bb6ec5b69c",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "CompanyProfileView"
+        ]
+      },
+      {
+        "path": "src/components/Dashboard.tsx",
+        "size": 56466,
+        "mtimeMs": 1790894019407.9453,
+        "hash": "59a4c7b23292444535aca3d7d281ac31b30098013fc5dc512706b2b087b02409",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/simulation",
+          "../types/game",
+          "./DriverFatigueModal",
+          "./LiveMapModal",
+          "./Navigation",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "Dashboard"
+        ]
+      },
+      {
+        "path": "src/components/DriverFatigueModal.tsx",
+        "size": 10501,
+        "mtimeMs": 1790600802475.4026,
+        "hash": "2118d552f18df03b5515825dac9b862957d4b6fb01919db9079fc8e58ea9bb36",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "DriverFatigueModal"
+        ]
+      },
+      {
+        "path": "src/components/DriverLounge.tsx",
+        "size": 23943,
+        "mtimeMs": 1790886893607.9504,
+        "hash": "3e75d3922bbca86382bbf44b7e4c599e2e2a37b65d056dd00dbe3c36b4211e09",
+        "language": "TypeScript React",
+        "imports": [
+          "../config/simulation",
+          "../data/drivers",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "DriverLounge"
+        ]
+      },
+      {
+        "path": "src/components/ErrorBoundary.tsx",
+        "size": 2341,
+        "mtimeMs": 1790513052103.4653,
+        "hash": "42df19d2208fab4f09cc122e0849a64d362abbbd0d5677166707f7e5381ea731",
+        "language": "TypeScript React",
+        "imports": [
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "ErrorBoundary"
+        ]
+      },
+      {
+        "path": "src/components/FinanceHub.tsx",
+        "size": 21754,
+        "mtimeMs": 1790592607667.4084,
+        "hash": "6712cd2add472c3a72380a3d0e848c1b7e0c89da209942908091c58eeb97e6c8",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "./InvestorsHub",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "FinanceHub"
+        ]
+      },
+      {
+        "path": "src/components/FleetManager.tsx",
+        "size": 47484,
+        "mtimeMs": 1790893984515.9453,
+        "hash": "30aa2fa4c46c04f4be58c659f2b010950bad234cf36b1591ae3c60816170214b",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/maintenancePricing",
+          "../engine/simulation",
+          "../types/game",
+          "./Navigation",
+          "./RepairBayView",
+          "./ServiceApprovalModal",
+          "./TruckInspectionModal",
+          "./TruckSpecsModal",
+          "./TruckUpgradeModal",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "FleetManager"
+        ]
+      },
+      {
+        "path": "src/components/FreightBoard.tsx",
+        "size": 34094,
+        "mtimeMs": 1790894142691.945,
+        "hash": "97e99bcb5dae40edbfda07f424e3deba839235f3f1617c55a6d8ed8e09cef213",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/jurisdiction",
+          "../engine/simulation",
+          "../types/game",
+          "./Navigation",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "FreightBoard"
+        ]
+      },
+      {
+        "path": "src/components/FuelManager.tsx",
+        "size": 15845,
+        "mtimeMs": 1790796843178.8723,
+        "hash": "c290d43830ead5747f53c5122c599dc6891e88cf449f002f0cb6767132bcaa8e",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "FuelManager"
+        ]
+      },
+      {
+        "path": "src/components/HQDepot.tsx",
+        "size": 18162,
+        "mtimeMs": 1790891508743.947,
+        "hash": "27e97a57761b9fb3e798e9d9acb27a3a77d257878c2c4ff6d3884631cce45eff",
+        "language": "TypeScript React",
+        "imports": [
+          "../config/simulation",
+          "../data/depots",
+          "../data/drivers",
+          "../types/game",
+          "./CompanyProfileView",
+          "./DriverLounge",
+          "./FinanceHub",
+          "./Settings",
+          "./SkillTree",
+          "./StaffManager",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "HQDepot"
+        ]
+      },
+      {
+        "path": "src/components/Header.tsx",
+        "size": 6263,
+        "mtimeMs": 1790833562967.9885,
+        "hash": "c82254888a106a27b76fd089c13b08ae4d1a2f2b776684f0e94e2d2cc43549f2",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/companyProgression",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "Header"
+        ]
+      },
+      {
+        "path": "src/components/InvestorsHub.tsx",
+        "size": 8812,
+        "mtimeMs": 1790539142519.4468,
+        "hash": "0c0ca8983ffdf7c7b62135f407213297bad91fec664021035760f92502cb66cf",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "InvestorsHub"
+        ]
+      },
+      {
+        "path": "src/components/LeaderboardModal.tsx",
+        "size": 8633,
+        "mtimeMs": 1790558484811.4329,
+        "hash": "e8f5d70864d7856729f6aab9cacdf3a4a45579d06410b1efccd8825de6eea2a2",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "LeaderboardModal"
+        ]
+      },
+      {
+        "path": "src/components/LiveMapModal.tsx",
+        "size": 13942,
+        "mtimeMs": 1790895847443.9438,
+        "hash": "352baa53ed2de76024ed70eed21d8619133449b9a7847e8667892667b70871af",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "./RealMapCanvas",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "CITY_COORDS",
+          "LiveMapModal"
+        ]
+      },
+      {
+        "path": "src/components/MarketHub.tsx",
+        "size": 41430,
+        "mtimeMs": 1790778220994.8857,
+        "hash": "e27d0aecfd65c147094f68ca76d3b717be1c49cba003791a59472bbd43a95cad",
+        "language": "TypeScript React",
+        "imports": [
+          "../data/trailers",
+          "../data/trucks",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "MarketHub"
+        ]
+      },
+      {
+        "path": "src/components/Navigation.tsx",
+        "size": 2752,
+        "mtimeMs": 1790864088663.9666,
+        "hash": "df137a23d2f70cf120127f4963f1bd80c23c02e6ae7dd0af706151c1de5895c6",
+        "language": "TypeScript React",
+        "imports": [
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "Navigation",
+          "TabType"
+        ]
+      },
+      {
+        "path": "src/components/NewGameModal.tsx",
+        "size": 5679,
+        "mtimeMs": 1790560180391.4316,
+        "hash": "531ee9e6060e3af88b5f4ea67d22ba8eab7baafb6481f03bd5e1fce7e83a6c47",
+        "language": "TypeScript React",
+        "imports": [
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "NewGameModal"
+        ]
+      },
+      {
+        "path": "src/components/OfflineModal.tsx",
+        "size": 3823,
+        "mtimeMs": 1790513647591.4648,
+        "hash": "12311a32591a030f06420bf979be03edb3fec795dba42445519e97e859fc1f13",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react"
+        ],
+        "exports": [
+          "OfflineModal"
+        ]
+      },
+      {
+        "path": "src/components/RealMapCanvas.tsx",
+        "size": 18937,
+        "mtimeMs": 1790895840439.9438,
+        "hash": "70ddf52228ca316cb73d7ac8bf534812be264f8c9d9b6d9d3a20b4d49a5e7e72",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "react"
+        ],
+        "exports": [
+          "MapRegion",
+          "RealMapCanvas"
+        ]
+      },
+      {
+        "path": "src/components/RepairBayView.tsx",
+        "size": 6285,
+        "mtimeMs": 1790898276651.9421,
+        "hash": "751b1fd6c11514d8740870c0eb1d465d69677e32a0eaa0a9a0db9345a31fcb57",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "RepairBayView"
+        ]
+      },
+      {
+        "path": "src/components/ServiceApprovalModal.tsx",
+        "size": 15111,
+        "mtimeMs": 1790862524183.9678,
+        "hash": "06e14cd82fa4e44d3ff5e9ea35b21d3edf6a8f129c5ff607a1e93aa840294d70",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "ServiceApprovalModal"
+        ]
+      },
+      {
+        "path": "src/components/Settings.tsx",
+        "size": 8501,
+        "mtimeMs": 1790560647751.4314,
+        "hash": "2528a6408dc8949903dd69c6c0c241d5961bd206533b5d92d62932584ba757e4",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/gameplayStorage",
+          "../engine/storage",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "Settings"
+        ]
+      },
+      {
+        "path": "src/components/SkillTree.tsx",
+        "size": 4586,
+        "mtimeMs": 1790832978915.9888,
+        "hash": "543555fb2c6b0e11505f7d142737ebdd446f16882d7864c8fba218706304450b",
+        "language": "TypeScript React",
+        "imports": [
+          "../data/skills",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "SkillTree"
+        ]
+      },
+      {
+        "path": "src/components/StaffManager.tsx",
+        "size": 5680,
+        "mtimeMs": 1790539151791.4468,
+        "hash": "559625156bfbb2f6f847d62b967986e9bcb931dba993b0e06172497a911bcfea",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "StaffManager"
+        ]
+      },
+      {
+        "path": "src/components/TruckInspectionModal.tsx",
+        "size": 14352,
+        "mtimeMs": 1790866241255.965,
+        "hash": "d86a9837232f612176473ad4673ad7d0ea7e3d111ca516da17f574e0c5d7e88b",
+        "language": "TypeScript React",
+        "imports": [
+          "../config/simulation",
+          "../engine/maintenancePricing",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "TruckInspectionModal"
+        ]
+      },
+      {
+        "path": "src/components/TruckSpecsModal.tsx",
+        "size": 10159,
+        "mtimeMs": 1790865724071.9656,
+        "hash": "44d006a60e24a617978cca024979cb94d2ee1e572cb68a44408ea5d3db09a434",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "TruckSpecsModal"
+        ]
+      },
+      {
+        "path": "src/components/TruckUpgradeModal.tsx",
+        "size": 11066,
+        "mtimeMs": 1790884715839.952,
+        "hash": "8708da1795ff46d0b5a65fcf95db11dfeb7a88593770c3be261b3579548ffbf9",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "TruckUpgradeModal",
+          "UPGRADE_DEFINITIONS"
+        ]
+      },
+      {
+        "path": "src/components/VehicleShowroomModal.tsx",
+        "size": 17188,
+        "mtimeMs": 1790884107191.9524,
+        "hash": "dbd30f3c0a6a723a65bf0a2ab7d4be58dc276f2dcb35237ad18eb68f59606e74",
+        "language": "TypeScript React",
+        "imports": [
+          "../data/trailers",
+          "../data/trucks",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "exports": [
+          "VehicleShowroomModal"
+        ]
+      },
+      {
+        "path": "src/config/simulation.ts",
+        "size": 10745,
+        "mtimeMs": 1790898255027.9421,
+        "hash": "58a2e8c65eeb42f13724638ed09511d9daa690753e87a9ba45df8671e17dcca6",
+        "language": "TypeScript",
+        "imports": [],
+        "exports": [
+          "SIMULATION_CONFIG",
+          "SimulationConfig"
+        ]
+      },
+      {
+        "path": "src/data/americanCities.ts",
+        "size": 24681,
+        "mtimeMs": 1790896941027.943,
+        "hash": "1998405271735ffcef54fd16f6925d627d6fcc9bd4822a471f2e36e297a333db",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "AMERICAN_CITIES_DATA",
+          "AmericanCityProfile",
+          "AmericanCorridor",
+          "AmericanHubType"
+        ]
+      },
+      {
+        "path": "src/data/contracts.ts",
+        "size": 26891,
+        "mtimeMs": 1790895860863.9438,
+        "hash": "340bddc039b213386f8eece90d01a174a4bddf5878f9115fadac024731355ddd",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "INITIAL_AVAILABLE_CONTRACTS",
+          "generateBatchContracts",
+          "generateRandomContract"
+        ]
+      },
+      {
+        "path": "src/data/depots.ts",
+        "size": 1864,
+        "mtimeMs": 1790494208495.4788,
+        "hash": "71b1cdf637ac4f9d7e29ec5829e658eea5a3721d608fe9bcd532bf7a2c10883f",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "DepotUpgradeCost",
+          "INITIAL_DEPOT",
+          "getDepotCosts"
+        ]
+      },
+      {
+        "path": "src/data/drivers.ts",
+        "size": 16299,
+        "mtimeMs": 1790886805023.9504,
+        "hash": "88170a7bfd5bd708041ed99b999042385a33a65caf7c47da932eb8f32405b9d6",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "DriverCandidate",
+          "DriverQualityTier",
+          "HIRABLE_DRIVERS_POOL",
+          "INITIAL_DRIVERS",
+          "generateDriverCandidate",
+          "generateDriverMarket",
+          "generateUniqueDriverName"
+        ]
+      },
+      {
+        "path": "src/data/legalStructures.ts",
+        "size": 5312,
+        "mtimeMs": 1790540549027.4458,
+        "hash": "68b95fdde8114c58aaa6c16236453552593489605831ef53dce6142a39d3e248",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "LEGAL_STRUCTURES",
+          "LegalStructureDefinition"
+        ]
+      },
+      {
+        "path": "src/data/skills.ts",
+        "size": 9328,
+        "mtimeMs": 1790832883375.989,
+        "hash": "0aa0174fa49040a64069136ac1a8c64e13836bb66f9a740f3aee0b354a5c5ce7",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "SKILL_TREE"
+        ]
+      },
+      {
+        "path": "src/data/trailers.ts",
+        "size": 3891,
+        "mtimeMs": 1790787186910.8794,
+        "hash": "dbd4b80e9b6fb66256f354431189809ae4651bc786fbff478a502a1f75ff07c5",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "CATALOG_TRAILERS",
+          "INITIAL_TRAILERS"
+        ]
+      },
+      {
+        "path": "src/data/trucks.ts",
+        "size": 13906,
+        "mtimeMs": 1790884063475.9524,
+        "hash": "5ea1d90949f0ef6364e4a1578a03a371350a978799d966a1ed27961f6ddacfdb",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "exports": [
+          "CATALOG_TRUCKS",
+          "INITIAL_TRUCKS"
+        ]
+      },
+      {
+        "path": "src/engine/companyProgression.ts",
+        "size": 939,
+        "mtimeMs": 1790833347635.9885,
+        "hash": "30dd5b03eef22f21f2c98912a70d41882d16fbfb383ef93aefe9e4570e4aca40",
+        "language": "TypeScript",
+        "imports": [],
+        "exports": [
+          "getCompanyRank",
+          "getCompanyXpRequirement"
+        ]
+      },
+      {
+        "path": "src/engine/gameplayStorage.ts",
+        "size": 3757,
+        "mtimeMs": 1790793832938.8745,
+        "hash": "4fb331729068f3390a2acb541e57151abb8d49feecafd5692226631e10578164",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game",
+          "./storage"
+        ],
+        "exports": [
+          "SaveSlot",
+          "createNewGameplay",
+          "deleteGameplay",
+          "getActiveSaveId",
+          "getSaveSlots",
+          "loadGameplayState",
+          "saveGameplayState",
+          "saveSlotsIndex",
+          "setActiveSaveId"
+        ]
+      },
+      {
+        "path": "src/engine/incident/incidentEngine.ts",
+        "size": 5005,
+        "mtimeMs": 1790887737371.9497,
+        "hash": "d653749bdce8a66bf8f2640a544f06d76707a54a5adb1abd8fdebd55a518f5e1",
+        "language": "TypeScript",
+        "imports": [
+          "../../types/game",
+          "./incidentTypes"
+        ],
+        "exports": [
+          "evaluateRoadsideIncidents"
+        ]
+      },
+      {
+        "path": "src/engine/incident/incidentTypes.ts",
+        "size": 496,
+        "mtimeMs": 1790766144994.8943,
+        "hash": "fd8c334668d0d5b011b576b1c90e81e0d32c72b553a203f47c39a857ac458ae6",
+        "language": "TypeScript",
+        "imports": [
+          "../../types/game"
+        ],
+        "exports": [
+          "AccidentSeverity",
+          "IncidentEvaluationResult",
+          "VehiclePerformanceResult"
+        ]
+      },
+      {
+        "path": "src/engine/incident/vehiclePerformance.ts",
+        "size": 1684,
+        "mtimeMs": 1790766169826.8943,
+        "hash": "6949b71e64e2243baa0628a452a033d3538f3cd8afb926b7c1a68e24ee5ef24a",
+        "language": "TypeScript",
+        "imports": [
+          "../../types/game",
+          "./incidentTypes"
+        ],
+        "exports": [
+          "calculateVehiclePerformance"
+        ]
+      },
+      {
+        "path": "src/engine/jurisdiction.ts",
+        "size": 10584,
+        "mtimeMs": 1790881740063.954,
+        "hash": "9a91664f2da76727ef07ab3afd5ae34dd9c62d2d73c232e0f528483f8cf78f31",
+        "language": "TypeScript",
+        "imports": [
+          "../config/simulation",
+          "../types/game"
+        ],
+        "exports": [
+          "ClassLimitSpec",
+          "DispatchValidationResult",
+          "REGIONAL_JURISDICTIONS",
+          "RegionalJurisdictionSpec",
+          "TRUCK_CLASS_LIMITS",
+          "calculateRigMaxPayloadTons",
+          "validateDispatchJurisdictionAndLimits"
+        ]
+      },
+      {
+        "path": "src/engine/maintenancePricing.ts",
+        "size": 2636,
+        "mtimeMs": 1790797816722.8718,
+        "hash": "d68b16d9d315fc2c4cce631a694c3fb72ed687ac6775dea9abfeaf74daa4bed4",
+        "language": "TypeScript",
+        "imports": [
+          "../config/simulation",
+          "../types/game"
+        ],
+        "exports": [
+          "MaintenanceQuote",
+          "MaintenanceServiceKey",
+          "getMaintenanceQuote"
+        ]
+      },
+      {
+        "path": "src/engine/simulation.ts",
+        "size": 74517,
+        "mtimeMs": 1790893164183.9458,
+        "hash": "bf217f7dbf2b86df1d7162b2c92be7757b93f9545690cfc1a966a9215f851df2",
+        "language": "TypeScript",
+        "imports": [
+          "../config/simulation",
+          "../data/contracts",
+          "../types/game",
+          "./companyProgression",
+          "./incident/incidentEngine",
+          "./incident/vehiclePerformance",
+          "./jurisdiction"
+        ],
+        "exports": [
+          "DrivingMotionState",
+          "TruckPhysicsResult",
+          "calculateOfflineProgress",
+          "calculateTruckPhysics",
+          "calculateTruckSpeed",
+          "formatShortDriverTruckIdentifier",
+          "getRefuelCost",
+          "processSimulationTick"
+        ]
+      },
+      {
+        "path": "src/engine/storage.ts",
+        "size": 15992,
+        "mtimeMs": 1790841194247.983,
+        "hash": "bf9da85cabccc29f472b92278d219995f0c0b4d6af3c7c2f80efab2eb0522bbb",
+        "language": "TypeScript",
+        "imports": [
+          "../data/contracts",
+          "../data/depots",
+          "../data/drivers",
+          "../data/trailers",
+          "../data/trucks",
+          "../types/game"
+        ],
+        "exports": [
+          "exportSaveToJSON",
+          "getInitialGameState",
+          "importSaveFromJSON",
+          "loadGameStateFromStorage",
+          "saveGameStateToStorage"
+        ]
+      },
+      {
+        "path": "src/main.tsx",
+        "size": 336,
+        "mtimeMs": 1790506132727.4702,
+        "hash": "f4c757560551fc79cb650b4bc4dc3255194397ab960c607d2a5461e7684d0b8d",
+        "language": "TypeScript React",
+        "imports": [
+          "./App.tsx",
+          "./components/ErrorBoundary.tsx",
+          "react",
+          "react-dom/client"
+        ],
+        "exports": []
+      },
+      {
+        "path": "src/types/game.ts",
+        "size": 10946,
+        "mtimeMs": 1790884750963.952,
+        "hash": "65902b53c1ec4cf6587f4665f618d64e6a1ea8f05608b354a972f7c6c231c6bd",
+        "language": "TypeScript",
+        "imports": [],
+        "exports": [
+          "BankLoan",
+          "CDLClassType",
+          "CargoCategory",
+          "CommodityInfo",
+          "CompanyProfile",
+          "Contract",
+          "CorporateStructureType",
+          "DepotUpgrade",
+          "Driver",
+          "DriverTrait",
+          "EngineSpecs",
+          "FinancialStatementRecord",
+          "FuelDelivery",
+          "GameSaveState",
+          "IPOMarketState",
+          "InvestorRound",
+          "Milestone",
+          "OfficeStaff",
+          "OfflineProgressSummary",
+          "PlayerSkill",
+          "RoadEventLog",
+          "StaffRole",
+          "Trailer",
+          "TrailerType",
+          "Truck",
+          "TruckClass",
+          "TruckRegion",
+          "TruckUpgrade",
+          "WeatherType"
+        ]
+      },
+      {
+        "path": "tailwind.config.js",
+        "size": 436,
+        "mtimeMs": 1790734344826.9172,
+        "hash": "0fcd741ec1c2ad32bbf963d6161a53c0351e7f5cb1d6018abc638a0714684942",
+        "language": "JavaScript",
+        "imports": [
+          "tailwindcss"
+        ],
+        "exports": []
+      },
+      {
+        "path": "tsconfig.app.json",
+        "size": 655,
+        "mtimeMs": 1790492513211.48,
+        "hash": "8e5d12ba330e7d86409edec74b95451e0db22ee09b9426c94b5bf817571eddb0",
+        "language": "JSON",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "tsconfig.json",
+        "size": 119,
+        "mtimeMs": 1790492513211.48,
+        "hash": "770b4140bbb581e2dfd9ea9946ffc9c75a1d86ba7d2db5f77c83e37cbdf9d808",
+        "language": "JSON",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "tsconfig.node.json",
+        "size": 558,
+        "mtimeMs": 1790492513211.48,
+        "hash": "d366cc0827139db39c61815f22491bbfda56c654354a42ad7795143d314e45e8",
+        "language": "JSON",
+        "imports": [],
+        "exports": []
+      },
+      {
+        "path": "vite.config.ts",
+        "size": 161,
+        "mtimeMs": 1790492513215.48,
+        "hash": "e1eefd0ed1639c88d1213884ef760516884db9e168190e223fee6b063ad3e088",
+        "language": "TypeScript",
+        "imports": [
+          "@vitejs/plugin-react",
+          "vite"
+        ],
+        "exports": []
+      }
+    ],
+    "modules": [
+      {
+        "path": "postcss.config.js",
+        "language": "JavaScript",
+        "imports": [],
+        "importedBy": [],
+        "exports": []
+      },
+      {
+        "path": "src/App.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "./components/Dashboard",
+          "./components/FleetManager",
+          "./components/FreightBoard",
+          "./components/FuelManager",
+          "./components/HQDepot",
+          "./components/Header",
+          "./components/LeaderboardModal",
+          "./components/LiveMapModal",
+          "./components/MarketHub",
+          "./components/Navigation",
+          "./components/NewGameModal",
+          "./components/OfflineModal",
+          "./components/RepairBayView",
+          "./components/TruckInspectionModal",
+          "./config/simulation",
+          "./data/contracts",
+          "./data/drivers",
+          "./data/skills",
+          "./data/trailers",
+          "./data/trucks",
+          "./engine/gameplayStorage",
+          "./engine/jurisdiction",
+          "./engine/maintenancePricing",
+          "./engine/simulation",
+          "./engine/storage",
+          "./types/game",
+          "react"
+        ],
+        "importedBy": [
+          "src/main.tsx"
+        ],
+        "exports": [
+          "App"
+        ]
+      },
+      {
+        "path": "src/components/CompanyProfileView.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx"
+        ],
+        "exports": [
+          "CompanyProfileView"
+        ]
+      },
+      {
+        "path": "src/components/Dashboard.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/simulation",
+          "../types/game",
+          "./DriverFatigueModal",
+          "./LiveMapModal",
+          "./Navigation",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "Dashboard"
+        ]
+      },
+      {
+        "path": "src/components/DriverFatigueModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/Dashboard.tsx"
+        ],
+        "exports": [
+          "DriverFatigueModal"
+        ]
+      },
+      {
+        "path": "src/components/DriverLounge.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../config/simulation",
+          "../data/drivers",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx"
+        ],
+        "exports": [
+          "DriverLounge"
+        ]
+      },
+      {
+        "path": "src/components/ErrorBoundary.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/main.tsx"
+        ],
+        "exports": [
+          "ErrorBoundary"
+        ]
+      },
+      {
+        "path": "src/components/FinanceHub.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "./InvestorsHub",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx"
+        ],
+        "exports": [
+          "FinanceHub"
+        ]
+      },
+      {
+        "path": "src/components/FleetManager.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/maintenancePricing",
+          "../engine/simulation",
+          "../types/game",
+          "./Navigation",
+          "./RepairBayView",
+          "./ServiceApprovalModal",
+          "./TruckInspectionModal",
+          "./TruckSpecsModal",
+          "./TruckUpgradeModal",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "FleetManager"
+        ]
+      },
+      {
+        "path": "src/components/FreightBoard.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/jurisdiction",
+          "../engine/simulation",
+          "../types/game",
+          "./Navigation",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "FreightBoard"
+        ]
+      },
+      {
+        "path": "src/components/FuelManager.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "FuelManager"
+        ]
+      },
+      {
+        "path": "src/components/HQDepot.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../config/simulation",
+          "../data/depots",
+          "../data/drivers",
+          "../types/game",
+          "./CompanyProfileView",
+          "./DriverLounge",
+          "./FinanceHub",
+          "./Settings",
+          "./SkillTree",
+          "./StaffManager",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "HQDepot"
+        ]
+      },
+      {
+        "path": "src/components/Header.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/companyProgression",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "Header"
+        ]
+      },
+      {
+        "path": "src/components/InvestorsHub.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/FinanceHub.tsx"
+        ],
+        "exports": [
+          "InvestorsHub"
+        ]
+      },
+      {
+        "path": "src/components/LeaderboardModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "LeaderboardModal"
+        ]
+      },
+      {
+        "path": "src/components/LiveMapModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "./RealMapCanvas",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/Dashboard.tsx"
+        ],
+        "exports": [
+          "CITY_COORDS",
+          "LiveMapModal"
+        ]
+      },
+      {
+        "path": "src/components/MarketHub.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../data/trailers",
+          "../data/trucks",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "MarketHub"
+        ]
+      },
+      {
+        "path": "src/components/Navigation.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/Dashboard.tsx",
+          "src/components/FleetManager.tsx",
+          "src/components/FreightBoard.tsx"
+        ],
+        "exports": [
+          "Navigation",
+          "TabType"
+        ]
+      },
+      {
+        "path": "src/components/NewGameModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "NewGameModal"
+        ]
+      },
+      {
+        "path": "src/components/OfflineModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react"
+        ],
+        "importedBy": [
+          "src/App.tsx"
+        ],
+        "exports": [
+          "OfflineModal"
+        ]
+      },
+      {
+        "path": "src/components/RealMapCanvas.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/LiveMapModal.tsx"
+        ],
+        "exports": [
+          "MapRegion",
+          "RealMapCanvas"
+        ]
+      },
+      {
+        "path": "src/components/RepairBayView.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/FleetManager.tsx"
+        ],
+        "exports": [
+          "RepairBayView"
+        ]
+      },
+      {
+        "path": "src/components/ServiceApprovalModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/FleetManager.tsx"
+        ],
+        "exports": [
+          "ServiceApprovalModal"
+        ]
+      },
+      {
+        "path": "src/components/Settings.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../engine/gameplayStorage",
+          "../engine/storage",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx"
+        ],
+        "exports": [
+          "Settings"
+        ]
+      },
+      {
+        "path": "src/components/SkillTree.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../data/skills",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx"
+        ],
+        "exports": [
+          "SkillTree"
+        ]
+      },
+      {
+        "path": "src/components/StaffManager.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx"
+        ],
+        "exports": [
+          "StaffManager"
+        ]
+      },
+      {
+        "path": "src/components/TruckInspectionModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../config/simulation",
+          "../engine/maintenancePricing",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/FleetManager.tsx"
+        ],
+        "exports": [
+          "TruckInspectionModal"
+        ]
+      },
+      {
+        "path": "src/components/TruckSpecsModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/FleetManager.tsx"
+        ],
+        "exports": [
+          "TruckSpecsModal"
+        ]
+      },
+      {
+        "path": "src/components/TruckUpgradeModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [
+          "src/components/FleetManager.tsx"
+        ],
+        "exports": [
+          "TruckUpgradeModal",
+          "UPGRADE_DEFINITIONS"
+        ]
+      },
+      {
+        "path": "src/components/VehicleShowroomModal.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "../data/trailers",
+          "../data/trucks",
+          "../types/game",
+          "lucide-react",
+          "react"
+        ],
+        "importedBy": [],
+        "exports": [
+          "VehicleShowroomModal"
+        ]
+      },
+      {
+        "path": "src/config/simulation.ts",
+        "language": "TypeScript",
+        "imports": [],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/DriverLounge.tsx",
+          "src/components/HQDepot.tsx",
+          "src/components/TruckInspectionModal.tsx",
+          "src/engine/jurisdiction.ts",
+          "src/engine/maintenancePricing.ts",
+          "src/engine/simulation.ts"
+        ],
+        "exports": [
+          "SIMULATION_CONFIG",
+          "SimulationConfig"
+        ]
+      },
+      {
+        "path": "src/data/americanCities.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [],
+        "exports": [
+          "AMERICAN_CITIES_DATA",
+          "AmericanCityProfile",
+          "AmericanCorridor",
+          "AmericanHubType"
+        ]
+      },
+      {
+        "path": "src/data/contracts.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/engine/simulation.ts",
+          "src/engine/storage.ts"
+        ],
+        "exports": [
+          "INITIAL_AVAILABLE_CONTRACTS",
+          "generateBatchContracts",
+          "generateRandomContract"
+        ]
+      },
+      {
+        "path": "src/data/depots.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/components/HQDepot.tsx",
+          "src/engine/storage.ts"
+        ],
+        "exports": [
+          "DepotUpgradeCost",
+          "INITIAL_DEPOT",
+          "getDepotCosts"
+        ]
+      },
+      {
+        "path": "src/data/drivers.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/DriverLounge.tsx",
+          "src/components/HQDepot.tsx",
+          "src/engine/storage.ts"
+        ],
+        "exports": [
+          "DriverCandidate",
+          "DriverQualityTier",
+          "HIRABLE_DRIVERS_POOL",
+          "INITIAL_DRIVERS",
+          "generateDriverCandidate",
+          "generateDriverMarket",
+          "generateUniqueDriverName"
+        ]
+      },
+      {
+        "path": "src/data/legalStructures.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [],
+        "exports": [
+          "LEGAL_STRUCTURES",
+          "LegalStructureDefinition"
+        ]
+      },
+      {
+        "path": "src/data/skills.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/SkillTree.tsx"
+        ],
+        "exports": [
+          "SKILL_TREE"
+        ]
+      },
+      {
+        "path": "src/data/trailers.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/MarketHub.tsx",
+          "src/components/VehicleShowroomModal.tsx",
+          "src/engine/storage.ts"
+        ],
+        "exports": [
+          "CATALOG_TRAILERS",
+          "INITIAL_TRAILERS"
+        ]
+      },
+      {
+        "path": "src/data/trucks.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/MarketHub.tsx",
+          "src/components/VehicleShowroomModal.tsx",
+          "src/engine/storage.ts"
+        ],
+        "exports": [
+          "CATALOG_TRUCKS",
+          "INITIAL_TRUCKS"
+        ]
+      },
+      {
+        "path": "src/engine/companyProgression.ts",
+        "language": "TypeScript",
+        "imports": [],
+        "importedBy": [
+          "src/components/Header.tsx",
+          "src/engine/simulation.ts"
+        ],
+        "exports": [
+          "getCompanyRank",
+          "getCompanyXpRequirement"
+        ]
+      },
+      {
+        "path": "src/engine/gameplayStorage.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../types/game",
+          "./storage"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/Settings.tsx"
+        ],
+        "exports": [
+          "SaveSlot",
+          "createNewGameplay",
+          "deleteGameplay",
+          "getActiveSaveId",
+          "getSaveSlots",
+          "loadGameplayState",
+          "saveGameplayState",
+          "saveSlotsIndex",
+          "setActiveSaveId"
+        ]
+      },
+      {
+        "path": "src/engine/incident/incidentEngine.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../../types/game",
+          "./incidentTypes"
+        ],
+        "importedBy": [
+          "src/engine/simulation.ts"
+        ],
+        "exports": [
+          "evaluateRoadsideIncidents"
+        ]
+      },
+      {
+        "path": "src/engine/incident/incidentTypes.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../../types/game"
+        ],
+        "importedBy": [
+          "src/engine/incident/incidentEngine.ts",
+          "src/engine/incident/vehiclePerformance.ts"
+        ],
+        "exports": [
+          "AccidentSeverity",
+          "IncidentEvaluationResult",
+          "VehiclePerformanceResult"
+        ]
+      },
+      {
+        "path": "src/engine/incident/vehiclePerformance.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../../types/game",
+          "./incidentTypes"
+        ],
+        "importedBy": [
+          "src/engine/simulation.ts"
+        ],
+        "exports": [
+          "calculateVehiclePerformance"
+        ]
+      },
+      {
+        "path": "src/engine/jurisdiction.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../config/simulation",
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/FreightBoard.tsx",
+          "src/engine/simulation.ts"
+        ],
+        "exports": [
+          "ClassLimitSpec",
+          "DispatchValidationResult",
+          "REGIONAL_JURISDICTIONS",
+          "RegionalJurisdictionSpec",
+          "TRUCK_CLASS_LIMITS",
+          "calculateRigMaxPayloadTons",
+          "validateDispatchJurisdictionAndLimits"
+        ]
+      },
+      {
+        "path": "src/engine/maintenancePricing.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../config/simulation",
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/FleetManager.tsx",
+          "src/components/TruckInspectionModal.tsx"
+        ],
+        "exports": [
+          "MaintenanceQuote",
+          "MaintenanceServiceKey",
+          "getMaintenanceQuote"
+        ]
+      },
+      {
+        "path": "src/engine/simulation.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../config/simulation",
+          "../data/contracts",
+          "../types/game",
+          "./companyProgression",
+          "./incident/incidentEngine",
+          "./incident/vehiclePerformance",
+          "./jurisdiction"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/Dashboard.tsx",
+          "src/components/FleetManager.tsx",
+          "src/components/FreightBoard.tsx"
+        ],
+        "exports": [
+          "DrivingMotionState",
+          "TruckPhysicsResult",
+          "calculateOfflineProgress",
+          "calculateTruckPhysics",
+          "calculateTruckSpeed",
+          "formatShortDriverTruckIdentifier",
+          "getRefuelCost",
+          "processSimulationTick"
+        ]
+      },
+      {
+        "path": "src/engine/storage.ts",
+        "language": "TypeScript",
+        "imports": [
+          "../data/contracts",
+          "../data/depots",
+          "../data/drivers",
+          "../data/trailers",
+          "../data/trucks",
+          "../types/game"
+        ],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/Settings.tsx",
+          "src/engine/gameplayStorage.ts"
+        ],
+        "exports": [
+          "exportSaveToJSON",
+          "getInitialGameState",
+          "importSaveFromJSON",
+          "loadGameStateFromStorage",
+          "saveGameStateToStorage"
+        ]
+      },
+      {
+        "path": "src/main.tsx",
+        "language": "TypeScript React",
+        "imports": [
+          "./App.tsx",
+          "./components/ErrorBoundary.tsx",
+          "react",
+          "react-dom/client"
+        ],
+        "importedBy": [],
+        "exports": []
+      },
+      {
+        "path": "src/types/game.ts",
+        "language": "TypeScript",
+        "imports": [],
+        "importedBy": [
+          "src/App.tsx",
+          "src/components/CompanyProfileView.tsx",
+          "src/components/Dashboard.tsx",
+          "src/components/DriverFatigueModal.tsx",
+          "src/components/DriverLounge.tsx",
+          "src/components/FinanceHub.tsx",
+          "src/components/FleetManager.tsx",
+          "src/components/FreightBoard.tsx",
+          "src/components/FuelManager.tsx",
+          "src/components/HQDepot.tsx",
+          "src/components/Header.tsx",
+          "src/components/InvestorsHub.tsx",
+          "src/components/LeaderboardModal.tsx",
+          "src/components/LiveMapModal.tsx",
+          "src/components/MarketHub.tsx",
+          "src/components/OfflineModal.tsx",
+          "src/components/RealMapCanvas.tsx",
+          "src/components/RepairBayView.tsx",
+          "src/components/ServiceApprovalModal.tsx",
+          "src/components/Settings.tsx",
+          "src/components/SkillTree.tsx",
+          "src/components/StaffManager.tsx",
+          "src/components/TruckInspectionModal.tsx",
+          "src/components/TruckSpecsModal.tsx",
+          "src/components/TruckUpgradeModal.tsx",
+          "src/components/VehicleShowroomModal.tsx",
+          "src/data/americanCities.ts",
+          "src/data/contracts.ts",
+          "src/data/depots.ts",
+          "src/data/drivers.ts",
+          "src/data/legalStructures.ts",
+          "src/data/skills.ts",
+          "src/data/trailers.ts",
+          "src/data/trucks.ts",
+          "src/engine/gameplayStorage.ts",
+          "src/engine/incident/incidentEngine.ts",
+          "src/engine/incident/incidentTypes.ts",
+          "src/engine/incident/vehiclePerformance.ts",
+          "src/engine/jurisdiction.ts",
+          "src/engine/maintenancePricing.ts",
+          "src/engine/simulation.ts",
+          "src/engine/storage.ts"
+        ],
+        "exports": [
+          "BankLoan",
+          "CDLClassType",
+          "CargoCategory",
+          "CommodityInfo",
+          "CompanyProfile",
+          "Contract",
+          "CorporateStructureType",
+          "DepotUpgrade",
+          "Driver",
+          "DriverTrait",
+          "EngineSpecs",
+          "FinancialStatementRecord",
+          "FuelDelivery",
+          "GameSaveState",
+          "IPOMarketState",
+          "InvestorRound",
+          "Milestone",
+          "OfficeStaff",
+          "OfflineProgressSummary",
+          "PlayerSkill",
+          "RoadEventLog",
+          "StaffRole",
+          "Trailer",
+          "TrailerType",
+          "Truck",
+          "TruckClass",
+          "TruckRegion",
+          "TruckUpgrade",
+          "WeatherType"
+        ]
+      },
+      {
+        "path": "tailwind.config.js",
+        "language": "JavaScript",
+        "imports": [
+          "tailwindcss"
+        ],
+        "importedBy": [],
+        "exports": []
+      },
+      {
+        "path": "vite.config.ts",
+        "language": "TypeScript",
+        "imports": [
+          "@vitejs/plugin-react",
+          "vite"
+        ],
+        "importedBy": [],
+        "exports": []
+      }
+    ],
+    "dependencies": [
+      {
+        "name": "@types/react",
+        "source": "package.json",
+        "version": "^19.0.0",
+        "type": "development"
+      },
+      {
+        "name": "@types/react-dom",
+        "source": "package.json",
+        "version": "^19.0.0",
+        "type": "development"
+      },
+      {
+        "name": "@vitejs/plugin-react",
+        "source": "package.json",
+        "version": "^4.3.4",
+        "type": "development"
+      },
+      {
+        "name": "autoprefixer",
+        "source": "package.json",
+        "version": "^10.4.20",
+        "type": "development"
+      },
+      {
+        "name": "lucide-react",
+        "source": "package.json",
+        "version": "^1.16.0",
+        "type": "runtime"
+      },
+      {
+        "name": "postcss",
+        "source": "package.json",
+        "version": "^8.4.49",
+        "type": "development"
+      },
+      {
+        "name": "react",
+        "source": "package.json",
+        "version": "^19.0.0",
+        "type": "runtime"
+      },
+      {
+        "name": "react-dom",
+        "source": "package.json",
+        "version": "^19.0.0",
+        "type": "runtime"
+      },
+      {
+        "name": "tailwindcss",
+        "source": "package.json",
+        "version": "^3.4.17",
+        "type": "development"
+      },
+      {
+        "name": "typescript",
+        "source": "package.json",
+        "version": "^5.7.2",
+        "type": "development"
+      },
+      {
+        "name": "vite",
+        "source": "package.json",
+        "version": "^6.0.7",
+        "type": "development"
+      }
+    ],
+    "graph": {
+      "nodes": [
+        ".oxlintrc.json",
+        "FUTURE_INCIDENTS.md",
+        "README.md",
+        "package-lock.json",
+        "package.json",
+        "postcss.config.js",
+        "src/App.tsx",
+        "src/components/CompanyProfileView.tsx",
+        "src/components/Dashboard.tsx",
+        "src/components/DriverFatigueModal.tsx",
+        "src/components/DriverLounge.tsx",
+        "src/components/ErrorBoundary.tsx",
+        "src/components/FinanceHub.tsx",
+        "src/components/FleetManager.tsx",
+        "src/components/FreightBoard.tsx",
+        "src/components/FuelManager.tsx",
+        "src/components/HQDepot.tsx",
+        "src/components/Header.tsx",
+        "src/components/InvestorsHub.tsx",
+        "src/components/LeaderboardModal.tsx",
+        "src/components/LiveMapModal.tsx",
+        "src/components/MarketHub.tsx",
+        "src/components/Navigation.tsx",
+        "src/components/NewGameModal.tsx",
+        "src/components/OfflineModal.tsx",
+        "src/components/RealMapCanvas.tsx",
+        "src/components/RepairBayView.tsx",
+        "src/components/ServiceApprovalModal.tsx",
+        "src/components/Settings.tsx",
+        "src/components/SkillTree.tsx",
+        "src/components/StaffManager.tsx",
+        "src/components/TruckInspectionModal.tsx",
+        "src/components/TruckSpecsModal.tsx",
+        "src/components/TruckUpgradeModal.tsx",
+        "src/components/VehicleShowroomModal.tsx",
+        "src/config/simulation.ts",
+        "src/data/americanCities.ts",
+        "src/data/contracts.ts",
+        "src/data/depots.ts",
+        "src/data/drivers.ts",
+        "src/data/legalStructures.ts",
+        "src/data/skills.ts",
+        "src/data/trailers.ts",
+        "src/data/trucks.ts",
+        "src/engine/companyProgression.ts",
+        "src/engine/gameplayStorage.ts",
+        "src/engine/incident/incidentEngine.ts",
+        "src/engine/incident/incidentTypes.ts",
+        "src/engine/incident/vehiclePerformance.ts",
+        "src/engine/jurisdiction.ts",
+        "src/engine/maintenancePricing.ts",
+        "src/engine/simulation.ts",
+        "src/engine/storage.ts",
+        "src/main.tsx",
+        "src/types/game.ts",
+        "tailwind.config.js",
+        "tsconfig.app.json",
+        "tsconfig.json",
+        "tsconfig.node.json",
+        "vite.config.ts"
+      ],
+      "edges": [
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/Dashboard.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/FleetManager.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/FreightBoard.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/FuelManager.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/HQDepot.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/Header.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/LeaderboardModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/LiveMapModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/MarketHub.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/Navigation.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/NewGameModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/OfflineModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/RepairBayView.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/components/TruckInspectionModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/data/contracts.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/data/drivers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/data/skills.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/data/trailers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/data/trucks.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/engine/gameplayStorage.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/engine/jurisdiction.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/engine/maintenancePricing.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/engine/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/engine/storage.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/App.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/CompanyProfileView.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Dashboard.tsx",
+          "to": "src/engine/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Dashboard.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Dashboard.tsx",
+          "to": "src/components/DriverFatigueModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Dashboard.tsx",
+          "to": "src/components/LiveMapModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Dashboard.tsx",
+          "to": "src/components/Navigation.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/DriverFatigueModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/DriverLounge.tsx",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/DriverLounge.tsx",
+          "to": "src/data/drivers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/DriverLounge.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FinanceHub.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FinanceHub.tsx",
+          "to": "src/components/InvestorsHub.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/engine/maintenancePricing.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/engine/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/components/Navigation.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/components/RepairBayView.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/components/ServiceApprovalModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/components/TruckInspectionModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/components/TruckSpecsModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FleetManager.tsx",
+          "to": "src/components/TruckUpgradeModal.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FreightBoard.tsx",
+          "to": "src/engine/jurisdiction.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FreightBoard.tsx",
+          "to": "src/engine/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FreightBoard.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FreightBoard.tsx",
+          "to": "src/components/Navigation.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/FuelManager.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/data/depots.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/data/drivers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/components/CompanyProfileView.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/components/DriverLounge.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/components/FinanceHub.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/components/Settings.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/components/SkillTree.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/HQDepot.tsx",
+          "to": "src/components/StaffManager.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Header.tsx",
+          "to": "src/engine/companyProgression.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Header.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/InvestorsHub.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/LeaderboardModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/LiveMapModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/LiveMapModal.tsx",
+          "to": "src/components/RealMapCanvas.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/components/MarketHub.tsx",
+          "to": "src/data/trailers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/MarketHub.tsx",
+          "to": "src/data/trucks.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/MarketHub.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/OfflineModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/RealMapCanvas.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/RepairBayView.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/ServiceApprovalModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Settings.tsx",
+          "to": "src/engine/gameplayStorage.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Settings.tsx",
+          "to": "src/engine/storage.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/Settings.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/SkillTree.tsx",
+          "to": "src/data/skills.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/SkillTree.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/StaffManager.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/TruckInspectionModal.tsx",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/TruckInspectionModal.tsx",
+          "to": "src/engine/maintenancePricing.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/TruckInspectionModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/TruckSpecsModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/TruckUpgradeModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/VehicleShowroomModal.tsx",
+          "to": "src/data/trailers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/VehicleShowroomModal.tsx",
+          "to": "src/data/trucks.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/components/VehicleShowroomModal.tsx",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/americanCities.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/contracts.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/depots.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/drivers.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/legalStructures.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/skills.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/trailers.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/data/trucks.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/gameplayStorage.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/gameplayStorage.ts",
+          "to": "src/engine/storage.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/incident/incidentEngine.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/incident/incidentEngine.ts",
+          "to": "src/engine/incident/incidentTypes.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/incident/incidentTypes.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/incident/vehiclePerformance.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/incident/vehiclePerformance.ts",
+          "to": "src/engine/incident/incidentTypes.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/jurisdiction.ts",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/jurisdiction.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/maintenancePricing.ts",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/maintenancePricing.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/config/simulation.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/data/contracts.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/engine/companyProgression.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/engine/incident/incidentEngine.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/engine/incident/vehiclePerformance.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/simulation.ts",
+          "to": "src/engine/jurisdiction.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/storage.ts",
+          "to": "src/data/contracts.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/storage.ts",
+          "to": "src/data/depots.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/storage.ts",
+          "to": "src/data/drivers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/storage.ts",
+          "to": "src/data/trailers.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/storage.ts",
+          "to": "src/data/trucks.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/engine/storage.ts",
+          "to": "src/types/game.ts",
+          "type": "import"
+        },
+        {
+          "from": "src/main.tsx",
+          "to": "src/App.tsx",
+          "type": "import"
+        },
+        {
+          "from": "src/main.tsx",
+          "to": "src/components/ErrorBoundary.tsx",
+          "type": "import"
+        }
+      ]
+    }
+  },
+  "changes": {
+    "added": [],
+    "changed": [],
+    "deleted": [],
+    "unchanged": 60
+  }
+}
