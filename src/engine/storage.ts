@@ -101,6 +101,19 @@ export function getInitialGameState(): GameSaveState {
         status: 'available'
       }
     ],
+    shipperRetainers: [
+      {
+        id: 'retainer-1',
+        shipperName: 'Midwest Logistics Corp',
+        origin: 'Chicago Hub',
+        destination: 'Detroit Logistics Park',
+        cargoCategory: 'General Freight',
+        weeklyPayout: 18500,
+        requiredTrucksCount: 1,
+        durationWeeksRemaining: 4,
+        status: 'active'
+      }
+    ],
     ipo: {
       isPubliclyTraded: false,
       stockSymbol: 'APEX',
@@ -193,6 +206,7 @@ export function loadGameStateFromStorage(): GameSaveState | null {
       if (!parsed.weatherForecast) parsed.weatherForecast = ['Clear Skies', 'Heavy Rain', 'Dense Fog'];
       if (!parsed.loans) parsed.loans = [];
       if (!parsed.investors) parsed.investors = [];
+      if (!parsed.shipperRetainers) parsed.shipperRetainers = [];
       if (!parsed.ipo) {
         parsed.ipo = {
           isPubliclyTraded: false,

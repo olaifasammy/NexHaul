@@ -5,10 +5,10 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T00:36:21.063Z",
+    "scannedAt": "2026-10-02T01:05:47.052Z",
     "git": {
       "branch": "main",
-      "commit": "90ed8d316f4243e137003b55685e0afafc8a7937",
+      "commit": "24b81b01dc97ff63a72503aeec6a03401917cc24",
       "dirty": true
     },
     "languages": {
@@ -599,9 +599,9 @@
       },
       {
         "path": "src/data/contracts.ts",
-        "size": 26891,
-        "mtimeMs": 1790895860863.9438,
-        "hash": "340bddc039b213386f8eece90d01a174a4bddf5878f9115fadac024731355ddd",
+        "size": 27309,
+        "mtimeMs": 1790901462419.94,
+        "hash": "77acaae1deb91d1a966a91cf9e05f5ee844a5534e4ce40f11085dc3bfd8de9f4",
         "language": "TypeScript",
         "imports": [
           "../types/game"
@@ -816,9 +816,9 @@
       },
       {
         "path": "src/engine/simulation.ts",
-        "size": 74517,
-        "mtimeMs": 1790893164183.9458,
-        "hash": "bf217f7dbf2b86df1d7162b2c92be7757b93f9545690cfc1a966a9215f851df2",
+        "size": 76078,
+        "mtimeMs": 1790901475615.94,
+        "hash": "8bd5dc4ba5f709398de141bebd41b01260f89820a160f59ecef8132a39f44a37",
         "language": "TypeScript",
         "imports": [
           "../config/simulation",
@@ -878,9 +878,9 @@
       },
       {
         "path": "src/types/game.ts",
-        "size": 10946,
-        "mtimeMs": 1790884750963.952,
-        "hash": "65902b53c1ec4cf6587f4665f618d64e6a1ea8f05608b354a972f7c6c231c6bd",
+        "size": 11238,
+        "mtimeMs": 1790901400299.94,
+        "hash": "0970a221f8d587fa76c7af574f8887a91aacf3fb4788caa81c25a4ff7bcc4c3c",
         "language": "TypeScript",
         "imports": [],
         "exports": [

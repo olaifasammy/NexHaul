@@ -321,14 +321,16 @@ export interface FuelDelivery {
   totalCost: number;
 }
 
-export interface Milestone {
+export interface ShipperRetainer {
   id: string;
-  title: string;
-  description: string;
-  type: 'earnings' | 'miles' | 'fleet' | 'level';
-  target: number;
-  rewardCash: number;
-  isClaimed: boolean;
+  shipperName: string;
+  origin: string;
+  destination: string;
+  cargoCategory: CargoCategory;
+  weeklyPayout: number;
+  requiredTrucksCount: number;
+  durationWeeksRemaining: number;
+  status: 'active' | 'completed' | 'expired';
 }
 
 export interface GameSaveState {
@@ -354,6 +356,7 @@ export interface GameSaveState {
   // Realistic Finance, Loans, Investors, IPO, Staff & Profile
   loans: BankLoan[];
   investors: InvestorRound[];
+  shipperRetainers: ShipperRetainer[];
   ipo: IPOMarketState;
   staff: OfficeStaff[];
   profile: CompanyProfile;

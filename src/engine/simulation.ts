@@ -562,10 +562,16 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
       // Attached trailer
       const trailer = nextState.trailers.find(tr => tr && tr.id === truck.assignedTrailerId);
 
-      // Find candidate contracts
+      // Find candidate contracts: Prioritize backhauls and contracts starting from truck's current city
+      const truckCity = truck.currentCity || 'HQ Depot';
       const candidateContracts = [...nextState.availableContracts]
         .filter(c => c && c.status === 'available' && !c.assignedTruckId)
-        .sort((a, b) => b.payoutCash - a.payoutCash);
+        .sort((a, b) => {
+          const aMatch = a.origin === truckCity ? 2 : (a.isBackhaul ? 1 : 0);
+          const bMatch = b.origin === truckCity ? 2 : (b.isBackhaul ? 1 : 0);
+          if (aMatch !== bMatch) return bMatch - aMatch;
+          return b.payoutCash - a.payoutCash;
+        });
 
       for (const contract of candidateContracts) {
         const validation = validateDispatchJurisdictionAndLimits(
@@ -1332,6 +1338,31 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
   if (nextState.gameHour >= 24.0) {
     nextState.gameHour -= 24.0;
     nextState.gameDay += 1;
+
+    // Weekly Shipper Retainer Payout (every 7 days)
+    if (nextState.gameDay % 7 === 0 && nextState.shipperRetainers && nextState.shipperRetainers.length > 0) {
+      let totalRetainerIncome = 0;
+      nextState.shipperRetainers.forEach(retainer => {
+        if (retainer.status === 'active' && retainer.durationWeeksRemaining > 0) {
+          totalRetainerIncome += retainer.weeklyPayout;
+          retainer.durationWeeksRemaining -= 1;
+          if (retainer.durationWeeksRemaining <= 0) {
+            retainer.status = 'completed';
+          }
+        }
+      });
+      if (totalRetainerIncome > 0) {
+        nextState.cash += totalRetainerIncome;
+        newEvents.push({
+          id: `retainer-weekly-${Date.now()}`,
+          timestamp: Date.now(),
+          title: `💼 Weekly Shipper Retainer Payout`,
+          message: `Received guaranteed weekly retainer revenue from corporate logistics contracts (+$${totalRetainerIncome.toLocaleString()}).`,
+          type: 'success',
+          cashChange: totalRetainerIncome
+        });
+      }
+    }
 
     // True Monthly Billing on the 1st of every month (30-day billing cycle)
     if (

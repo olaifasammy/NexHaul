@@ -1,4 +1,5 @@
 import type { Contract, TrailerType, CargoCategory, TruckRegion } from '../types/game';
+import { AMERICAN_CITIES_DATA } from './americanCities';
 
 export const INITIAL_AVAILABLE_CONTRACTS: Contract[] = [
   {
@@ -596,6 +597,16 @@ export function generateRandomContract(
   ratePerMile *= laneDemand;
   ratePerMile *= commodityMultiplier;
   ratePerMile *= urgencyMultiplier;
+
+  const originCity = AMERICAN_CITIES_DATA[selectedRoute.origin];
+  const destCity = AMERICAN_CITIES_DATA[selectedRoute.dest];
+  let imbalanceMultiplier = 1.0;
+  if (originCity?.economicRole === 'Export Surplus' && destCity?.economicRole === 'Import Sink') {
+    imbalanceMultiplier = 1.15;
+  } else if (originCity?.economicRole === 'Import Sink') {
+    imbalanceMultiplier = 1.20;
+  }
+  ratePerMile *= imbalanceMultiplier;
 
   // Regional operating complexity.
   if (selectedGroup.region === 'Europe') ratePerMile *= 1.08;
