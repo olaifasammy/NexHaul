@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T02:04:40.249Z",
+    "scannedAt": "2026-10-02T02:21:28.504Z",
     "git": {
       "branch": "main",
-      "commit": "1cf10a60c2b0bb9b31f9570648e0c492c1447040",
-      "dirty": false
+      "commit": "ec120189e1faf6d6c8f218c381c9122b0df01e71",
+      "dirty": true
     },
     "languages": {
       "JSON": 6,
@@ -129,9 +129,9 @@
       },
       {
         "path": "src/components/Dashboard.tsx",
-        "size": 56466,
-        "mtimeMs": 1790894019407.9453,
-        "hash": "59a4c7b23292444535aca3d7d281ac31b30098013fc5dc512706b2b087b02409",
+        "size": 53526,
+        "mtimeMs": 1790907656591.9355,
+        "hash": "5bfc3ef95616995a464006417ec630229d99ddc8ff01c32101f29aa9022cb2c8",
         "language": "TypeScript React",
         "imports": [
           "../engine/simulation",
@@ -413,9 +413,9 @@
       },
       {
         "path": "src/components/RealMapCanvas.tsx",
-        "size": 18937,
-        "mtimeMs": 1790895840439.9438,
-        "hash": "70ddf52228ca316cb73d7ac8bf534812be264f8c9d9b6d9d3a20b4d49a5e7e72",
+        "size": 15768,
+        "mtimeMs": 1790907571207.9355,
+        "hash": "807b3dfba0af5d0cbeab3874e9939e4f7944a930104a75ac926430f6c30ff1cc",
         "language": "TypeScript React",
         "imports": [
           "../types/game",
@@ -491,9 +491,9 @@
       },
       {
         "path": "src/components/StaffManager.tsx",
-        "size": 5680,
-        "mtimeMs": 1790539151791.4468,
-        "hash": "559625156bfbb2f6f847d62b967986e9bcb931dba993b0e06172497a911bcfea",
+        "size": 5582,
+        "mtimeMs": 1790906757067.936,
+        "hash": "2138fdad1427ccaa8ded83694eb3ef9329ffd8f38acada7f4086bf5573643af7",
         "language": "TypeScript React",
         "imports": [
           "../types/game",
@@ -879,9 +879,9 @@
       },
       {
         "path": "src/types/game.ts",
-        "size": 11431,
-        "mtimeMs": 1790903578619.9385,
-        "hash": "45fe40c6cf80bfbcb084020d4fe371958fa13ad1092ae87625e98d7f5060907d",
+        "size": 11416,
+        "mtimeMs": 1790906734435.936,
+        "hash": "c2290afc23480a2148cdb6e07bf8b137ceb3954ccc709676370b430848c10a09",
         "language": "TypeScript",
         "imports": [],
         "exports": [
@@ -2667,8 +2667,11 @@
   },
   "changes": {
     "added": [],
-    "changed": [],
+    "changed": [
+      "src/components/Dashboard.tsx",
+      "src/components/RealMapCanvas.tsx"
+    ],
     "deleted": [],
-    "unchanged": 60
+    "unchanged": 58
   }
 }

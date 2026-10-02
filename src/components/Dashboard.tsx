@@ -3,6 +3,7 @@ import type { GameSaveState } from '../types/game';
 import type { TabType } from './Navigation';
 import { calculateTruckPhysics, formatShortDriverTruckIdentifier, type DrivingMotionState } from '../engine/simulation';
 import { DriverFatigueModal } from './DriverFatigueModal';
+import { RealMapCanvas } from './RealMapCanvas';
 import { CITY_COORDS } from './LiveMapModal';
 import { 
   Gauge, 
@@ -24,7 +25,9 @@ import {
   ChevronLeft,
   ChevronRight,
   Search,
-  Maximize2
+  Maximize2,
+  Plus,
+  Minus
 } from 'lucide-react';
 
 interface DashboardProps {
@@ -816,88 +819,45 @@ export const Dashboard: React.FC<DashboardProps> = ({
         </div>
 
         {/* Vector Map Canvas */}
-        <div className="relative w-full h-56 bg-slate-950 rounded-xl border border-slate-800 overflow-hidden flex items-center justify-center p-2">
-          <div 
-            className="relative w-full h-full transition-transform duration-200 select-none flex items-center justify-center"
-            style={{ transform: `scale(${mapZoom})` }}
-          >
-            <svg className="w-full h-full opacity-90" viewBox="0 0 500 500">
-              <defs>
-                <pattern id="dashboard-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-                  <path d="M 40 0 L 0 0 0 40" fill="none" stroke="#1e293b" strokeWidth="0.8" />
-                </pattern>
-              </defs>
-              <rect width="500" height="500" fill="url(#dashboard-grid)" rx="12" />
+        <div className="relative w-full h-80 bg-[#090d16] rounded-xl border border-slate-800 overflow-hidden shadow-inner group">
+          <RealMapCanvas 
+            region={mapRegion}
+            contracts={activeContracts}
+            trucks={state.trucks}
+            selectedTruckId={mapSelectedTruckId}
+            onSelectTruck={(id) => setMapSelectedTruckId(id)}
+            zoom={mapZoom}
+            showLabels={mapZoom > 0.9}
+          />
 
-              {/* Curved Highway Route Lines */}
-              {activeContracts.map(contract => {
-                if (contract.region !== mapRegion) return null;
-                const orig = CITY_COORDS[contract.origin] || { x: 150, y: 150 };
-                const dest = CITY_COORDS[contract.destination] || { x: 350, y: 350 };
-                const progress = Math.min(1, (contract.progressMiles || 0) / Math.max(1, contract.distanceMiles));
-
-                const dx = dest.x - orig.x;
-                const dy = dest.y - orig.y;
-                const mx = (orig.x + dest.x) / 2;
-                const my = (orig.y + dest.y) / 2;
-                const cx = mx - dy * 0.22;
-                const cy = my + dx * 0.22;
-
-                const pathData = `M ${orig.x} ${orig.y} Q ${cx} ${cy} ${dest.x} ${dest.y}`;
-                const currentX = Math.pow(1 - progress, 2) * orig.x + 2 * (1 - progress) * progress * cx + Math.pow(progress, 2) * dest.x;
-                const currentY = Math.pow(1 - progress, 2) * orig.y + 2 * (1 - progress) * progress * cy + Math.pow(progress, 2) * dest.y;
-                const progressPathData = `M ${orig.x} ${orig.y} Q ${cx} ${cy} ${currentX} ${currentY}`;
-
-                return (
-                  <g key={`dash-route-${contract.id}`}>
-                    <path d={pathData} fill="none" stroke="#334155" strokeWidth="2" strokeDasharray="4 4" />
-                    <path d={progressPathData} fill="none" stroke="#f59e0b" strokeWidth="2.5" strokeLinecap="round" />
-                  </g>
-                );
-              })}
-
-              {/* City Hub Markers */}
-              {Object.entries(CITY_COORDS).map(([cityName, coord]) => {
-                if (coord.region !== mapRegion) return null;
-                return (
-                  <g key={`dash-city-${cityName}`} transform={`translate(${coord.x}, ${coord.y})`}>
-                    <circle r="3.5" fill="#64748b" stroke="#0f172a" strokeWidth="1" />
-                    <text x="5" y="3" fill="#64748b" fontSize="7" fontFamily="monospace">{cityName}</text>
-                  </g>
-                );
-              })}
-
-              {/* Moving Truck Markers */}
-              {activeContracts.map(contract => {
-                if (contract.region !== mapRegion) return null;
-                const orig = CITY_COORDS[contract.origin] || { x: 150, y: 150 };
-                const dest = CITY_COORDS[contract.destination] || { x: 350, y: 350 };
-                const progress = Math.min(1, (contract.progressMiles || 0) / Math.max(1, contract.distanceMiles));
-                const currentX = orig.x + (dest.x - orig.x) * progress;
-                const currentY = orig.y + (dest.y - orig.y) * progress;
-
-                return (
-                  <g 
-                    key={`dash-truck-${contract.id}`} 
-                    transform={`translate(${currentX}, ${currentY})`}
-                    onClick={() => contract.assignedTruckId && setMapSelectedTruckId(contract.assignedTruckId)}
-                    className="cursor-pointer group"
-                  >
-                    <circle r="10" fill="#f59e0b" fillOpacity="0.25" className="animate-ping" />
-                    <circle r="7" fill="#1e293b" stroke="#f59e0b" strokeWidth="1.5" />
-                    <text x="-3.5" y="2.5" fontSize="8">🚚</text>
-                    <title>{contract.title}</title>
-                  </g>
-                );
-              })}
-            </svg>
+          {/* Map Status Overlay (Corner) */}
+          <div className="absolute top-3 left-3 flex items-center space-x-2 bg-slate-900/60 backdrop-blur-md px-2.5 py-1.5 rounded-lg border border-slate-700/50 pointer-events-none select-none">
+            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+            <span className="text-[10px] font-bold text-slate-300 uppercase tracking-tighter">Sector {mapRegion} Link</span>
           </div>
 
           {/* Map Controls */}
-          <div className="absolute bottom-3 right-3 flex items-center space-x-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800 shadow">
-            <button onClick={() => setMapZoom(prev => Math.min(2.0, +(prev + 0.25).toFixed(2)))} className="px-2 py-0.5 text-xs font-bold text-slate-200 hover:bg-slate-800 rounded">+</button>
-            <button onClick={() => setMapZoom(prev => Math.max(0.8, +(prev - 0.25).toFixed(2)))} className="px-2 py-0.5 text-xs font-bold text-slate-200 hover:bg-slate-800 rounded">-</button>
-            <button onClick={() => setMapZoom(1.0)} className="px-2 py-0.5 text-[10px] font-bold text-slate-400 hover:bg-slate-800 rounded">Reset</button>
+          <div className="absolute bottom-3 right-3 flex items-center space-x-1.5 bg-slate-900/90 backdrop-blur-md p-1.5 rounded-xl border border-slate-700 shadow-2xl transition-opacity opacity-0 group-hover:opacity-100">
+            <button 
+              onClick={() => setMapZoom(prev => Math.min(2.5, +(prev + 0.25).toFixed(2)))} 
+              className="p-1 text-slate-200 hover:bg-slate-800 rounded-lg transition"
+              title="Zoom In"
+            >
+              <Plus className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => setMapZoom(prev => Math.max(0.6, +(prev - 0.25).toFixed(2)))} 
+              className="p-1 text-slate-200 hover:bg-slate-800 rounded-lg transition"
+              title="Zoom Out"
+            >
+              <Minus className="w-4 h-4" />
+            </button>
+            <button 
+              onClick={() => setMapZoom(1.0)} 
+              className="px-2 py-1 text-[10px] font-bold text-slate-400 hover:text-white transition"
+            >
+              RESET
+            </button>
           </div>
         </div>
 

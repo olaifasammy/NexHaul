@@ -105,22 +105,8 @@ const CITY_LOCATIONS: Record<string, CityLocation> = {
   'Mombasa Port': { lat: -4.0435, lng: 39.6682, region: 'Africa' },
 };
 
-const COLORS: Record<string, string> = {
-  America: '#f5a623',
-  Europe: '#35c6df',
-  Asia: '#b59aff',
-  Africa: '#65d68a',
-};
-
-type Point = { x: number; y: number };
-
-function seeded(n: number) {
-  const v = Math.sin(n * 127.1 + 311.7) * 43758.5453;
-  return v - Math.floor(v);
-}
-
 const labelFor = (name: string) =>
-  name.replace(/ (Hub|Terminal|Depot|Port|Wharf|Logistics|Interchange|Railhead|Rail|Cluster|Complex|Park|Processing Hub|Data Fortress)/, '');
+  name.replace(/ (Hub|Terminal|Depot|Port|Wharf|Logistics|Interchange|Railhead|Rail|Cluster|Complex|Park|Processing Hub|Data Fortress|Logistics Center|Inland Port|Air Hub|Distribution Hub|River Terminal|Industrial Hub|Garden City Terminal|Gulf Terminal|Border Gateway|Trade Hub|Border Terminal|Tech Complex|Sierra Logistics Park|Intermountain Hub|Agricultural Dock|Plains Terminal|Marine Terminal|Valley Hub|Inland Port)/, '');
 
 export const RealMapCanvas: React.FC<{
   region: MapRegion;
@@ -129,7 +115,9 @@ export const RealMapCanvas: React.FC<{
   selectedTruckId: string | null;
   onSelectTruck: (id: string) => void;
   zoom?: number;
-}> = ({ region, contracts, trucks, selectedTruckId, onSelectTruck, zoom = 1 }) => {
+  showLabels?: boolean;
+  showRoutes?: boolean;
+}> = ({ region, contracts, trucks, selectedTruckId, onSelectTruck, zoom = 1, showLabels = true, showRoutes = true }) => {
   const cities = useMemo(
     () => Object.entries(CITY_LOCATIONS).filter(([, c]) => region === 'Global' || c.region === region),
     [region],
@@ -148,209 +136,167 @@ export const RealMapCanvas: React.FC<{
     };
   }, [cities, region]);
 
-  const project = (lat: number, lng: number): Point => ({
+  const project = (lat: number, lng: number) => ({
     x: 45 + ((lng - bounds.minLng) / (bounds.maxLng - bounds.minLng || 1)) * 910,
     y: 35 + ((bounds.maxLat - lat) / (bounds.maxLat - bounds.minLat || 1)) * 530,
   });
 
   const cityPoints = useMemo(
-    () => cities.map(([name, city], i) => ({ name, ...project(city.lat, city.lng), seed: i + 1 })),
-    [cities, bounds],
+    () => cities.map(([name, city]) => ({ name, ...project(city.lat, city.lng) })),
+    [cities, bounds]
   );
 
-  const visibleContracts = contracts.filter(c => region === 'Global' || c.region === region);
-
-  const routeData = visibleContracts.map(contract => {
-    const origin = CITY_LOCATIONS[contract.origin];
-    const destination = CITY_LOCATIONS[contract.destination];
-    if (!origin || !destination) return null;
-    const a = project(origin.lat, origin.lng);
-    const b = project(destination.lat, destination.lng);
-    const dx = b.x - a.x;
-    const dy = b.y - a.y;
-    const curve = Math.max(-75, Math.min(75, dx * 0.1));
-    const path = `M ${a.x} ${a.y} Q ${(a.x + b.x) / 2 - curve} ${(a.y + b.y) / 2 + curve} ${b.x} ${b.y}`;
-    const progress = Math.max(0, Math.min(1, (contract.progressMiles || 0) / Math.max(1, contract.distanceMiles)));
-    const t = progress;
-    const current = {
-      x: (1-t)*(1-t)*a.x + 2*(1-t)*t*((a.x+b.x)/2-curve) + t*t*b.x,
-      y: (1-t)*(1-t)*a.y + 2*(1-t)*t*((a.y+b.y)/2+curve) + t*t*b.y,
-    };
-    const truck = trucks.find(item => item.id === contract.assignedTruckId);
-    return { contract, path, current, progress, truck };
-  }).filter((item): item is NonNullable<typeof item> => item !== null);
-
-  // Each city gets a dense, irregular street grid around its center.
-  const cityStreets = cityPoints.flatMap((city, cityIndex) => {
-    const streets: React.ReactNode[] = [];
-    const radius = 20 + (seeded(city.seed) * 18);
-    for (let i = -3; i <= 3; i++) {
-      const offset = i * 9;
-      const bend = (seeded(city.seed * 20 + i + 8) - .5) * 13;
-      streets.push(
-        <path key={`street-h-${cityIndex}-${i}`}
-          d={`M ${city.x-radius} ${city.y+offset} Q ${city.x+bend} ${city.y+offset+bend} ${city.x+radius} ${city.y+offset- bend}`}
-          stroke="#65777a" strokeWidth="1.15" opacity=".35" fill="none" />,
-        <path key={`street-v-${cityIndex}-${i}`}
-          d={`M ${city.x+offset} ${city.y-radius} Q ${city.x+offset+bend} ${city.y+bend} ${city.x+offset-bend} ${city.y+radius}`}
-          stroke="#65777a" strokeWidth="1.15" opacity=".32" fill="none" />,
-      );
-    }
-    for (let b = 0; b < 10; b++) {
-      const angle = seeded(city.seed * 80 + b) * Math.PI * 2;
-      const dist = radius * (.55 + seeded(city.seed + b * 7) * .7);
-      const x = city.x + Math.cos(angle) * dist;
-      const y = city.y + Math.sin(angle) * dist;
-      streets.push(
-        <rect key={`block-${cityIndex}-${b}`} x={x} y={y} width={5 + seeded(b+city.seed)*7}
-          height={4 + seeded(b*2+city.seed)*6} rx="1" fill="#8a9a8b" opacity=".13"
-          transform={`rotate(${seeded(b+city.seed*3)*50-25} ${x} ${y})`} />,
-      );
-    }
-    return streets;
-  });
-
-  // Main corridors connect nearby cities, with secondary roads branching outward.
-  const highwayPaths = useMemo(() => {
-    const points = cityPoints;
-    const links = new Set<string>();
-    const paths: { d: string; major: boolean; id: string }[] = [];
-    points.forEach((a, i) => {
-      const nearest = points
-        .map((b, j) => ({ b, j, distance: Math.hypot(a.x-b.x, a.y-b.y) }))
-        .filter(item => item.j !== i)
-        .sort((x,y) => x.distance-y.distance)
-        .slice(0, region === 'Global' ? 1 : 2);
-      nearest.forEach(({ b, j, distance }) => {
-        const key = [Math.min(i,j),Math.max(i,j)].join('-');
-        if (links.has(key)) return;
-        links.add(key);
-        const bend = (seeded(i*31+j*17)-.5) * Math.min(70,distance*.22);
-        const midX = (a.x+b.x)/2 + bend;
-        const midY = (a.y+b.y)/2 - bend*.65;
-        paths.push({
-          d: `M ${a.x} ${a.y} Q ${midX} ${midY} ${b.x} ${b.y}`,
-          major: distance > 90,
-          id: key,
-        });
-      });
+  const activeTruckPositions = useMemo(() => {
+    return trucks.map(truck => {
+      const contract = contracts.find(c => c.assignedTruckId === truck.id && c.status === 'in_progress');
+      if (!contract) {
+        const loc = CITY_LOCATIONS[truck.currentCity] || CITY_LOCATIONS['Dallas Logistics'];
+        return { truckId: truck.id, ...project(loc.lat, loc.lng), truck, isIdle: true };
+      }
+      
+      const origin = CITY_LOCATIONS[contract.origin] || CITY_LOCATIONS['Dallas Logistics'];
+      const dest = CITY_LOCATIONS[contract.destination] || CITY_LOCATIONS['Chicago Hub'];
+      const ratio = Math.min(0.99, (contract.progressMiles || 0) / (contract.distanceMiles || 1));
+      
+      const currentLat = origin.lat + (dest.lat - origin.lat) * ratio;
+      const currentLng = origin.lng + (dest.lng - origin.lng) * ratio;
+      
+      return {
+        truckId: truck.id,
+        ...project(currentLat, currentLng),
+        origin: project(origin.lat, origin.lng),
+        dest: project(dest.lat, dest.lng),
+        truck,
+        isIdle: false
+      };
     });
-    return paths;
-  }, [cityPoints, region]);
+  }, [trucks, contracts, bounds]);
 
   return (
-    <div className="relative h-full w-full overflow-hidden" style={{ background: '#172a2b' }}>
-      <svg
-        viewBox={`${(1000 - 1000 / Math.max(1, Math.min(zoom, 4))) / 2} ${(600 - 600 / Math.max(1, Math.min(zoom, 4))) / 2} ${1000 / Math.max(1, Math.min(zoom, 4))} ${600 / Math.max(1, Math.min(zoom, 4))}`} preserveAspectRatio="xMidYMid slice" className="absolute inset-0 h-full w-full">
+    <div className="relative w-full h-full bg-[#090d16] overflow-hidden rounded-xl border border-slate-800/50 shadow-2xl">
+      <svg 
+        viewBox="0 0 1000 600" 
+        className="w-full h-full transform transition-transform duration-500 ease-out origin-center"
+        style={{ transform: `scale(${zoom})` }}
+      >
         <defs>
-          <pattern id="map-grid" width="32" height="32" patternUnits="userSpaceOnUse">
-            <path d="M32 0H0V32" fill="none" stroke="#b0c1ad" strokeOpacity=".035" strokeWidth="1" />
-          </pattern>
-          <linearGradient id="land-shade" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#253d39" />
-            <stop offset="55%" stopColor="#1b302e" />
-            <stop offset="100%" stopColor="#142526" />
-          </linearGradient>
-          <radialGradient id="city-glow">
-            <stop offset="0%" stopColor="#d4b77b" stopOpacity=".18" />
-            <stop offset="100%" stopColor="#d4b77b" stopOpacity="0" />
+          <radialGradient id="hub-glow">
+            <stop offset="0%" stopColor="#3b82f6" stopOpacity="0.4" />
+            <stop offset="100%" stopColor="#3b82f6" stopOpacity="0" />
           </radialGradient>
+          <filter id="neon-glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="2" result="blur" />
+            <feComposite in="SourceGraphic" in2="blur" operator="over" />
+          </filter>
         </defs>
 
-        <rect width="1000" height="600" fill="url(#land-shade)" />
-        <rect width="1000" height="600" fill="url(#map-grid)" />
+        {/* Global Grid Lines */}
+        <g opacity="0.05">
+          {[...Array(20)].map((_, i) => (
+            <line key={`v-${i}`} x1={i * 50} y1="0" x2={i * 50} y2="600" stroke="#94a3b8" strokeWidth="1" />
+          ))}
+          {[...Array(12)].map((_, i) => (
+            <line key={`h-${i}`} x1="0" y1={i * 50} x2="1000" y2={i * 50} stroke="#94a3b8" strokeWidth="1" />
+          ))}
+        </g>
 
-        {Array.from({length: 20}, (_,i) => {
-          const y = i*37-40;
-          const bend = seeded(i+70)*100-50;
-          return <path key={`contour-${i}`}
-            d={`M-50 ${y} C220 ${y+bend}, 620 ${y-bend}, 1050 ${y+35}`}
-            fill="none" stroke={i%4===0 ? '#7c9272' : '#789087'}
-            strokeWidth={i%4===0 ? 20 : 9} strokeOpacity={i%4===0 ? '.045' : '.035'} />;
-        })}
-
-        {/* Rivers and waterways */}
-        <path d="M-30 130 C130 180 170 100 300 165 S530 270 640 220 S850 150 1030 220"
-          fill="none" stroke="#32606a" strokeWidth="13" opacity=".22" />
-        <path d="M-30 130 C130 180 170 100 300 165 S530 270 640 220 S850 150 1030 220"
-          fill="none" stroke="#5a8790" strokeWidth="2.5" opacity=".38" />
-        <path d="M160 630 C210 500 180 420 320 360 S520 300 580 -30"
-          fill="none" stroke="#32606a" strokeWidth="10" opacity=".18" />
-
-        {/* Local streets first, beneath highways */}
-        {cityStreets}
-
-        {/* Regional highways with layered asphalt and center markings */}
-        {highwayPaths.map(({d,major,id}) => (
-          <g key={`highway-${id}`}>
-            <path d={d} fill="none" stroke="#101b1d" strokeWidth={major ? 10 : 6} opacity=".72" strokeLinecap="round" />
-            <path d={d} fill="none" stroke={major ? '#b2a68c' : '#667775'} strokeWidth={major ? 6.5 : 3.5} opacity=".92" strokeLinecap="round" />
-            <path d={d} fill="none" stroke={major ? '#e0d4b5' : '#aeb6a5'} strokeWidth={major ? 1.1 : .7}
-              strokeDasharray={major ? '8 9' : '4 8'} opacity=".65" strokeLinecap="round" />
+        {/* Active Transport Corridors */}
+        {showRoutes && activeTruckPositions.filter(p => !p.isIdle).map(p => (
+          <g key={`route-${p.truckId}`}>
+            <path 
+              d={`M ${p.origin?.x} ${p.origin?.y} L ${p.dest?.x} ${p.dest?.y}`}
+              stroke="#1e293b"
+              strokeWidth="2"
+              fill="none"
+              strokeDasharray="4 4"
+            />
+            <path 
+              d={`M ${p.origin?.x} ${p.origin?.y} L ${p.x} ${p.y}`}
+              stroke="#3b82f6"
+              strokeWidth="2"
+              fill="none"
+              strokeOpacity="0.6"
+              filter="url(#neon-glow)"
+            />
           </g>
         ))}
 
-        {/* Interchange loops and ramps near larger junctions */}
-        {cityPoints.map((city,i) => (
-          <g key={`junction-${i}`} opacity=".75">
-            <ellipse cx={city.x} cy={city.y} rx="13" ry="7" fill="none" stroke="#b9b39b" strokeWidth="2.2"
-              transform={`rotate(${seeded(i+9)*70-35} ${city.x} ${city.y})`} />
-            <path d={`M ${city.x-18} ${city.y+12} Q ${city.x-4} ${city.y-12} ${city.x+15} ${city.y-8}`}
-              fill="none" stroke="#8f998b" strokeWidth="2" />
+        {/* Cities & Logistics Hubs */}
+        {cityPoints.map((city) => (
+          <g key={`city-${city.name}`} transform={`translate(${city.x}, ${city.y})`}>
+            <circle r="12" fill="url(#hub-glow)" />
+            <circle r="3" fill="#334155" />
+            <circle r="1.5" fill="#facc15" filter="url(#neon-glow)" />
+            {showLabels && (
+              <text 
+                x="6" 
+                y="3" 
+                fill="#94a3b8" 
+                fontSize="8" 
+                fontWeight="700" 
+                fontFamily="monospace"
+                className="pointer-events-none select-none uppercase tracking-tighter"
+              >
+                {labelFor(city.name)}
+              </text>
+            )}
           </g>
         ))}
 
-        {/* Subtle urban glow and city labels */}
-        {cityPoints.map((city,i) => (
-          <g key={`city-${city.name}`}>
-            <circle cx={city.x} cy={city.y} r="65" fill="url(#city-glow)" />
-            <circle cx={city.x} cy={city.y} r="8" fill="#e5d5ad" opacity=".16" />
-            <circle cx={city.x} cy={city.y} r="4" fill="#f1e7cb" stroke="#263432" strokeWidth="1.8" />
-            <text x={city.x+9} y={city.y-10} fill="#e1e8db" fontSize="11" fontWeight="600"
-              stroke="#172a2b" strokeWidth="3.2" paintOrder="stroke" opacity=".96">
-              {labelFor(city.name)}
-            </text>
-          </g>
-        ))}
-
-        {/* Active delivery routes */}
-        {routeData.map(({contract,path}) => (
-          <g key={`route-${contract.id}`}>
-            <path d={path} fill="none" stroke="#081214" strokeWidth="8" opacity=".8" />
-            <path d={path} fill="none" stroke={COLORS[contract.region] || '#f5f5f5'}
-              strokeWidth="3.5" strokeLinecap="round" opacity=".96" />
-            <path d={path} fill="none" stroke="#fff" strokeWidth="1"
-              strokeDasharray="3 8" opacity=".5" />
-          </g>
-        ))}
-
-        {/* Truck markers */}
-        {routeData.filter(item => item.truck).map(({contract,current,progress,truck}) => {
-          if (!truck) return null;
-          const selected = selectedTruckId === truck.id;
-          return (
-            <g key={`truck-${truck.id}-${contract.id}`}
-              onClick={() => onSelectTruck(truck.id)} role="button" tabIndex={0}
-              aria-label={`Select ${truck.name}`} style={{cursor:'pointer'}}
-              onKeyDown={event => {
-                if (event.key === 'Enter' || event.key === ' ') onSelectTruck(truck.id);
-              }}>
-              {selected && <circle cx={current.x} cy={current.y} r="20" fill="#fff" opacity=".2" />}
-              <circle cx={current.x} cy={current.y} r="12"
-                fill="#101a1b" stroke={selected ? '#fff' : '#f5b942'} strokeWidth={selected ? 2.5 : 1.5} />
-              <text x={current.x} y={current.y+5} textAnchor="middle" fontSize="15">🚚</text>
-              <title>{truck.name} — {Math.floor(progress*100)}% complete</title>
+        {/* Live Truck Telemetry Beacons */}
+        {activeTruckPositions.map(p => (
+          <g 
+            key={`truck-${p.truckId}`} 
+            transform={`translate(${p.x}, ${p.y})`}
+            onClick={() => onSelectTruck(p.truckId)}
+            className="cursor-pointer group"
+          >
+            <circle 
+              r="10" 
+              fill={p.isIdle ? '#64748b' : '#10b981'} 
+              fillOpacity="0.2" 
+              className={!p.isIdle ? "animate-ping" : ""} 
+            />
+            <rect 
+              x="-5" 
+              y="-5" 
+              width="10" 
+              height="10" 
+              rx="2" 
+              fill={p.isIdle ? '#475569' : '#10b981'} 
+              stroke="#fff" 
+              strokeWidth="1.5"
+              className="transition-transform group-hover:scale-125 shadow-xl"
+            />
+            
+            {/* HUD Tooltip Overlay */}
+            <g className="opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+               <rect x="12" y="-25" width="100" height="45" rx="6" fill="#0f172a" fillOpacity="0.95" stroke="#334155" />
+               <text x="18" y="-12" fill="#fff" fontSize="8" fontWeight="bold">{p.truck.name}</text>
+               <text x="18" y="-2" fill="#94a3b8" fontSize="7">Status: {p.truck.status}</text>
+               <text x="18" y="8" fill="#fbbf24" fontSize="7">Fuel: {Math.floor(p.truck.currentFuelLitres)}L</text>
+               <text x="18" y="16" fill="#10b981" fontSize="7">Mpg: {p.truck.fuelEfficiencyMpg}</text>
             </g>
-          );
-        })}
+          </g>
+        ))}
       </svg>
 
-      <div className="pointer-events-none absolute bottom-3 left-3 rounded-md border border-white/10 bg-slate-950/75 px-3 py-2 text-[10px] tracking-wide text-slate-300 backdrop-blur">
-        <div className="font-semibold text-slate-100">{region === 'Global' ? 'WORLD NETWORK' : `${region.toUpperCase()} NETWORK`}</div>
-        <div className="mt-1 flex items-center gap-2">
-          <span className="inline-block h-1 w-5 rounded bg-amber-400" /> HIGHWAYS
-          <span className="ml-1 inline-block h-1 w-5 rounded bg-slate-500" /> LOCAL ROADS
+      {/* Map Legend / HUD Overlay */}
+      <div className="absolute bottom-4 left-4 bg-slate-950/80 backdrop-blur-md border border-slate-800 p-3 rounded-xl space-y-2 pointer-events-none select-none">
+        <div className="flex items-center gap-2">
+          <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+          <span className="text-[10px] font-black text-white uppercase tracking-widest">NexHaul Live Telemetry</span>
         </div>
+        <div className="flex items-center gap-4 text-[9px] text-slate-400 font-bold uppercase">
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-emerald-500 rounded-sm" /> En-Route</span>
+          <span className="flex items-center gap-1.5"><span className="w-1.5 h-1.5 bg-slate-500 rounded-sm" /> Idle / Garage</span>
+          <span className="flex items-center gap-1.5"><span className="w-2 h-2 bg-amber-400 rounded-full border border-slate-800" /> Logistics Hub</span>
+        </div>
+      </div>
+      
+      {/* Continental Indicator */}
+      <div className="absolute top-4 right-4 bg-blue-600/10 backdrop-blur-sm border border-blue-500/20 px-3 py-1.5 rounded-full">
+        <span className="text-[10px] font-bold text-blue-400 uppercase tracking-tighter">Sector: {region} Navigation</span>
       </div>
     </div>
   );
