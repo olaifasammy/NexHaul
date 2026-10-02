@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T02:00:10.557Z",
+    "scannedAt": "2026-10-02T02:04:40.249Z",
     "git": {
       "branch": "main",
-      "commit": "36784d6c19b1a43ba98034b88229512d5a858251",
-      "dirty": true
+      "commit": "1cf10a60c2b0bb9b31f9570648e0c492c1447040",
+      "dirty": false
     },
     "languages": {
       "JSON": 6,
@@ -2667,10 +2667,8 @@
   },
   "changes": {
     "added": [],
-    "changed": [
-      "src/engine/simulation.ts"
-    ],
+    "changed": [],
     "deleted": [],
-    "unchanged": 59
+    "unchanged": 60
   }
 }

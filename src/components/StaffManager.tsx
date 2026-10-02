@@ -9,7 +9,6 @@ interface StaffManagerProps {
 }
 
 const CANDIDATE_POOL = [
-  { name: 'Sarah Jenkins', role: 'dispatcher' as StaffRole, salary: 3500, skill: 85, bonus: 12 },
   { name: 'Marcus Sterling', role: 'accountant' as StaffRole, salary: 4200, skill: 90, bonus: 15 },
   { name: 'Elena Rostova', role: 'mechanic' as StaffRole, salary: 3800, skill: 88, bonus: 20 },
   { name: 'David Thorne', role: 'hr_manager' as StaffRole, salary: 4000, skill: 82, bonus: 10 },

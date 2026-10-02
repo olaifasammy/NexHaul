@@ -254,7 +254,7 @@ export interface IPOMarketState {
   totalDividendsPaid: number;
 }
 
-export type StaffRole = 'dispatcher' | 'accountant' | 'mechanic' | 'hr_manager' | 'safety_officer';
+export type StaffRole = 'accountant' | 'mechanic' | 'hr_manager' | 'safety_officer';
 
 export interface OfficeStaff {
   id: string;
