@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { GameSaveState, Truck, InsuranceCoverageTier } from '../types/game';
+import type { GameSaveState, Truck, InsuranceCoverageTier, TruckRegion } from '../types/game';
 import { getRefuelCost } from '../engine/simulation';
 import { getMaintenanceQuote } from '../engine/maintenancePricing';
 import { TruckInspectionModal } from './TruckInspectionModal';
@@ -8,7 +8,7 @@ import { ServiceApprovalModal } from './ServiceApprovalModal';
 import { RepairBayView } from './RepairBayView';
 import { TruckUpgradeModal } from './TruckUpgradeModal';
 import type { TabType } from './Navigation';
-import { Wrench, Fuel, X, Info, Gauge, Flame, Clock, MapPin, Droplet, CircleDot, Radio } from 'lucide-react';
+import { Wrench, Fuel, X, Info, Gauge, Flame, Clock, MapPin, Droplet, CircleDot, Radio, Search } from 'lucide-react';
 
 interface FleetManagerProps {
   state: GameSaveState;
@@ -61,9 +61,25 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
   const [upgradeTruck, setUpgradeTruck] = useState<Truck | null>(null);
   const [expandedTruckId, setExpandedTruckId] = useState<string | null>(null);
 
+  // Global Fleet Management Filters
+  const [fleetRegionFilter, setFleetRegionFilter] = useState<'All' | TruckRegion>('All');
+  const [fleetStatusFilter, setFleetStatusFilter] = useState<string>('all');
+  const [fleetClassFilter, setFleetClassFilter] = useState<string>('all');
+  const [fleetSearchQuery, setFleetSearchQuery] = useState('');
+
   const trucksList = state?.trucks || [];
   const trailersList = state?.trailers || [];
   const driversList = state?.drivers || [];
+
+  const filteredTrucks = trucksList.filter(truck => {
+    if (!truck) return false;
+    const matchesRegion = fleetRegionFilter === 'All' || truck.stationedHub === fleetRegionFilter || truck.region === fleetRegionFilter;
+    const matchesStatus = fleetStatusFilter === 'all' || truck.status === fleetStatusFilter;
+    const matchesClass = fleetClassFilter === 'all' || truck.modelClass === fleetClassFilter;
+    const query = fleetSearchQuery.trim().toLowerCase();
+    const matchesSearch = !query || truck.name.toLowerCase().includes(query) || truck.brand.toLowerCase().includes(query) || (truck.stationedHub || '').toLowerCase().includes(query);
+    return matchesRegion && matchesStatus && matchesClass && matchesSearch;
+  });
 
   return (
     <div className="space-y-4">
@@ -126,14 +142,75 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
       {/* GARAGE VIEW */}
       {activeSubTab === 'garage' && (
         <div className="space-y-3">
-          {trucksList.length === 0 ? (
-            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-6 text-center space-y-2">
+          
+          {/* Global Fleet Filtering Toolbar */}
+          <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3 shadow-lg">
+            <div className="flex flex-col sm:flex-row gap-2">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-500" />
+                <input
+                  type="text"
+                  value={fleetSearchQuery}
+                  onChange={(e) => setFleetSearchQuery(e.target.value)}
+                  placeholder="Search fleet by name, brand, or hub..."
+                  className="w-full bg-slate-950 border border-slate-700 rounded-xl pl-9 pr-3 py-2 text-xs text-white outline-none focus:border-amber-500"
+                />
+              </div>
+
+              <div className="flex items-center gap-2">
+                <select
+                  value={fleetStatusFilter}
+                  onChange={(e) => setFleetStatusFilter(e.target.value)}
+                  className="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-slate-200 outline-none"
+                >
+                  <option value="all">All Statuses</option>
+                  <option value="idle">Idle in Garage</option>
+                  <option value="in_transit">En-route</option>
+                  <option value="maintenance">In Maintenance</option>
+                  <option value="shipping">In Shipping</option>
+                </select>
+
+                <select
+                  value={fleetClassFilter}
+                  onChange={(e) => setFleetClassFilter(e.target.value)}
+                  className="bg-slate-950 border border-slate-700 rounded-xl px-2.5 py-2 text-xs text-slate-200 outline-none"
+                >
+                  <option value="all">All Classes</option>
+                  <option value="Class 3 Light">Light Box</option>
+                  <option value="Class 6 Medium">Medium</option>
+                  <option value="Class 8 Highway">Highway</option>
+                  <option value="Class 8 Heavy">Heavy Duty</option>
+                  <option value="Super Hauler">Super Hauler</option>
+                </select>
+              </div>
+            </div>
+
+            {/* Region / Hub Filter Dropdown */}
+            <div className="flex items-center gap-2 pt-1">
+              <span className="text-xs text-slate-400 font-bold">Region:</span>
+              <select
+                value={fleetRegionFilter}
+                onChange={(e) => setFleetRegionFilter(e.target.value as any)}
+                className="bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs font-bold text-white outline-none focus:border-amber-500"
+              >
+                <option value="All">🌐 All Regions</option>
+                <option value="America">🇺🇸 America</option>
+                <option value="Europe">🇪🇺 Europe</option>
+                <option value="Africa">🌍 Africa</option>
+                <option value="Asia">🌏 Asia</option>
+                <option value="Electric EV">⚡ Electric EV</option>
+              </select>
+            </div>
+          </div>
+
+          {filteredTrucks.length === 0 ? (
+            <div className="bg-slate-900 border border-slate-800 rounded-2xl p-8 text-center space-y-2">
               <div className="text-3xl">🚚</div>
-              <h4 className="text-white font-bold text-sm">Garage Empty</h4>
-              <p className="text-xs text-slate-400">Visit the Dealership to acquire your first commercial rig!</p>
+              <h4 className="text-white font-bold text-sm">No Rigs Match Filter</h4>
+              <p className="text-xs text-slate-400">Try adjusting your search query or region/status filters.</p>
             </div>
           ) : (
-            trucksList.map((truck) => {
+            filteredTrucks.map((truck) => {
               if (!truck) return null;
 
               const driver = driversList.find(d => d && d.id === truck.assignedDriverId);

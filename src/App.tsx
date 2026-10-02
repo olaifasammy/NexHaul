@@ -1026,13 +1026,105 @@ export function App() {
     });
   };
 
+  const handleBuyHub = (hubId: string) => {
+    setGameState(prev => {
+      const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
+      const hub = (next.hubs || []).find(h => h.id === hubId);
+      if (!hub || hub.isUnlocked) return prev;
+
+      if (next.companyLevel < hub.levelRequirement) {
+        setPurchaseResultModal({
+          title: 'Hub Acquisition Denied',
+          message: `Company Level ${hub.levelRequirement} required to establish ${hub.name} in ${hub.cityName}.`,
+          success: false
+        });
+        return prev;
+      }
+
+      if (next.cash < hub.cost) {
+        setPurchaseResultModal({
+          title: 'Hub Acquisition Denied',
+          message: `Insufficient funds! ${hub.name} costs $${hub.cost.toLocaleString()}, but you have $${next.cash.toLocaleString()}.`,
+          success: false
+        });
+        return prev;
+      }
+
+      next.cash -= hub.cost;
+      hub.isUnlocked = true;
+      next.activeHubId = hub.id;
+
+      if (next.regionalHubs && next.regionalHubs[hub.region]) {
+        next.regionalHubs[hub.region].isUnlocked = true;
+      }
+
+      if (!next.unlockedRegions) next.unlockedRegions = ['America'];
+      if (!next.unlockedRegions.includes(hub.region)) {
+        next.unlockedRegions.push(hub.region);
+      }
+
+      next.eventLogs.unshift({
+        id: `hub-est-${hub.id}-${Date.now()}`,
+        timestamp: Date.now(),
+        title: `🏢 Hub Established: ${hub.name}`,
+        message: `Successfully established ${hub.name} in ${hub.cityName} for $${hub.cost.toLocaleString()}. Terminal online!`,
+        type: 'success',
+        cashChange: -hub.cost
+      });
+
+      return next;
+    });
+
+    setPurchaseResultModal({
+      title: 'Hub Established Successfully!',
+      message: `Terminal online! You can now manage local fleets, repair bays, and HR for this hub.`,
+      success: true
+    });
+  };
+
+  const handleSetActiveHub = (hubId: string) => {
+    setGameState(prev => ({
+      ...prev,
+      activeHubId: hubId
+    }));
+  };
+
+  const handleRelocateTruckToHub = (truckId: string, targetHubId: string) => {
+    setGameState(prev => {
+      const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
+      const truck = next.trucks.find(t => t.id === truckId);
+      const targetHub = (next.hubs || []).find(h => h.id === targetHubId);
+      if (!truck || !targetHub || !targetHub.isUnlocked || truck.status === 'in_transit' || truck.status === 'shipping' || truck.assignedContractId) return prev;
+
+      const shippingCost = 18000;
+      if (next.cash < shippingCost) return prev;
+
+      next.cash -= shippingCost;
+      truck.status = 'shipping';
+      truck.destinationHub = targetHub.region;
+      truck.hubId = targetHub.id;
+      truck.stationedHub = targetHub.region;
+      truck.shippingSecondsRemaining = 300;
+
+      next.eventLogs.unshift({
+        id: `relocate-hub-${truckId}-${Date.now()}`,
+        timestamp: Date.now(),
+        title: `🚢 Intercontinental Fleet Shipping Initiated`,
+        message: `${truck.name} dispatched to port for transfer to ${targetHub.name} (${targetHub.cityName}) (-$${shippingCost.toLocaleString()}).`,
+        type: 'info',
+        cashChange: -shippingCost
+      });
+
+      return next;
+    });
+  };
+
   const handleBuyTruck = (model: typeof CATALOG_TRUCKS[0], customName?: string) => {
-    const regionalHubs = gameState.regionalHubs || {};
-    const hub = regionalHubs[model.region];
-    if (model.region && model.region !== 'Electric EV' && (!hub || !hub.isUnlocked)) {
+    const activeHub = (gameState.hubs || []).find(h => h.id === gameState.activeHubId) || (gameState.hubs || [])[0];
+    if (!activeHub || !activeHub.isUnlocked || activeHub.region !== model.region) {
       setPurchaseResultModal({
-        title: 'Purchase Denied: Regional Hub Required',
-        message: `You must acquire the ${model.region} Regional Hub (${hub?.hubName || 'Continental Terminal'}) in Headquarters before purchasing or stationing trucks in this region.`,
+        title: 'Purchase Denied: Hub Region Mismatch',
+        message: `You must select or switch your active Hub view in HQ Depot to an unlocked ${model.region} terminal before purchasing a ${model.region} rig.`,
         success: false
       });
       return;
@@ -1096,9 +1188,10 @@ export function App() {
             description: model.description,
             currentCity: 'HQ Depot',
             status: 'shipping',
-            stationedHub: model.region,
+            stationedHub: activeHub.region,
+            hubId: activeHub.id,
             shippingSecondsRemaining: 180,
-            destinationHub: model.region,
+            destinationHub: activeHub.region,
             odometerMiles: 0,
             hasInsurance: true,
             vin: '1HD' + Math.random().toString(36).substring(2, 15).toUpperCase(),
@@ -2230,7 +2323,9 @@ export function App() {
             onFireStaff={handleFireStaff}
             onUpgradeStructure={handleUpgradeStructure}
             onUnlockRegion={handleUnlockRegion}
-            onBuyRegionalHub={handleBuyRegionalHub}
+            onBuyHub={handleBuyHub}
+            onSetActiveHub={handleSetActiveHub}
+            onRelocateTruckToHub={handleRelocateTruckToHub}
             onBuyHeavyHaulPermit={handleBuyHeavyHaulPermit}
             onClaimMilestone={handleClaimMilestone}
             onResetSave={handleResetSave}

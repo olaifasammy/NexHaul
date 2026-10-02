@@ -171,6 +171,17 @@ export function getInitialGameState(): GameSaveState {
       'Asia': { region: 'Asia', hubName: 'Singapore Maritime & Express Hub', cityName: 'Singapore', cost: 400000, levelRequirement: 5, isUnlocked: false, description: 'East Asian expressway and high-density corridor terminal.' },
       'Electric EV': { region: 'Electric EV', hubName: 'Silicon Valley Megawatt Depot', cityName: 'San Jose, CA', cost: 150000, levelRequirement: 2, isUnlocked: false, description: 'Dedicated zero-emission megacharging and electric EV fleet depot.' }
     },
+    hubs: [
+      { id: 'hub-america-hq', name: 'Dallas Central Logistics HQ', region: 'America', cityName: 'Dallas, TX', isHq: true, isUnlocked: true, cost: 0, levelRequirement: 1, description: 'Primary North American headquarters and regional command center.' },
+      { id: 'hub-america-chi', name: 'Chicago Freight Gateway', region: 'America', cityName: 'Chicago, IL', isHq: false, isUnlocked: false, cost: 100000, levelRequirement: 2, description: 'Midwest distribution hub expanding interstate hauling capacity.' },
+      { id: 'hub-america-lax', name: 'Los Angeles Pacific Terminal', region: 'America', cityName: 'Los Angeles, CA', isHq: false, isUnlocked: false, cost: 120000, levelRequirement: 3, description: 'West coast container freight and port access terminal.' },
+      { id: 'hub-europe-hq', name: 'Rotterdam EuroPort HQ', region: 'Europe', cityName: 'Rotterdam, NL', isHq: true, isUnlocked: false, cost: 250000, levelRequirement: 3, description: 'European continental freight headquarters and COE fleet terminal.' },
+      { id: 'hub-europe-fra', name: 'Frankfurt Interstate Depot', region: 'Europe', cityName: 'Frankfurt, DE', isHq: false, isUnlocked: false, cost: 180000, levelRequirement: 4, description: 'Central European corridor hub for high-speed freight delivery.' },
+      { id: 'hub-africa-hq', name: 'Cairo Trans-African Gateway HQ', region: 'Africa', cityName: 'Cairo, EG', isHq: true, isUnlocked: false, cost: 300000, levelRequirement: 4, description: 'North & Sub-Saharan trade corridor operations headquarters.' },
+      { id: 'hub-asia-hq', name: 'Singapore Maritime & Express HQ', region: 'Asia', cityName: 'Singapore', isHq: true, isUnlocked: false, cost: 400000, levelRequirement: 5, description: 'East Asian expressway and high-density corridor headquarters.' },
+      { id: 'hub-ev-hq', name: 'Silicon Valley Megawatt Depot HQ', region: 'Electric EV', cityName: 'San Jose, CA', isHq: true, isUnlocked: false, cost: 150000, levelRequirement: 2, description: 'Dedicated zero-emission megacharging and electric EV fleet headquarters.' }
+    ],
+    activeHubId: 'hub-america-hq',
     cryptoMarket: {
       assets: {
         BTC: { symbol: 'BTC', name: 'Bitcoin', price: 65430.00, basePrice: 64000.00, change24h: 3.4, high24h: 66800.00, low24h: 63100.00, volume24h: 28450120, priceHistory: [63500, 63800, 64200, 64800, 65100, 65430], trend: 'rising', description: 'The decentralized digital gold standard of global finance.' },
@@ -337,6 +348,18 @@ export function loadGameStateFromStorage(): GameSaveState | null {
         }
       }
 
+      const defaultHubsList = getInitialGameState().hubs;
+      if (!parsed.hubs || !Array.isArray(parsed.hubs) || parsed.hubs.length === 0) {
+        parsed.hubs = defaultHubsList;
+      } else {
+        defaultHubsList.forEach(defHub => {
+          if (!parsed.hubs.some(h => h.id === defHub.id)) {
+            parsed.hubs.push(defHub);
+          }
+        });
+      }
+      if (!parsed.activeHubId) parsed.activeHubId = 'hub-america-hq';
+
       if (parsed.stats.totalTollsPaid === undefined) parsed.stats.totalTollsPaid = 0;
       if (parsed.stats.totalFinesPaid === undefined) parsed.stats.totalFinesPaid = 0;
       if (!parsed.stats.revenueHistory) parsed.stats.revenueHistory = [];
@@ -359,6 +382,10 @@ export function loadGameStateFromStorage(): GameSaveState | null {
           if (!t.currentCity) t.currentCity = 'HQ Depot';
           if (!t.status) t.status = 'idle';
           if (!t.stationedHub) t.stationedHub = t.region || 'America';
+          if (!t.hubId) {
+            const matchingHub = (parsed.hubs || []).find(h => h.region === t.stationedHub && h.isHq);
+            t.hubId = matchingHub ? matchingHub.id : 'hub-america-hq';
+          }
           if (t.odometerMiles === undefined) t.odometerMiles = 0;
           if (t.hasInsurance === undefined) t.hasInsurance = true;
           if (!t.insuranceTier) t.insuranceTier = t.hasInsurance ? 'Standard Collision' : 'None';

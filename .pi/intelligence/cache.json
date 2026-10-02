@@ -5,18 +5,18 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T08:21:39.047Z",
+    "scannedAt": "2026-10-02T13:05:29.062Z",
     "git": {
       "branch": "main",
-      "commit": "8eebe49c8866634fb6620650014b4437ad7683e1",
+      "commit": "990e4d2b342f4058077ae3504ed4bd40d8487944",
       "dirty": true
     },
     "languages": {
       "JSON": 6,
       "Markdown": 2,
       "JavaScript": 2,
-      "TypeScript React": 30,
-      "TypeScript": 20
+      "TypeScript": 21,
+      "TypeScript React": 30
     },
     "files": [
       {
@@ -74,10 +74,26 @@
         "exports": []
       },
       {
+        "path": "public/myfile/router.ts",
+        "size": 27338,
+        "mtimeMs": 1790946120013.3655,
+        "hash": "982abc0047ac9a5fd28b42a1f09d9c82b2c62d502f88f346c5d150ef97433ed1",
+        "language": "TypeScript",
+        "imports": [
+          "@earendil-works/pi-ai/compat",
+          "@earendil-works/pi-coding-agent",
+          "node:crypto",
+          "node:fs",
+          "node:os",
+          "node:path"
+        ],
+        "exports": []
+      },
+      {
         "path": "src/App.tsx",
-        "size": 92288,
-        "mtimeMs": 1790927536495.9211,
-        "hash": "d201f1ee7639832fde9efaa2b0d2caa18129569287f31d2d0e8228ab0c913d8c",
+        "size": 95640,
+        "mtimeMs": 1790929607923.9197,
+        "hash": "5930dc53e7738aff4c43adce30e3521eef2083f26d903858eb9aa7043d6d5187",
         "language": "TypeScript React",
         "imports": [
           "./components/Dashboard",
@@ -211,9 +227,9 @@
       },
       {
         "path": "src/components/FleetManager.tsx",
-        "size": 50658,
-        "mtimeMs": 1790927613295.9211,
-        "hash": "cee50032b1e9f88c60b5df5af652de8a951fd919b1eaa036180109c113411e90",
+        "size": 54950,
+        "mtimeMs": 1790930947763.9187,
+        "hash": "36ddbd778c2fa5826d544caa9e676c03a61139c8cd2b635409a4fa54ebddb182",
         "language": "TypeScript React",
         "imports": [
           "../engine/maintenancePricing",
@@ -234,9 +250,9 @@
       },
       {
         "path": "src/components/FreightBoard.tsx",
-        "size": 34094,
-        "mtimeMs": 1790894142691.945,
-        "hash": "97e99bcb5dae40edbfda07f424e3deba839235f3f1617c55a6d8ed8e09cef213",
+        "size": 38538,
+        "mtimeMs": 1790930997419.9187,
+        "hash": "21fb57f6ab2dd2b5cc832f4d44c5865174a91b867098f546dbda1603d1308bb0",
         "language": "TypeScript React",
         "imports": [
           "../engine/jurisdiction",
@@ -267,12 +283,11 @@
       },
       {
         "path": "src/components/HQDepot.tsx",
-        "size": 18378,
-        "mtimeMs": 1790926761539.9219,
-        "hash": "bb72d741a6eef911083c69bb3f155ac0a878c7e5bd8360cfb3e8110b45d0090b",
+        "size": 26001,
+        "mtimeMs": 1790930931863.9187,
+        "hash": "1a755823fea806796a6ca2c3d215df330a7bb1e0cdbd776f2b6ce3a6d64d5103",
         "language": "TypeScript React",
         "imports": [
-          "../config/simulation",
           "../data/depots",
           "../data/drivers",
           "../types/game",
@@ -782,9 +797,9 @@
       },
       {
         "path": "src/engine/jurisdiction.ts",
-        "size": 11454,
-        "mtimeMs": 1790927322651.9214,
-        "hash": "4c3b804914d7c91d9788a568f7b6ff5022e2936ff7c3368af09f98ff1fe10d05",
+        "size": 11619,
+        "mtimeMs": 1790929555091.92,
+        "hash": "5bb3311a05a0f38202bbc2010b2a85f9f121a7e2ade59d0dfbe06f93049a3866",
         "language": "TypeScript",
         "imports": [
           "../config/simulation",
@@ -844,9 +859,9 @@
       },
       {
         "path": "src/engine/storage.ts",
-        "size": 25745,
-        "mtimeMs": 1790927422111.9214,
-        "hash": "c7924eb288eda691ca55b349c13c3de4c23b495b67162d2c5b3ed1d01a8931ae",
+        "size": 28512,
+        "mtimeMs": 1790929539895.92,
+        "hash": "aea3c0cf1750c00a3dbfa8d60de8993b075cb5225b49dd0318a4f7b038a1b9b5",
         "language": "TypeScript",
         "imports": [
           "../data/contracts",
@@ -880,9 +895,9 @@
       },
       {
         "path": "src/types/game.ts",
-        "size": 12885,
-        "mtimeMs": 1790927289015.9214,
-        "hash": "86069b6719edf7cb7435cb12623a6edf80dabc469029d1ea28f3eea4744e06f7",
+        "size": 13162,
+        "mtimeMs": 1790929511879.92,
+        "hash": "1222d66e44272a7d0ea5042511c905c0f53af3bc4a8b078a625ff435e3de77f3",
         "language": "TypeScript",
         "imports": [],
         "exports": [
@@ -905,6 +920,7 @@
           "FinancialStatementRecord",
           "FuelDelivery",
           "GameSaveState",
+          "HubLocation",
           "IPOMarketState",
           "InsuranceCoverageTier",
           "InvestorRound",
@@ -979,6 +995,20 @@
         "path": "postcss.config.js",
         "language": "JavaScript",
         "imports": [],
+        "importedBy": [],
+        "exports": []
+      },
+      {
+        "path": "public/myfile/router.ts",
+        "language": "TypeScript",
+        "imports": [
+          "@earendil-works/pi-ai/compat",
+          "@earendil-works/pi-coding-agent",
+          "node:crypto",
+          "node:fs",
+          "node:os",
+          "node:path"
+        ],
         "importedBy": [],
         "exports": []
       },
@@ -1178,7 +1208,6 @@
         "path": "src/components/HQDepot.tsx",
         "language": "TypeScript React",
         "imports": [
-          "../config/simulation",
           "../data/depots",
           "../data/drivers",
           "../types/game",
@@ -1491,7 +1520,6 @@
         "importedBy": [
           "src/App.tsx",
           "src/components/DriverLounge.tsx",
-          "src/components/HQDepot.tsx",
           "src/components/TruckInspectionModal.tsx",
           "src/engine/jurisdiction.ts",
           "src/engine/maintenancePricing.ts",
@@ -1887,6 +1915,7 @@
           "FinancialStatementRecord",
           "FuelDelivery",
           "GameSaveState",
+          "HubLocation",
           "IPOMarketState",
           "InsuranceCoverageTier",
           "InvestorRound",
@@ -2001,6 +2030,7 @@
         "package-lock.json",
         "package.json",
         "postcss.config.js",
+        "public/myfile/router.ts",
         "src/App.tsx",
         "src/components/CompanyProfileView.tsx",
         "src/components/Dashboard.tsx",
@@ -2320,11 +2350,6 @@
         {
           "from": "src/components/FuelManager.tsx",
           "to": "src/types/game.ts",
-          "type": "import"
-        },
-        {
-          "from": "src/components/HQDepot.tsx",
-          "to": "src/config/simulation.ts",
           "type": "import"
         },
         {
@@ -2689,6 +2714,6 @@
     "added": [],
     "changed": [],
     "deleted": [],
-    "unchanged": 60
+    "unchanged": 61
   }
 }

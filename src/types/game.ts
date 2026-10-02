@@ -49,6 +49,7 @@ export interface Truck {
   currentCity: string;
   status: 'idle' | 'in_transit' | 'deadheading' | 'resting' | 'fueling' | 'breakdown' | 'maintenance' | 'shipping';
   stationedHub: TruckRegion;
+  hubId: string;
   shippingSecondsRemaining?: number;
   destinationHub?: TruckRegion;
   odometerMiles: number;
@@ -384,6 +385,18 @@ export interface RegionalHubInfo {
   description: string;
 }
 
+export interface HubLocation {
+  id: string;
+  name: string;
+  region: TruckRegion;
+  cityName: string;
+  isHq: boolean;
+  isUnlocked: boolean;
+  cost: number;
+  levelRequirement: number;
+  description: string;
+}
+
 export interface ShipperRetainer {
   id: string;
   shipperName: string;
@@ -473,6 +486,8 @@ export interface GameSaveState {
   // Real Crypto Market Exchange & Portfolio
   // Regional Hubs & Continental Terminals (Realism: Buy physical hub to operate in region)
   regionalHubs: Record<TruckRegion, RegionalHubInfo>;
+  hubs: HubLocation[];
+  activeHubId: string;
 
   cryptoMarket: CryptoMarketState;
 }

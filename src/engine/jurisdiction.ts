@@ -1,4 +1,4 @@
-import type { TruckClass, TruckRegion, CargoCategory, TrailerType, Truck, Contract, Driver, Trailer, RegionalHubInfo } from '../types/game';
+import type { TruckClass, TruckRegion, CargoCategory, TrailerType, Truck, Contract, Driver, Trailer, RegionalHubInfo, HubLocation } from '../types/game';
 import { SIMULATION_CONFIG } from '../config/simulation';
 
 export interface ClassLimitSpec {
@@ -113,15 +113,19 @@ export function validateDispatchJurisdictionAndLimits(
   unlockedRegions: TruckRegion[] = ['America'],
   heavyHaulPermits: TruckRegion[] = [],
   companyLevel: number = 1,
-  regionalHubs: Record<TruckRegion, RegionalHubInfo> = {}
+  regionalHubs: Record<TruckRegion, RegionalHubInfo> = {},
+  hubs: HubLocation[] = []
 ): DispatchValidationResult {
   const blockers: string[] = [];
   const warnings: string[] = [];
 
   // 1. Regional Hub & Operating Permit Check (Realism: Must own physical terminal in region to operate trucks there!)
-  const hub = regionalHubs[contract.region];
-  if (!hub || !hub.isUnlocked) {
-    blockers.push(`Regional Logistics Hub Required: You must purchase a regional terminal/hub in ${contract.region} (${hub?.cityName || 'Continental Terminal'}) before operating or dispatching trucks there.`);
+  const hubInfo = regionalHubs[contract.region];
+  const stationedHubObj = hubs.find(h => h.id === truck.hubId);
+  const isHubUnlocked = hubInfo?.isUnlocked || stationedHubObj?.isUnlocked || contract.region === 'America';
+
+  if (!isHubUnlocked) {
+    blockers.push(`Regional Logistics Hub Required: You must establish a regional terminal/hub in ${contract.region} before dispatching commercial freight there.`);
   }
 
   // Truck Stationed Hub Match Check (Realism: Truck must be stationed at the hub in the contract's region)
