@@ -164,6 +164,18 @@ export interface Contract {
   isUrgent?: boolean;
   expirySecondsRemaining?: number;
   expirySecondsTotal?: number;
+
+  // Round Trip & Backhaul Logistics
+  isRoundTrip?: boolean;
+  returnLeg?: {
+    destination: string;
+    cargoCategory: CargoCategory;
+    payoutCash: number;
+    distanceMiles: number;
+    requiredTrailerType: TrailerType;
+  };
+  isBackhaul?: boolean;
+  backhaulDiscountPercent?: number;
 }
 
 export interface DepotUpgrade {

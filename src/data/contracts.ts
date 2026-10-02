@@ -679,10 +679,13 @@ export function generateRandomContract(
         )
       : cargoTitle;
 
+  const isRoundTrip = !forceLightBoxTruck && Math.random() < 0.35;
+  const returnPayout = Math.floor(payoutCash * 1.12);
+
   return {
     id: `contract-gen-${Date.now()}-${Math.floor(Math.random() * 9999)}-${Math.floor(Math.random() * 9999)}`,
 
-    title: `${prefix} (${selectedRoute.desc} — ${selectedRoute.origin} → ${selectedRoute.dest})`,
+    title: `${prefix} (${selectedRoute.desc} — ${selectedRoute.origin} → ${selectedRoute.dest})${isRoundTrip ? ' [🔄 Round-Trip Linked]' : ''}`,
 
     origin: selectedRoute.origin,
     destination: selectedRoute.dest,
@@ -711,7 +714,16 @@ export function generateRandomContract(
     isUrgent,
 
     expirySecondsTotal,
-    expirySecondsRemaining: expirySecondsTotal
+    expirySecondsRemaining: expirySecondsTotal,
+
+    isRoundTrip,
+    returnLeg: isRoundTrip ? {
+      destination: selectedRoute.origin,
+      cargoCategory,
+      payoutCash: returnPayout,
+      distanceMiles,
+      requiredTrailerType: forcedTrailerType || profile.trailer
+    } : undefined
   };
 }
 

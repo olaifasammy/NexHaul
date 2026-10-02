@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T00:12:32.515Z",
+    "scannedAt": "2026-10-02T00:36:21.063Z",
     "git": {
-      "branch": "detached",
-      "commit": "",
-      "dirty": false
+      "branch": "main",
+      "commit": "90ed8d316f4243e137003b55685e0afafc8a7937",
+      "dirty": true
     },
     "languages": {
       "JSON": 6,
@@ -57,9 +57,9 @@
       },
       {
         "path": "package.json",
-        "size": 580,
-        "mtimeMs": 1790875212311.9587,
-        "hash": "fc64910a55f5e9a5fa52f4208f5bfa3019f87e3ed1f5f4f6267aef9dab85bee6",
+        "size": 571,
+        "mtimeMs": 1790899973395.941,
+        "hash": "1b64d931776b21b89e67e4bd95ba8502eac8300897b308c55cd243cbf084b63d",
         "language": "JSON",
         "imports": [],
         "exports": []

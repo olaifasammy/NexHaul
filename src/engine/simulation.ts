@@ -1119,6 +1119,40 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
       contract.status = 'completed';
       truck.currentCity = contract.destination;
 
+      // Round Trip & Backhaul generation
+      if (contract.isRoundTrip && contract.returnLeg) {
+        const backhaulContract: Contract = {
+          id: `backhaul-${Date.now()}-${Math.floor(Math.random() * 9999)}`,
+          title: `Return Backhaul (${contract.destination} → ${contract.origin}) [🔙 Backhaul Loop]`,
+          origin: contract.destination,
+          destination: contract.origin,
+          cargoCategory: contract.returnLeg.cargoCategory,
+          requiredTrailerType: contract.returnLeg.requiredTrailerType,
+          distanceMiles: contract.returnLeg.distanceMiles,
+          weightTons: contract.weightTons,
+          payoutCash: contract.returnLeg.payoutCash,
+          payoutXp: contract.payoutXp,
+          timeLimitMinutes: contract.timeLimitMinutes,
+          dangerLevel: contract.dangerLevel,
+          region: contract.region,
+          status: 'available',
+          negotiationStatus: 'none',
+          isBackhaul: true,
+          expirySecondsTotal: 14400,
+          expirySecondsRemaining: 14400
+        };
+        if (!nextState.availableContracts) nextState.availableContracts = [];
+        nextState.availableContracts.unshift(backhaulContract);
+
+        newEvents.push({
+          id: `backhaul-spawn-${Date.now()}`,
+          timestamp: Date.now(),
+          title: `📦 Return Backhaul Freight Unlocked`,
+          message: `${truck.name} delivered cargo to ${contract.destination}. Exclusive return backhaul freight posted to the Freight Board for zero deadhead!`,
+          type: 'success'
+        });
+      }
+
       if (truck.scheduledMaintenanceAfterJob) {
         truck.status = 'maintenance';
 
