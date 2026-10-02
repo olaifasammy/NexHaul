@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import type { GameSaveState, Truck } from '../types/game';
+import type { GameSaveState, Truck, InsuranceCoverageTier } from '../types/game';
 import { getRefuelCost } from '../engine/simulation';
 import { getMaintenanceQuote } from '../engine/maintenancePricing';
 import { TruckInspectionModal } from './TruckInspectionModal';
@@ -24,8 +24,8 @@ interface FleetManagerProps {
   onInstallPrePass: (truckId: string) => void;
   onFileInsuranceClaim: (truckId: string) => void;
   onAttachTrailer: (truckId: string, trailerId: string | null) => void;
-  onToggleTruckInsurance: (truckId: string) => void;
-  onToggleTrailerInsurance: (trailerId: string) => void;
+  onSetInsuranceTier: (truckId: string, tier: InsuranceCoverageTier) => void;
+  onSetTrailerInsuranceTier: (trailerId: string, tier: InsuranceCoverageTier) => void;
   onSellTruck: (truckId: string) => void;
   onSellTrailer: (trailerId: string) => void;
   onSubmitUpgrades?: (truckId: string, selectedParts: Array<keyof Truck['upgrades']>, totalCost: number, totalSeconds: number, scheduleAfterJob: boolean) => void;
@@ -46,8 +46,8 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
   onInstallPrePass,
   onFileInsuranceClaim,
   onAttachTrailer,
-  onToggleTruckInsurance,
-  onToggleTrailerInsurance,
+  onSetInsuranceTier,
+  onSetTrailerInsuranceTier,
   onSellTruck,
   onSellTrailer,
   onSubmitUpgrades,
@@ -667,25 +667,25 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
                     </div>
                   </div>
 
-                  {/* Insurance Policy Toggle */}
+                  {/* Insurance Policy Tier Selector */}
                   <div className="flex items-center justify-between text-xs bg-slate-950 p-2.5 rounded-xl border border-slate-800/80">
                     <div className="flex items-center space-x-2">
                       <span className="text-base">🛡️</span>
                       <div>
-                        <span className="text-white font-bold block text-[11px]">Cargo Insurance Policy</span>
-                        <span className="text-[10px] text-slate-400">{trailer.hasInsurance ? 'Active' : 'Uninsured'}</span>
+                        <span className="text-white font-bold block text-[11px]">Insurance Policy</span>
+                        <span className="text-[10px] text-slate-400">{trailer.insuranceTier || (trailer.hasInsurance ? 'Standard Collision' : 'None')}</span>
                       </div>
                     </div>
-                    <button
-                      onClick={() => onToggleTrailerInsurance(trailer.id)}
-                      className={`px-3 py-1.5 rounded-lg text-xs font-bold transition ${
-                        trailer.hasInsurance 
-                          ? 'bg-emerald-600 hover:bg-emerald-500 text-white shadow-md' 
-                          : 'bg-slate-800 hover:bg-slate-700 text-slate-300'
-                      }`}
+                    <select
+                      value={trailer.insuranceTier || (trailer.hasInsurance ? 'Standard Collision' : 'None')}
+                      onChange={(e) => onSetTrailerInsuranceTier(trailer.id, e.target.value as any)}
+                      className="bg-slate-900 border border-slate-700 text-white rounded-lg px-2.5 py-1 text-[11px] font-semibold focus:outline-none focus:border-blue-500"
                     >
-                      {trailer.hasInsurance ? 'Insured' : 'Uninsured'}
-                    </button>
+                      <option value="None">None</option>
+                      <option value="Liability Only">Liability</option>
+                      <option value="Standard Collision">Standard</option>
+                      <option value="Full Comprehensive">Comprehensive</option>
+                    </select>
                   </div>
 
                   {/* Sell Trailer Button */}
@@ -716,7 +716,7 @@ export const FleetManager: React.FC<FleetManagerProps> = ({
           <TruckSpecsModal
             truck={inspectTruck as Truck}
             onClose={() => setInspectTruck(null)}
-            onToggleInsurance={(id) => onToggleTruckInsurance(id)}
+            onToggleInsurance={(id, tier) => onSetInsuranceTier(id, tier || 'Standard Collision')}
             onTogglePrePass={(id) => onInstallPrePass(id)}
           />
         ) : (

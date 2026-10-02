@@ -5,11 +5,11 @@
     "projectName": "Truck-simulator",
     "workspace": "play",
     "leakWarnings": [],
-    "scannedAt": "2026-10-02T01:05:47.052Z",
+    "scannedAt": "2026-10-02T01:12:25.854Z",
     "git": {
       "branch": "main",
-      "commit": "24b81b01dc97ff63a72503aeec6a03401917cc24",
-      "dirty": true
+      "commit": "da215be225ff0561d58adf8c8cdb7475cdc8a5c5",
+      "dirty": false
     },
     "languages": {
       "JSON": 6,
@@ -599,12 +599,13 @@
       },
       {
         "path": "src/data/contracts.ts",
-        "size": 27309,
-        "mtimeMs": 1790901462419.94,
-        "hash": "77acaae1deb91d1a966a91cf9e05f5ee844a5534e4ce40f11085dc3bfd8de9f4",
+        "size": 27790,
+        "mtimeMs": 1790903231335.9387,
+        "hash": "f40365dab2a42242d924d067fcdf40ba07fa190c28afc7268b18b1a798b1b489",
         "language": "TypeScript",
         "imports": [
-          "../types/game"
+          "../types/game",
+          "./americanCities"
         ],
         "exports": [
           "INITIAL_AVAILABLE_CONTRACTS",
@@ -816,9 +817,9 @@
       },
       {
         "path": "src/engine/simulation.ts",
-        "size": 76078,
-        "mtimeMs": 1790901475615.94,
-        "hash": "8bd5dc4ba5f709398de141bebd41b01260f89820a160f59ecef8132a39f44a37",
+        "size": 77505,
+        "mtimeMs": 1790903259667.9387,
+        "hash": "9ad740e2a51ccdc35accf1cf44d2e91a09ef70f2d50c6a70df781fc08818ff1c",
         "language": "TypeScript",
         "imports": [
           "../config/simulation",
@@ -842,9 +843,9 @@
       },
       {
         "path": "src/engine/storage.ts",
-        "size": 15992,
-        "mtimeMs": 1790841194247.983,
-        "hash": "bf9da85cabccc29f472b92278d219995f0c0b4d6af3c7c2f80efab2eb0522bbb",
+        "size": 16419,
+        "mtimeMs": 1790903181383.9387,
+        "hash": "4fa66fd436a8d7e5db04282eb024f682e84f698b1a7c4b25c868ca5a12e2138a",
         "language": "TypeScript",
         "imports": [
           "../data/contracts",
@@ -878,9 +879,9 @@
       },
       {
         "path": "src/types/game.ts",
-        "size": 11238,
-        "mtimeMs": 1790901400299.94,
-        "hash": "0970a221f8d587fa76c7af574f8887a91aacf3fb4788caa81c25a4ff7bcc4c3c",
+        "size": 11362,
+        "mtimeMs": 1790903160055.9387,
+        "hash": "66f58b421a7b456ab547a39d13c7e73c2fb2736d6fe201308cab2367e1ac0ae3",
         "language": "TypeScript",
         "imports": [],
         "exports": [
@@ -900,11 +901,11 @@
           "GameSaveState",
           "IPOMarketState",
           "InvestorRound",
-          "Milestone",
           "OfficeStaff",
           "OfflineProgressSummary",
           "PlayerSkill",
           "RoadEventLog",
+          "ShipperRetainer",
           "StaffRole",
           "Trailer",
           "TrailerType",
@@ -1498,7 +1499,9 @@
         "imports": [
           "../types/game"
         ],
-        "importedBy": [],
+        "importedBy": [
+          "src/data/contracts.ts"
+        ],
         "exports": [
           "AMERICAN_CITIES_DATA",
           "AmericanCityProfile",
@@ -1510,7 +1513,8 @@
         "path": "src/data/contracts.ts",
         "language": "TypeScript",
         "imports": [
-          "../types/game"
+          "../types/game",
+          "./americanCities"
         ],
         "importedBy": [
           "src/App.tsx",
@@ -1871,11 +1875,11 @@
           "GameSaveState",
           "IPOMarketState",
           "InvestorRound",
-          "Milestone",
           "OfficeStaff",
           "OfflineProgressSummary",
           "PlayerSkill",
           "RoadEventLog",
+          "ShipperRetainer",
           "StaffRole",
           "Trailer",
           "TrailerType",
@@ -2494,6 +2498,11 @@
           "type": "import"
         },
         {
+          "from": "src/data/contracts.ts",
+          "to": "src/data/americanCities.ts",
+          "type": "import"
+        },
+        {
           "from": "src/data/depots.ts",
           "to": "src/types/game.ts",
           "type": "import"
@@ -2658,8 +2667,13 @@
   },
   "changes": {
     "added": [],
-    "changed": [],
+    "changed": [
+      "src/data/contracts.ts",
+      "src/engine/simulation.ts",
+      "src/engine/storage.ts",
+      "src/types/game.ts"
+    ],
     "deleted": [],
-    "unchanged": 60
+    "unchanged": 56
   }
 }

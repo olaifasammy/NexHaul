@@ -301,6 +301,7 @@ export function loadGameStateFromStorage(): GameSaveState | null {
           if (!t.status) t.status = 'idle';
           if (t.odometerMiles === undefined) t.odometerMiles = 0;
           if (t.hasInsurance === undefined) t.hasInsurance = true;
+          if (!t.insuranceTier) t.insuranceTier = t.hasInsurance ? 'Standard Collision' : 'None';
         });
       }
 
@@ -314,6 +315,7 @@ export function loadGameStateFromStorage(): GameSaveState | null {
             if (t.setPointTempF === undefined) t.setPointTempF = 34;
           }
           if (t.hasInsurance === undefined) t.hasInsurance = true;
+          if (!t.insuranceTier) t.insuranceTier = t.hasInsurance ? 'Standard Collision' : 'None';
         });
       }
 

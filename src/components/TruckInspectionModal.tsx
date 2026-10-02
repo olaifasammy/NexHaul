@@ -1,5 +1,5 @@
 import React, { useMemo, useState, useEffect } from 'react';
-import type { GameSaveState } from '../types/game';
+import type { GameSaveState, InsuranceCoverageTier } from '../types/game';
 import { getMaintenanceQuote, type MaintenanceServiceKey } from '../engine/maintenancePricing';
 import { SIMULATION_CONFIG } from '../config/simulation';
 import {
@@ -14,7 +14,7 @@ interface Props {
   onRepairTruck: (truckId: string) => void;
   onFileInsuranceClaim: (truckId: string) => void;
   onInstallPrePass: (truckId: string) => void;
-  onToggleTruckInsurance: (truckId: string) => void;
+  onSetInsuranceTier: (truckId: string, tier: InsuranceCoverageTier) => void;
   initialTruckId?: string | null;
   onBack?: () => void;
 }
@@ -39,7 +39,7 @@ export const TruckInspectionModal: React.FC<Props> = ({
   onRepairTruck,
   onFileInsuranceClaim,
   onInstallPrePass,
-  onToggleTruckInsurance,
+  onSetInsuranceTier,
   initialTruckId,
   onBack,
 }) => {
@@ -221,27 +221,33 @@ export const TruckInspectionModal: React.FC<Props> = ({
       </section>
 
       <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4">
-        <h2 className="mb-3 flex items-center gap-2 font-bold"><ShieldCheck className="h-4 w-4 text-emerald-400" /> Insurance protection</h2>
-        <div className="flex items-center justify-between gap-3">
-          <div>
-            <p className="font-semibold">{truck.hasInsurance ? 'Coverage enabled' : 'Not insured'}</p>
-            <p className="text-xs text-slate-400">Claim threshold: below {claimMinimum}% condition or breakdown</p>
+        <h2 className="mb-3 flex items-center gap-2 font-bold"><ShieldCheck className="h-4 w-4 text-emerald-400" /> Professional Insurance Policy</h2>
+        <div className="space-y-3">
+          <div className="flex items-center justify-between">
+            <span className="text-xs text-slate-400">Coverage Tier</span>
+            <select
+              value={truck.insuranceTier || (truck.hasInsurance ? 'Standard Collision' : 'None')}
+              onChange={(e) => onSetInsuranceTier(truck.id, e.target.value as any)}
+              className="bg-slate-950 border border-slate-700 text-white rounded-xl px-3 py-1.5 text-xs font-semibold focus:outline-none focus:border-blue-500"
+            >
+              <option value="None">None (Uninsured)</option>
+              <option value="Liability Only">Liability Only (Third-Party)</option>
+              <option value="Standard Collision">Standard Collision (80% / $500 Deductible)</option>
+              <option value="Full Comprehensive">Full Comprehensive (100% / $0 Deductible)</option>
+            </select>
           </div>
-          <button onClick={() => onToggleTruckInsurance(truck.id)} className="rounded-lg border border-slate-700 px-3 py-2 text-xs font-bold">
-            {truck.hasInsurance ? 'Turn off' : 'Turn on'}
-          </button>
-        </div>
-        <div className="mt-3 rounded-xl bg-slate-800 p-3 text-xs text-slate-400">
-          Deductible: {money(SIMULATION_CONFIG.maintenance.insurance.deductible)} · Reimbursement: {Math.round(SIMULATION_CONFIG.maintenance.insurance.reimbursementRate * 100)}%
+          <div className="rounded-xl bg-slate-800 p-3 text-xs text-slate-400 space-y-1">
+            <div>Monthly Premium: <strong className="text-amber-400 font-mono">${Math.round((state.profile?.insuranceMonthlyPerTruck || 420) * (truck.insuranceTier === 'Liability Only' ? 0.45 : truck.insuranceTier === 'Full Comprehensive' ? 1.60 : truck.insuranceTier === 'None' ? 0 : 1.0))}</strong></div>
+            <div>Claim Threshold: Below {claimMinimum}% condition or breakdown</div>
+          </div>
         </div>
         <button
-          disabled={!claimEligible || state.cash < SIMULATION_CONFIG.maintenance.insurance.deductible}
+          disabled={!claimEligible || (truck.insuranceTier === 'None' || truck.insuranceTier === 'Liability Only') || state.cash < (truck.insuranceTier === 'Full Comprehensive' ? 0 : SIMULATION_CONFIG.maintenance.insurance.deductible)}
           onClick={() => onFileInsuranceClaim(truck.id)}
-          className="mt-3 w-full rounded-xl bg-emerald-700 px-4 py-3 text-sm font-bold text-white disabled:opacity-40"
+          className="mt-3 w-full rounded-xl bg-emerald-700 hover:bg-emerald-600 px-4 py-3 text-sm font-bold text-white disabled:opacity-40 transition"
         >
           File insurance claim
         </button>
-        {!claimEligible && <p className="mt-2 text-xs text-slate-500">A claim is not currently available for this truck.</p>}
       </section>
 
       <section className="rounded-2xl border border-slate-800 bg-slate-900 p-4">

@@ -50,6 +50,7 @@ export interface Truck {
   status: 'idle' | 'in_transit' | 'deadheading' | 'resting' | 'fueling' | 'breakdown' | 'maintenance';
   odometerMiles: number;
   hasInsurance: boolean;
+  insuranceTier: InsuranceCoverageTier;
   predictiveAlertSent?: boolean;
   oilAlertSent?: boolean;
   tireAlertSent?: boolean;
@@ -74,7 +75,7 @@ export interface Truck {
   currentFuelGallons?: number;
 }
 
-export type TrailerType = 'Dry Van' | 'Refrigerated' | 'Flatbed' | 'Fuel Tanker' | 'Lowboy Heavy' | 'HazMat Container';
+export type InsuranceCoverageTier = 'None' | 'Liability Only' | 'Standard Collision' | 'Full Comprehensive';
 
 export interface Trailer {
   id: string;
@@ -97,6 +98,7 @@ export interface Trailer {
   currentTempF?: number;      // For Refrigerated cargo temperature
   setPointTempF?: number;     // e.g. -5F or 34F
   hasInsurance: boolean;
+  insuranceTier: InsuranceCoverageTier;
 }
 
 export type DriverTrait = 

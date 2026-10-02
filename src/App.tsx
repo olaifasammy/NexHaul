@@ -590,17 +590,21 @@ export function App() {
     setGameState(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
       const truck = next.trucks.find(t => t.id === truckId);
-      if (!truck || !truck.hasInsurance) return prev;
+      if (!truck) return prev;
+      const tier = truck.insuranceTier || (truck.hasInsurance ? 'Standard Collision' : 'None');
+      if (tier === 'None' || tier === 'Liability Only') return prev;
       if (truck.conditionPercent >= SIMULATION_CONFIG.maintenance.condition.insuranceClaimMinimumPercent && truck.status !== 'breakdown') return prev;
 
       const repairBayLvl = next.depot.repairBayLevel || 1;
       const repairCost = Math.floor((100 - truck.conditionPercent) * SIMULATION_CONFIG.maintenance.service.body.costPerConditionPoint * Math.max((SIMULATION_CONFIG.maintenance.repairBay?.minimumDiscountFactor ?? 0.5), 1 - (repairBayLvl * (SIMULATION_CONFIG.maintenance.repairBay?.discountPerLevel ?? 0.1))));
-      const deductible = SIMULATION_CONFIG.maintenance.insurance.deductible;
+      
+      const deductible = tier === 'Full Comprehensive' ? 0 : SIMULATION_CONFIG.maintenance.insurance.deductible;
+      const reimbursementRate = tier === 'Full Comprehensive' ? 1.0 : SIMULATION_CONFIG.maintenance.insurance.reimbursementRate;
 
       if (next.cash < deductible) return prev;
 
       next.cash -= deductible;
-      const payout = Math.floor(repairCost * SIMULATION_CONFIG.maintenance.insurance.reimbursementRate);
+      const payout = Math.floor(repairCost * reimbursementRate);
       next.cash += payout;
 
       truck.conditionPercent = Math.min(SIMULATION_CONFIG.vehicleDefaults.startingConditionPercent, truck.conditionPercent + SIMULATION_CONFIG.maintenance.condition.insuranceRepairBonusPercent);
@@ -609,7 +613,7 @@ export function App() {
       next.eventLogs.unshift({
         id: `insurance-claim-${Date.now()}`,
         timestamp: Date.now(),
-        title: `Insurance Claim Approved`,
+        title: `Insurance Claim Approved (${tier})`,
         message: `Underwriters approved claim for ${truck.name}. Paid $${deductible} deductible, received $${payout} repair reimbursement, and restored unit condition!`,
         type: 'success',
         cashChange: payout - deductible
@@ -1600,23 +1604,25 @@ export function App() {
     });
   };
 
-  const handleToggleTruckInsurance = (truckId: string) => {
+  const handleSetTruckInsuranceTier = (truckId: string, tier: InsuranceCoverageTier) => {
     setGameState(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
       const truck = next.trucks.find(t => t.id === truckId);
       if (truck) {
-        truck.hasInsurance = !truck.hasInsurance;
+        truck.insuranceTier = tier;
+        truck.hasInsurance = tier !== 'None';
       }
       return next;
     });
   };
 
-  const handleToggleTrailerInsurance = (trailerId: string) => {
+  const handleSetTrailerInsuranceTier = (trailerId: string, tier: InsuranceCoverageTier) => {
     setGameState(prev => {
       const next = JSON.parse(JSON.stringify(prev)) as GameSaveState;
       const trailer = next.trailers.find(t => t.id === trailerId);
       if (trailer) {
-        trailer.hasInsurance = !trailer.hasInsurance;
+        trailer.insuranceTier = tier;
+        trailer.hasInsurance = tier !== 'None';
       }
       return next;
     });
@@ -1909,8 +1915,8 @@ export function App() {
             onFileInsuranceClaim={handleFileInsuranceClaim}
             onApproveService={handleApproveService}
             onAttachTrailer={handleAttachTrailer}
-            onToggleTruckInsurance={handleToggleTruckInsurance}
-            onToggleTrailerInsurance={handleToggleTrailerInsurance}
+            onSetInsuranceTier={handleSetTruckInsuranceTier}
+            onSetTrailerInsuranceTier={handleSetTrailerInsuranceTier}
             onSellTruck={handleSellTruck}
             onSellTrailer={handleSellTrailer}
             onSubmitUpgrades={handleScheduleTruckUpgrades}
@@ -1929,7 +1935,7 @@ export function App() {
             onRepairTruck={handleRepairTruck}
             onFileInsuranceClaim={handleFileInsuranceClaim}
             onInstallPrePass={handleInstallPrePass}
-            onToggleTruckInsurance={handleToggleTruckInsurance}
+            onSetInsuranceTier={handleSetTruckInsuranceTier}
             initialTruckId={inspectionTruckId}
             onBack={() => setActiveTab('fleet')}
           />

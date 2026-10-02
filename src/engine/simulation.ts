@@ -1405,18 +1405,33 @@ export function processSimulationTick(state: GameSaveState, deltaSeconds: number
     // 2. Office Staff Monthly Salaries
     const totalStaffSalaries = nextState.staff?.reduce((sum, s) => sum + s.salaryMonthly, 0) || 0;
 
-    // 3. Fleet Insurance (Billed ONLY for trucks and trailers with hasInsurance === true)
+    // 3. Fleet Insurance (Billed based on professional coverage tiers)
     const baseInsurancePerTruck = nextState.profile?.insuranceMonthlyPerTruck || 420;
     const safetyDiscountFactor = Math.max(SIMULATION_CONFIG.maintenance.insurance.minimumInsuranceDiscountFactor, 1 - (safetyStaffBonus / SIMULATION_CONFIG.general.staffBonusPercentBase));
-    const effectiveInsurancePerTruck = Math.round(baseInsurancePerTruck * safetyDiscountFactor);
-    const effectiveInsurancePerTrailer = Math.round(effectiveInsurancePerTruck * SIMULATION_CONFIG.maintenance.insurance.trailerRateMultiplier);
 
     let totalInsuranceExpenses = 0;
     nextState.trucks.forEach(t => {
-      if (t.hasInsurance) totalInsuranceExpenses += effectiveInsurancePerTruck;
+      const tier = t.insuranceTier || (t.hasInsurance ? 'Standard Collision' : 'None');
+      let multiplier = 0;
+      if (tier === 'Liability Only') multiplier = 0.45;
+      else if (tier === 'Standard Collision') multiplier = 1.0;
+      else if (tier === 'Full Comprehensive') multiplier = 1.60;
+      
+      if (multiplier > 0) {
+        totalInsuranceExpenses += Math.round(baseInsurancePerTruck * multiplier * safetyDiscountFactor);
+      }
     });
+
     nextState.trailers.forEach(tr => {
-      if (tr.hasInsurance) totalInsuranceExpenses += effectiveInsurancePerTrailer;
+      const tier = tr.insuranceTier || (tr.hasInsurance ? 'Standard Collision' : 'None');
+      let multiplier = 0;
+      if (tier === 'Liability Only') multiplier = 0.20;
+      else if (tier === 'Standard Collision') multiplier = SIMULATION_CONFIG.maintenance.insurance.trailerRateMultiplier;
+      else if (tier === 'Full Comprehensive') multiplier = SIMULATION_CONFIG.maintenance.insurance.trailerRateMultiplier * 1.5;
+
+      if (multiplier > 0) {
+        totalInsuranceExpenses += Math.round(baseInsurancePerTruck * multiplier * safetyDiscountFactor);
+      }
     });
 
     // 4. Loan Monthly Payments & Interest Amortization
